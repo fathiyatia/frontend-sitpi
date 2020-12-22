@@ -91,12 +91,12 @@ export default {
         {
           icon: "mdi-sail-boat",
           title: "Data Nelayan",
-          to: ""
+          to: "/nelayan/dataNelayan"
         },
         {
           icon: "mdi-account",
           title: "Data Pembeli",
-          to: ""
+          to: "/pembeli/dataPembeli"
         },
         {
           icon: "mdi-cog",
