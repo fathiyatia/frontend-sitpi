@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Form Transaksi </v-toolbar-title>
+        <v-toolbar-title>Edit Transaksi </v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
