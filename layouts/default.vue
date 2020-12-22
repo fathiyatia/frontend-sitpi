@@ -81,12 +81,12 @@ export default {
         {
           icon: "mdi-handshake",
           title: "Data Lelang",
-          to: ""
+          to: "/pelelangan/dataPelelangan"
         },
         {
           icon: "mdi-cash-multiple",
           title: "Data Transaksi",
-          to: ""
+          to: "/transaksi/dataTransaksi"
         },
         {
           icon: "mdi-sail-boat",
