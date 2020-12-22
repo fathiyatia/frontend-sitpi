@@ -70,8 +70,8 @@ export default {
         },
         {
           icon: "mdi-cash",
-          title: "/transaksi/formTransaksi",
-          to: ""
+          title: "Form Transaksi",
+          to: "/transaksi/formTransaksi"
         },
         {
           icon: "mdi-fish",
