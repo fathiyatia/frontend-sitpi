@@ -142,13 +142,12 @@ export default {
     },
     async storeCaught() {
       try {
-        let caught = await this.$api("caught", "store", this.input);
-        let auction = await this.$api("auction", "store", this.input);
-        this.$router.push("/tangkapan/dataTangkapan");
-        return {
-          auction,
-          caught
-        };
+        const result = await this.$api("caught", "store", this.input).finally(
+          response => {
+            this.$router.push("/tangkapan/dataTangkapan");
+            return response;
+          }
+        );
       } catch (e) {
         console.log(e);
       }

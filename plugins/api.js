@@ -108,14 +108,14 @@ export default ({ app }, inject) => {
     },
     store(data) {
       const body = {
-        tpi_id: 2,
-        officer_id: 2,
         fisher_id: parseInt(data.fisherid),
         fish_type_id: 1,
         weight: parseFloat(data.weight),
         weight_unit: data.unit,
         fishing_gear: data.gear,
-        fishing_area: data.area
+        fishing_area: data.area,
+        auction_weight: parseFloat(data.weightauction),
+        auction_weight_unit: data.unitauction
       };
 
       return app
@@ -197,12 +197,8 @@ export default ({ app }, inject) => {
       const body = {
         tpi_id: 2,
         officer_id: 2,
-        fisher_id: parseInt(data.fisherid),
-        fish_type_id: 1,
         weight: parseFloat(data.weightauction),
-        weight_unit: data.unitauction,
-        fishing_gear: data.gear,
-        fishing_area: data.area
+        weight_unit: data.unitauction
       };
 
       return app
