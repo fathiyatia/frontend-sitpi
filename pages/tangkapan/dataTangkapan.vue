@@ -21,7 +21,6 @@
           hide-details
         ></v-text-field>
 
-        <!---- Dialog Delete Item --->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline"
@@ -30,20 +29,37 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteItemConfirm">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteCaught">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
-    <!---- Action Button --->
-    <template v-slot:item.actions="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/tangkapan/edit'">
+    <template v-slot:item.created_at="{ item }">
+      <span>{{
+        new Date(item.created_at).toLocaleDateString(["id-ID"], {})
+      }}</span>
+    </template>
+    <template v-slot:item.weightunit="{ item }">
+      {{ item.weight }} {{ item.weight_unit }}
+    </template>
+    <template v-slot:item.id="{ item }">
+      <v-btn
+        x-small
+        color="secondary"
+        depressed
+        :to="'/tangkapan/edit/' + item.id"
+      >
         Edit
       </v-btn>
 
-      <v-btn x-small color="error" depressed @click="deleteItem(item)">
+      <v-btn
+        x-small
+        color="error"
+        depressed
+        @click="popupDialogDelete(item.id)"
+      >
         Hapus
       </v-btn>
     </template>
@@ -63,15 +79,15 @@ export default {
         text: "NIK Nelayan",
         align: "start",
         sortable: false,
-        value: "fisherid"
+        value: "fisher_nik"
       },
-      { text: "Nama Nelayan", value: "fishername" },
-      { text: "Tanggal", value: "date" },
-      { text: "Jenis Ikan", value: "fishtype" },
-      { text: "Berat", value: "weight" },
-      { text: "Alat Tangkap", value: "geartype" },
-      { text: "Daerah Tangkapan", value: "area" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Tanggal", value: "created_at" },
+      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Berat", value: "weightunit" },
+      { text: "Alat Tangkap", value: "fishing_gear" },
+      { text: "Daerah Tangkapan", value: "fishing_area" },
+      { text: "Actions", value: "id", sortable: false }
     ],
     caughtfish: []
   }),
@@ -85,43 +101,14 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getAllCaught();
   },
 
   methods: {
-    initialize() {
-      this.caughtfish = [
-        {
-          fisherid: "3279567891123456",
-          fishername: "Bambang H",
-          date: "22-12-2020",
-          fishtype: "Tuna",
-          weight: "100 Kg",
-          geartype: "Jaring",
-          area: "Selat Sunda"
-        },
-        {
-          fisherid: "3279567891133356",
-          fishername: "Herman B",
-          date: "22-12-2020",
-          fishtype: "Tuna",
-          weight: "80 Kg",
-          geartype: "Jaring",
-          area: "Selat Sunda"
-        }
-      ];
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.caughtfish.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    popupDialogDelete(id) {
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.caughtfish.splice(this.editedIndex, 1);
-      this.closeDelete();
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -130,6 +117,25 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    deleteCaught() {
+      try {
+        this.$api("caught", "delete", this.currentId).finally(() => {
+          this.getAllCaught();
+          this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllCaught() {
+      try {
+        this.caughtfish = await this.$api("caught", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

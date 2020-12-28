@@ -15,7 +15,7 @@
             + Tambah Pembeli
           </v-btn>
         </template>
-        <!---- Dialog Delete Item --->
+
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline"
@@ -24,7 +24,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteItemConfirm">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -41,12 +41,21 @@
         ></v-text-field>
       </template>
     </template>
-    <!---- Action Button --->
-    <template v-slot:item.actions="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/pembeli/edit'">
+    <template v-slot:item.id="{ item }">
+      <v-btn
+        x-small
+        color="secondary"
+        depressed
+        :to="'/pembeli/edit/' + item.id"
+      >
         Edit
       </v-btn>
-      <v-btn x-small color="error" depressed @click="deleteItem(item)">
+      <v-btn
+        x-small
+        color="error"
+        depressed
+        @click="popupDialogDelete(item.id)"
+      >
         Hapus
       </v-btn>
     </template>
@@ -63,11 +72,11 @@ export default {
         text: "NIK Pembeli",
         align: "start",
         sortable: false,
-        value: "buyerid"
+        value: "nik"
       },
       { text: "Nama", value: "name" },
       { text: "Alamat", value: "address" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: "Actions", value: "id", sortable: false }
     ],
     buyer: []
   }),
@@ -81,35 +90,14 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getAllBuyer();
   },
 
   methods: {
-    initialize() {
-      this.buyer = [
-        {
-          buyerid: "123456",
-          name: "Fulan",
-          address: "Bogor"
-        },
-        {
-          buyerid: "123456",
-          name: "Fulana",
-          address: "Sukabumi"
-        }
-      ];
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.buyer.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    popupDialogDelete(id) {
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.buyer.splice(this.editedIndex, 1);
-      this.closeDelete();
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -118,6 +106,25 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    deleteBuyer() {
+      try {
+        this.$api("buyer", "delete", this.currentId).finally(() => {
+          this.getAllBuyer();
+          this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllBuyer() {
+      try {
+        this.buyer = await this.$api("buyer", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendaftaran Pembeli</v-toolbar-title>
+        <v-toolbar-title>Edit Transaksi </v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
@@ -11,31 +11,37 @@
             outlined
             label="NIK Pembeli"
             :rules="required"
-            v-model="input.nik"
+            v-model="input.buyer_id"
           />
           <v-text-field
             outlined
-            label="Nama"
+            label="No. Pelelangan"
             :rules="required"
-            v-model="input.name"
+            v-model="input.auction_id"
           />
           <v-text-field
             outlined
-            label="Alamat"
+            label="Total Harga (Rp)"
             :rules="required"
-            v-model="input.address"
+            v-model="input.price"
+          />
+          <v-text-field
+            outlined
+            label="Daerah Penjualan Ikan"
+            :rules="required"
+            v-model="input.distribution_area"
           />
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-center px-3">
         <v-row>
           <v-col md="6">
-            <v-btn large block color="accent" :to="'/pembeli/dataPembeli'">
+            <v-btn large block color="accent" :to="'/transaksi/dataTransaksi'">
               Batal
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeBuyer()">
+            <v-btn large block color="primary" @click="updateTransaction">
               Simpan
             </v-btn>
           </v-col>
@@ -49,23 +55,40 @@ export default {
   data: () => ({
     required: [v => !!v || "Data ini harus diisi"],
     input: {
-      nik: null,
-      name: null,
-      address: null
+      buyer_id: null,
+      auction_id: null,
+      distribution_area: null,
+      price: null
     }
   }),
+  mounted() {
+    this.getById();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
     },
-    async storeBuyer() {
+    async getById() {
       try {
-        const result = await this.$api("buyer", "store", this.input).finally(
-          response => {
-            this.$router.push("/pembeli/dataPembeli");
-            return response;
-          }
+        this.input = await this.$api(
+          "transaction",
+          "get_by_id",
+          this.$route.params.id
         );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async updateTransaction() {
+      try {
+        const result = await this.$api(
+          "transaction",
+          "update",
+          this.input
+        ).finally(response => {
+          this.$router.push("/transaksi/dataTransaksi");
+          return response;
+        });
       } catch (e) {
         console.log(e);
       }

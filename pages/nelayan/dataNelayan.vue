@@ -15,7 +15,6 @@
             + Tambah Nelayan
           </v-btn>
         </template>
-        <!---- Dialog Delete Item --->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline"
@@ -24,7 +23,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteItemConfirm">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -41,12 +40,21 @@
         ></v-text-field>
       </template>
     </template>
-    <!---- Action Button --->
-    <template v-slot:item.actions="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/nelayan/edit'">
+    <template v-slot:item.id="{ item }">
+      <v-btn
+        x-small
+        color="secondary"
+        depressed
+        :to="'/nelayan/edit/' + item.id"
+      >
         Edit
       </v-btn>
-      <v-btn x-small color="error" depressed @click="deleteItem(item)">
+      <v-btn
+        x-small
+        color="error"
+        depressed
+        @click="popupDialogDelete(item.id)"
+      >
         Hapus
       </v-btn>
     </template>
@@ -63,11 +71,11 @@ export default {
         text: "NIK Nelayan",
         align: "start",
         sortable: false,
-        value: "fisherid"
+        value: "nik"
       },
       { text: "Nama", value: "name" },
       { text: "Alamat", value: "address" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: "Actions", value: "id", sortable: false }
     ],
     fisher: []
   }),
@@ -81,35 +89,14 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getAllFisher();
   },
 
   methods: {
-    initialize() {
-      this.fisher = [
-        {
-          fisherid: "123456",
-          name: "Bambang H",
-          address: "Bogor"
-        },
-        {
-          fisherid: "123456",
-          name: "Herman H",
-          address: "Sukabumi"
-        }
-      ];
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.fisher.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    popupDialogDelete(id) {
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.fisher.splice(this.editedIndex, 1);
-      this.closeDelete();
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -118,6 +105,25 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    deleteBuyer() {
+      try {
+        this.$api("fisher", "delete", this.currentId).finally(() => {
+          this.getAllFisher();
+          this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllFisher() {
+      try {
+        this.fisher = await this.$api("fisher", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

@@ -9,7 +9,12 @@
         <v-form ref="form">
           <h3 class="accent--text">Identitas Nelayan</h3>
           <br />
-          <v-text-field outlined label="NIK Nelayan" :rules="required" />
+          <v-text-field
+            outlined
+            label="NIK Nelayan"
+            v-model="input.fisherid"
+            :rules="required"
+          />
           <template>
             <h3 class="accent--text">Hasil Tangkapan</h3>
             <br />
@@ -17,7 +22,7 @@
               :items="fishtype"
               label="Jenis Ikan"
               outlined
-              v-model="caught.fish"
+              v-model="input.fish"
               :rules="required"
             ></v-select>
             <v-row>
@@ -26,7 +31,7 @@
                   outlined
                   label="Berat"
                   type="number"
-                  v-model="caught.weight"
+                  v-model="input.weight"
                 />
               </v-col>
               <v-col md="6">
@@ -34,7 +39,7 @@
                   :items="unittype"
                   label="Satuan"
                   outlined
-                  v-model="caught.unit"
+                  v-model="input.unit"
                 ></v-select>
               </v-col>
             </v-row>
@@ -42,12 +47,12 @@
               :items="geartype"
               label="Alat Tangkap"
               outlined
-              v-model="caught.gear"
+              v-model="input.gear"
             ></v-select>
             <v-text-field
               outlined
               label="Daerah Tangkapan"
-              v-model="caught.area"
+              v-model="input.area"
             />
             <h3 class="accent--text">Data Lelang Ikan</h3>
             <br />
@@ -55,7 +60,7 @@
               Jumlah yang dilelang sama dengan yang ditangkap?
             </span>
             <v-radio-group
-              v-model="caught.check"
+              v-model="input.check"
               row
               @change="checkweight"
               class="check"
@@ -68,7 +73,7 @@
                 <v-text-field
                   outlined
                   label="Berat"
-                  v-model="caught.weightauction"
+                  v-model="input.weightauction"
                   type="number"
                   :rules="required"
                 />
@@ -78,7 +83,7 @@
                   :items="unittype"
                   label="Satuan"
                   outlined
-                  v-model="caught.unitauction"
+                  v-model="input.unitauction"
                   :rules="required"
                 ></v-select>
               </v-col>
@@ -94,7 +99,9 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary"> Simpan </v-btn>
+            <v-btn large block color="primary" @click.stop="storeCaught()">
+              Simpan
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
@@ -107,18 +114,17 @@ export default {
     geartype: ["Jaring", "Pancingan"],
     fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
     unittype: ["Kg", "Kwintal", "Ton"],
-    caught: [
-      {
-        fish: "",
-        gear: "",
-        area: "",
-        check: null,
-        weight: null,
-        weightauction: null,
-        unit: "",
-        unitauction: ""
-      }
-    ],
+    input: {
+      fisherid: null,
+      fish: null,
+      gear: null,
+      area: null,
+      check: null,
+      weight: null,
+      unit: null,
+      weightauction: null,
+      unitauction: null
+    },
     required: [v => !!v || "Data ini harus diisi"]
   }),
   methods: {
@@ -126,12 +132,25 @@ export default {
       this.$refs.form.reset();
     },
     checkweight() {
-      if (this.caught.check == "Yes") {
-        this.caught.weightauction = this.caught.weight;
-        this.caught.unitauction = this.caught.unit;
-      } else if (this.caught.check == "No") {
-        this.caught.weightauction = null;
-        this.caught.unitauction = null;
+      if (this.input.check == "Yes") {
+        this.input.weightauction = this.input.weight;
+        this.input.unitauction = this.input.unit;
+      } else if (this.input.check == "No") {
+        this.input.weightauction = null;
+        this.input.unitauction = null;
+      }
+    },
+    async storeCaught() {
+      try {
+        let caught = await this.$api("caught", "store", this.input);
+        let auction = await this.$api("auction", "store", this.input);
+        this.$router.push("/tangkapan/dataTangkapan");
+        return {
+          auction,
+          caught
+        };
+      } catch (e) {
+        console.log(e);
       }
     }
   }

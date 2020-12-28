@@ -21,7 +21,6 @@
           hide-details
         ></v-text-field>
 
-        <!---- Dialog Delete Item --->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline"
@@ -30,19 +29,34 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteItemConfirm">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteAuction">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
-    <!---- Action Button --->
-    <template v-slot:item.actions="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/pelelangan/edit'">
+    <template v-slot:item.created_at="{ item }">
+      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+    </template>
+    <template v-slot:item.weightunit="{ item }">
+      {{ item.weight }} {{ item.weight_unit }}
+    </template>
+    <template v-slot:item.action="{ item }">
+      <v-btn
+        x-small
+        color="secondary"
+        depressed
+        :to="'/pelelangan/edit/' + item.id"
+      >
         Edit
       </v-btn>
-      <v-btn x-small color="error" depressed @click="deleteItem(item)">
+      <v-btn
+        x-small
+        color="error"
+        depressed
+        @click="popupDialogDelete(item.id)"
+      >
         Hapus
       </v-btn>
     </template>
@@ -59,14 +73,14 @@ export default {
         text: "No. Pelelangan",
         align: "start",
         sortable: false,
-        value: "auctionid"
+        value: "id"
       },
-      { text: "Tanggal", value: "date" },
-      { text: "Nelayan", value: "fishername" },
-      { text: "Jenis Ikan", value: "fishtype" },
-      { text: "Berat", value: "weight" },
-      { text: "Status Pelelangan", value: "status" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: "Tanggal", value: "created_at" },
+      { text: "Nelayan", value: "fisher_name" },
+      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Berat", value: "weightunit" },
+      { text: "Status Pelelangan", value: "status_name" },
+      { text: "Actions", value: "action", sortable: false }
     ],
     auction: []
   }),
@@ -80,41 +94,14 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getAllAuction();
   },
 
   methods: {
-    initialize() {
-      this.auction = [
-        {
-          auctionid: "123456",
-          date: "23-12-2020",
-          fishername: "Bambang H",
-          fishtype: "Tuna",
-          weight: "50 kg",
-          status: "Belum Terjual"
-        },
-        {
-          auctionid: "666456",
-          date: "22-12-2020",
-          fishername: "Herman B",
-          fishtype: "Tuna",
-          weight: "70 kg",
-          status: "Sudah Terjual"
-        }
-      ];
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.auction.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    popupDialogDelete(id) {
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.auction.splice(this.editedIndex, 1);
-      this.closeDelete();
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -123,6 +110,25 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    deleteAuction() {
+      try {
+        this.$api("auction", "delete", this.currentId).finally(() => {
+          this.getAllAuction();
+          this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllAuction() {
+      try {
+        this.auction = await this.$api("auction", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

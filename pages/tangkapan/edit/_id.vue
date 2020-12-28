@@ -12,7 +12,7 @@
           <v-text-field
             outlined
             label="NIK Nelayan"
-            v-model="fisherid"
+            v-model="input.fisher_id"
             :rules="required"
           />
           <template>
@@ -22,7 +22,7 @@
               :items="fishtype"
               label="Jenis Ikan"
               outlined
-              v-model="caught.fish"
+              v-model="input.fish_type_id"
               :rules="required"
             ></v-select>
             <v-row>
@@ -31,7 +31,7 @@
                   outlined
                   label="Berat"
                   type="number"
-                  v-model="caught.weight"
+                  v-model="input.weight"
                 />
               </v-col>
               <v-col md="6">
@@ -39,7 +39,7 @@
                   :items="unittype"
                   label="Satuan"
                   outlined
-                  v-model="caught.unit"
+                  v-model="input.weight_unit"
                 ></v-select>
               </v-col>
             </v-row>
@@ -47,12 +47,12 @@
               :items="geartype"
               label="Alat Tangkap"
               outlined
-              v-model="caught.gear"
+              v-model="input.fishing_gear"
             ></v-select>
             <v-text-field
               outlined
               label="Daerah Tangkapan"
-              v-model="caught.area"
+              v-model="input.fishing_area"
             />
           </template>
         </v-form>
@@ -60,12 +60,12 @@
       <v-card-actions class="justify-center px-3">
         <v-row>
           <v-col md="6">
-            <v-btn large block color="accent" @click="reset">
+            <v-btn large block color="accent" :to="'/tangkapan/dataTangkapan'">
               Batal
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" :to="'/tangkapan/dataTangkapan'">
+            <v-btn large block color="primary" @click="updateCaught">
               Simpan
             </v-btn>
           </v-col>
@@ -80,23 +80,46 @@ export default {
     geartype: ["Jaring", "Pancingan"],
     fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
     unittype: ["Kg", "Kwintal", "Ton"],
-    caught: [
-      {
-        fish: "",
-        gear: "",
-        area: "",
-        check: null,
-        weight: null,
-        weightauction: null,
-        unit: "",
-        unitauction: ""
-      }
-    ],
+    input: {
+      fisher_id: null,
+      fish_type_id: null,
+      fishing_gear: null,
+      fishing_area: null,
+      weight: null,
+      weight_unit: null
+    },
     required: [v => !!v || "Data ini harus diisi"]
   }),
+  mounted() {
+    this.getById();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
+    },
+    async getById() {
+      console.log("Masuk");
+      try {
+        this.input = await this.$api(
+          "caught",
+          "get_by_id",
+          this.$route.params.id
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async updateCaught() {
+      try {
+        const result = await this.$api("caught", "update", this.input).finally(
+          response => {
+            this.$router.push("/tangkapan/dataTangkapan");
+            return response;
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

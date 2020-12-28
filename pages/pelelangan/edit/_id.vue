@@ -2,40 +2,40 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendaftaran Pembeli</v-toolbar-title>
+        <v-toolbar-title>Edit Pelelangan </v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
         <v-form ref="form">
           <v-text-field
             outlined
-            label="NIK Pembeli"
+            label="Jumlah Lelang"
             :rules="required"
-            v-model="input.nik"
+            v-model="input.weight"
           />
-          <v-text-field
+          <v-select
+            :items="unittype"
+            label="Satuan"
             outlined
-            label="Nama"
             :rules="required"
-            v-model="input.name"
-          />
-          <v-text-field
-            outlined
-            label="Alamat"
-            :rules="required"
-            v-model="input.address"
-          />
+            v-model="input.weight_unit"
+          ></v-select>
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-center px-3">
         <v-row>
           <v-col md="6">
-            <v-btn large block color="accent" :to="'/pembeli/dataPembeli'">
+            <v-btn
+              large
+              block
+              color="accent"
+              :to="'/pelelangan/dataPelelangan'"
+            >
               Batal
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeBuyer()">
+            <v-btn large block color="primary" @click="updateAuction">
               Simpan
             </v-btn>
           </v-col>
@@ -47,22 +47,36 @@
 <script>
 export default {
   data: () => ({
+    unittype: ["Kg", "Kwintal", "Ton"],
     required: [v => !!v || "Data ini harus diisi"],
     input: {
-      nik: null,
-      name: null,
-      address: null
+      weight: null,
+      weight_unit: null
     }
   }),
+  mounted() {
+    this.getById();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
     },
-    async storeBuyer() {
+    async getById() {
       try {
-        const result = await this.$api("buyer", "store", this.input).finally(
+        this.input = await this.$api(
+          "auction",
+          "get_by_id",
+          this.$route.params.id
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async updateAuction() {
+      try {
+        const result = await this.$api("auction", "update", this.input).finally(
           response => {
-            this.$router.push("/pembeli/dataPembeli");
+            this.$router.push("/pelelangan/dataPelelangan");
             return response;
           }
         );

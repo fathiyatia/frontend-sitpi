@@ -19,7 +19,6 @@
           hide-details
         ></v-text-field>
 
-        <!---- Dialog Delete Item --->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline"
@@ -28,20 +27,38 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteItemConfirm">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteTransaction">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
-    <!---- Action Button --->
-    <template v-slot:item.actions="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/transaksi/edit'">
+    <template v-slot:item.created_at="{ item }">
+      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+    </template>
+    <template v-slot:item.price="{ item }">
+      <span> Rp{{ item.price }}</span>
+    </template>
+    <template v-slot:item.weightunit="{ item }">
+      {{ item.weight }} {{ item.weight_unit }}
+    </template>
+    <template v-slot:item.action="{ item }">
+      <v-btn
+        x-small
+        color="secondary"
+        depressed
+        :to="'/transaksi/edit/' + item.id"
+      >
         Edit
       </v-btn>
 
-      <v-btn x-small color="error" depressed @click="deleteItem(item)">
+      <v-btn
+        x-small
+        color="error"
+        depressed
+        @click="popupDialogDelete(item.id)"
+      >
         Hapus
       </v-btn>
     </template>
@@ -58,16 +75,16 @@ export default {
         text: "No. Transaksi",
         align: "start",
         sortable: false,
-        value: "transactionid"
+        value: "id"
       },
-      { text: "Tanggal", value: "date" },
-      { text: "Nama Pembeli", value: "buyername" },
-      { text: "Nama Nelayan", value: "fishername" },
-      { text: "Jenis Ikan", value: "fishtype" },
-      { text: "Berat", value: "weight" },
-      { text: "Total Harga (Rp)", value: "price" },
-      { text: "Daerah Penjualan", value: "area" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: "Tanggal", value: "created_at" },
+      { text: "Nama Pembeli", value: "buyer_name" },
+      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Berat", value: "weightunit" },
+      { text: "Total Harga", value: "price" },
+      { text: "Daerah Penjualan", value: "distribution_area" },
+      { text: "Actions", value: "action", sortable: false }
     ],
     transaction: []
   }),
@@ -81,45 +98,14 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getAllTransaction();
   },
 
   methods: {
-    initialize() {
-      this.transaction = [
-        {
-          transactionid: "123456",
-          date: "22-12-2020",
-          buyername: "Mawar",
-          fishername: "Bambang H",
-          fishtype: "Tuna",
-          weight: "50 kg",
-          price: "Rp250.000",
-          area: "Selat Sunda"
-        },
-        {
-          transactionid: "654321",
-          date: "22-12-2020",
-          buyername: "Fulan",
-          fishername: "Bambang H",
-          fishtype: "Kakap",
-          weight: "70 kg",
-          price: "Rp500.000",
-          area: "Selat Sunda"
-        }
-      ];
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.transaction.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    popupDialogDelete(id) {
       this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.transaction.splice(this.editedIndex, 1);
-      this.closeDelete();
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -128,6 +114,25 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+
+    deleteTransaction() {
+      try {
+        this.$api("transaction", "delete", this.currentId).finally(() => {
+          this.getAllTransaction();
+          this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllTransaction() {
+      try {
+        this.transaction = await this.$api("transaction", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

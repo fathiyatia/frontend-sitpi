@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendaftaran Pembeli</v-toolbar-title>
+        <v-toolbar-title>Edit Pembeli </v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
@@ -35,7 +35,7 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeBuyer()">
+            <v-btn large block color="primary" @click="updateBuyer">
               Simpan
             </v-btn>
           </v-col>
@@ -54,13 +54,27 @@ export default {
       address: null
     }
   }),
+  mounted() {
+    this.getById();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
     },
-    async storeBuyer() {
+    async getById() {
       try {
-        const result = await this.$api("buyer", "store", this.input).finally(
+        this.input = await this.$api(
+          "buyer",
+          "get_by_id",
+          this.$route.params.id
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async updateBuyer() {
+      try {
+        const result = await this.$api("buyer", "update", this.input).finally(
           response => {
             this.$router.push("/pembeli/dataPembeli");
             return response;

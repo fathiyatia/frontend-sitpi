@@ -18,7 +18,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: ["~/plugins/api.js"],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -38,7 +38,12 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    //prefix: "/api/v1",
+    port: 9090,
+    host: "localhost",
+    https: false
+  },
 
   // PWA configuration
   pwa: {
@@ -77,14 +82,12 @@ export default {
       }
     }
   },
-
-  /*--- nyoba aja  
+  /*
   server: {
     port: 8000,
     host: "0.0.0.0"
   },
 */
-
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {}
 };
