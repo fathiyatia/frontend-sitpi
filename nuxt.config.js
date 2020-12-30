@@ -41,7 +41,7 @@ export default {
   axios: {
     //prefix: "/api/v1",
     port: 9090,
-    host: "localhost",
+    host: "23.97.52.240",
     https: false
   },
 
