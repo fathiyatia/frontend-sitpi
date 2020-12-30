@@ -42,7 +42,7 @@ export default {
     //prefix: "/api/v1",
     port: 9090,
     host: "23.97.52.240",
-    https: false
+    https: true
   },
 
   // PWA configuration
