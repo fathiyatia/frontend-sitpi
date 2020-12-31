@@ -9,12 +9,20 @@
         <v-form ref="form">
           <h3 class="accent--text">Identitas Nelayan</h3>
           <br />
-          <v-text-field
+          <v-autocomplete
             outlined
             label="NIK Nelayan"
-            v-model="input.fisherid"
             :rules="required"
-          />
+            v-model="input.fisherid"
+            :items="fisher"
+            clearable
+            item-text="nik"
+            item-value="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.nik + " - " + item.name
+            }}</template></v-autocomplete
+          >
           <template>
             <h3 class="accent--text">Hasil Tangkapan</h3>
             <br />
@@ -125,11 +133,24 @@ export default {
       weightauction: null,
       unitauction: null
     },
-    required: [v => !!v || "Data ini harus diisi"]
+    required: [v => !!v || "Data ini harus diisi"],
+    fisher: []
   }),
+
+  mounted() {
+    this.getAllFisher();
+  },
+
   methods: {
     reset() {
       this.$refs.form.reset();
+    },
+    async getAllFisher() {
+      try {
+        this.fisher = await this.$api("fisher", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
     },
     checkweight() {
       if (this.input.check == "Yes") {
