@@ -40,8 +40,8 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
     //prefix: "/api/v1",
-    port: process.env.PORT || 9090,
-    host: process.env.HOST || "23.97.52.240",
+    port: 9090,
+    host: "localhost",
     https: false
   },
 
