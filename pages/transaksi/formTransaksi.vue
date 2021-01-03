@@ -96,14 +96,14 @@ export default {
     },
     async getAllBuyer() {
       try {
-        this.buyer = await this.$api("buyer", "index", null);
+        this.buyer = await this.$api("buyer", "inquiry", null);
       } catch (e) {
         console.log(e);
       }
     },
     async getAllAuction() {
       try {
-        this.auction = await this.$api("auction", "index", null);
+        this.auction = await this.$api("auction", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

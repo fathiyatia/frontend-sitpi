@@ -13,13 +13,20 @@
             :rules="required"
             v-model="input.weight"
           />
-          <v-select
-            :items="unittype"
-            label="Satuan"
+          <v-autocomplete
             outlined
+            label="Satuan"
             :rules="required"
             v-model="input.weight_unit"
-          ></v-select>
+            :items="weightunit"
+            clearable
+            item-text="name"
+            item-value="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.name
+            }}</template></v-autocomplete
+          >
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-center px-3">
@@ -47,7 +54,7 @@
 <script>
 export default {
   data: () => ({
-    unittype: ["Kg", "Kwintal", "Ton"],
+    weightunit: [],
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       weight: null,
@@ -56,6 +63,7 @@ export default {
   }),
   mounted() {
     this.getById();
+    this.getAllWeightUnit();
   },
   methods: {
     reset() {
@@ -68,6 +76,13 @@ export default {
           "get_by_id",
           this.$route.params.id
         );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllWeightUnit() {
+      try {
+        this.weightunit = await this.$api("weight_unit", "index", null);
       } catch (e) {
         console.log(e);
       }

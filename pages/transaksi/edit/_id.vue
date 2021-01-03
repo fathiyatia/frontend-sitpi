@@ -7,18 +7,39 @@
       <v-spacer></v-spacer>
       <v-card-text>
         <v-form ref="form">
-          <v-text-field
+          <v-autocomplete
             outlined
             label="NIK Pembeli"
             :rules="required"
             v-model="input.buyer_id"
-          />
-          <v-text-field
+            :items="buyer"
+            clearable
+            item-text="nik"
+            item-value="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.nik + " - " + item.name
+            }}</template></v-autocomplete
+          >
+          <v-autocomplete
             outlined
             label="No. Pelelangan"
             :rules="required"
             v-model="input.auction_id"
-          />
+            :items="auction"
+            clearable
+            item-text="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.id +
+                " - Jenis Ikan : " +
+                item.fish_type +
+                " - Berat : " +
+                item.weight +
+                " " +
+                item.weight_unit
+            }}</template></v-autocomplete
+          >
           <v-text-field
             outlined
             label="Total Harga (Rp)"
@@ -54,15 +75,20 @@
 export default {
   data: () => ({
     required: [v => !!v || "Data ini harus diisi"],
+    buyer: [],
+    auction: [],
     input: {
       buyer_id: null,
       auction_id: null,
       distribution_area: null,
+      weight_unit: null,
       price: null
     }
   }),
   mounted() {
     this.getById();
+    this.getAllBuyer();
+    this.getAllAuction();
   },
   methods: {
     reset() {
@@ -75,6 +101,26 @@ export default {
           "get_by_id",
           this.$route.params.id
         );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllBuyer() {
+      try {
+        this.buyer = await this.$api("buyer", "inquiry", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllAuction() {
+      try {
+        this.auction = await this.$api("auction", "inquiry", null);
+        this.auction.push({
+          id: this.input.auction_id,
+          fish_type: this.input.fish_type,
+          weight: this.input.weight,
+          weight_unit: this.input.weight_unit
+        });
       } catch (e) {
         console.log(e);
       }

@@ -5,6 +5,36 @@ export default ({ app }, inject) => {
     target = target.toLowerCase();
     action = action.toLowerCase();
     switch (target) {
+      case "fish":
+        switch (action) {
+          case "index":
+            return Fish.index(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "fishing_gear":
+        switch (action) {
+          case "index":
+            return Fishing_gear.index(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "weight_unit":
+        switch (action) {
+          case "index":
+            return Weight_unit.index(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
       case "caught":
         switch (action) {
           case "index":
@@ -27,6 +57,8 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Auction.index(data, other);
+          case "inquiry":
+            return Auction.inquiry(data, other);
           case "store":
             return Auction.store(data, other);
           case "delete":
@@ -63,6 +95,8 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Fisher.index(data, other);
+          case "inquiry":
+            return Fisher.inquiry(data, other);
           case "store":
             return Fisher.store(data, other);
           case "delete":
@@ -81,6 +115,8 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Buyer.index(data, other);
+          case "inquiry":
+            return Buyer.inquiry(data, other);
           case "store":
             return Buyer.store(data, other);
           case "delete":
@@ -99,6 +135,33 @@ export default ({ app }, inject) => {
     }
   };
 
+  const Fish = {
+    index() {
+      return app.$axios.get("/fish_type").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    }
+  };
+
+  const Fishing_gear = {
+    index() {
+      return app.$axios.get("/fishing_gear").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    }
+  };
+
+  const Weight_unit = {
+    index() {
+      return app.$axios.get("/weight_unit").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    }
+  };
+
   const Caught = {
     index() {
       return app.$axios.get("/caught_fish").then(response => {
@@ -109,7 +172,7 @@ export default ({ app }, inject) => {
     store(data) {
       const body = {
         fisher_id: parseInt(data.fisherid),
-        fish_type_id: 1,
+        fish_type_id: parseInt(data.fish),
         weight: parseFloat(data.weight),
         weight_unit: data.unit,
         fishing_gear: data.gear,
@@ -161,10 +224,8 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
-        tpi_id: 2,
-        officer_id: 2,
         fisher_id: parseInt(data.fisher_id),
-        fish_type_id: 1,
+        fish_type_id: parseInt(data.fish_type_id),
         weight: parseFloat(data.weight),
         weight_unit: data.weight_unit,
         fishing_gear: data.fishing_gear,
@@ -193,10 +254,14 @@ export default ({ app }, inject) => {
         return response.data.response_data;
       });
     },
+    inquiry() {
+      return app.$axios.get("/auction/inquiry").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    },
     store(data) {
       const body = {
-        tpi_id: 2,
-        officer_id: 2,
         weight: parseFloat(data.weightauction),
         weight_unit: data.unitauction
       };
@@ -273,8 +338,6 @@ export default ({ app }, inject) => {
     },
     store(data) {
       const body = {
-        tpi_id: 2,
-        officer_id: 2,
         buyer_id: parseInt(data.buyer_id),
         auction_id: parseInt(data.auction_id),
         distribution_area: data.distribution_area,
@@ -324,8 +387,6 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
-        tpi_id: 2,
-        officer_id: 2,
         buyer_id: parseInt(data.buyer_id),
         auction_id: parseInt(data.auction_id),
         distribution_area: data.distribution_area,
@@ -350,6 +411,12 @@ export default ({ app }, inject) => {
   const Fisher = {
     index() {
       return app.$axios.get("/fisher").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    },
+    inquiry() {
+      return app.$axios.get("/fisher/inquiry").then(response => {
         console.log(response);
         return response.data.response_data;
       });
@@ -428,6 +495,12 @@ export default ({ app }, inject) => {
   const Buyer = {
     index() {
       return app.$axios.get("/buyer").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    },
+    inquiry() {
+      return app.$axios.get("/buyer/inquiry").then(response => {
         console.log(response);
         return response.data.response_data;
       });

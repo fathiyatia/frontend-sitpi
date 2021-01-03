@@ -26,13 +26,20 @@
           <template>
             <h3 class="accent--text">Hasil Tangkapan</h3>
             <br />
-            <v-select
-              :items="fishtype"
-              label="Jenis Ikan"
+            <v-autocomplete
               outlined
-              v-model="input.fish"
+              label="Jenis Ikan"
               :rules="required"
-            ></v-select>
+              v-model="input.fish"
+              :items="fishtype"
+              clearable
+              item-text="name"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
             <v-row>
               <v-col md="6">
                 <v-text-field
@@ -40,23 +47,41 @@
                   label="Berat"
                   type="number"
                   v-model="input.weight"
+                  @change="checkweight"
                 />
               </v-col>
               <v-col md="6">
-                <v-select
-                  :items="unittype"
-                  label="Satuan"
+                <v-autocomplete
                   outlined
+                  label="Satuan"
+                  :rules="required"
                   v-model="input.unit"
-                ></v-select>
+                  :items="weightunit"
+                  clearable
+                  item-text="name"
+                  item-value="id"
+                  @change="checkweight"
+                >
+                  <template v-slot:selection="{ item }">{{
+                    item.name
+                  }}</template></v-autocomplete
+                >
               </v-col>
             </v-row>
-            <v-select
-              :items="geartype"
-              label="Alat Tangkap"
+            <v-autocomplete
               outlined
+              label="Alat Tangkap"
+              :rules="required"
               v-model="input.gear"
-            ></v-select>
+              :items="fishinggear"
+              clearable
+              item-text="name"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
             <v-text-field
               outlined
               label="Daerah Tangkapan"
@@ -84,16 +109,25 @@
                   v-model="input.weightauction"
                   type="number"
                   :rules="required"
+                  @change="changeweight"
                 />
               </v-col>
               <v-col md="6">
-                <v-select
-                  :items="unittype"
-                  label="Satuan"
+                <v-autocomplete
                   outlined
-                  v-model="input.unitauction"
+                  label="Satuan"
                   :rules="required"
-                ></v-select>
+                  v-model="input.unitauction"
+                  :items="weightunit"
+                  clearable
+                  item-text="name"
+                  item-value="id"
+                  @change="changeweight"
+                >
+                  <template v-slot:selection="{ item }">{{
+                    item.name
+                  }}</template></v-autocomplete
+                >
               </v-col>
             </v-row>
           </template>
@@ -119,9 +153,9 @@
 <script>
 export default {
   data: () => ({
-    geartype: ["Jaring", "Pancingan"],
-    fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
-    unittype: ["Kg", "Kwintal", "Ton"],
+    fishinggear: [],
+    fishtype: [],
+    weightunit: [],
     input: {
       fisherid: null,
       fish: null,
@@ -139,6 +173,9 @@ export default {
 
   mounted() {
     this.getAllFisher();
+    this.getAllFish();
+    this.getAllFishingGear();
+    this.getAllWeightUnit();
   },
 
   methods: {
@@ -147,7 +184,28 @@ export default {
     },
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "index", null);
+        this.fisher = await this.$api("fisher", "inquiry", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFish() {
+      try {
+        this.fishtype = await this.$api("fish", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFishingGear() {
+      try {
+        this.fishinggear = await this.$api("fishing_gear", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllWeightUnit() {
+      try {
+        this.weightunit = await this.$api("weight_unit", "index", null);
       } catch (e) {
         console.log(e);
       }
@@ -159,6 +217,12 @@ export default {
       } else if (this.input.check == "No") {
         this.input.weightauction = null;
         this.input.unitauction = null;
+      }
+    },
+    changeweight() {
+      if (this.input.check == "Yes") {
+        this.input.weight = this.input.weightauction;
+        this.input.unit = this.input.unitauction;
       }
     },
     async storeCaught() {
