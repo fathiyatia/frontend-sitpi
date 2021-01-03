@@ -17,14 +17,14 @@
             outlined
             label="Satuan"
             :rules="required"
-            v-model="input.weight_unit"
+            v-model="input.weight_unit_id"
             :items="weightunit"
             clearable
-            item-text="name"
+            item-text="unit"
             item-value="id"
           >
             <template v-slot:selection="{ item }">{{
-              item.name
+              item.unit
             }}</template></v-autocomplete
           >
         </v-form>
@@ -58,7 +58,7 @@ export default {
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       weight: null,
-      weight_unit: null
+      weight_unit_id: null
     }
   }),
   mounted() {

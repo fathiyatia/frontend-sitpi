@@ -174,11 +174,11 @@ export default ({ app }, inject) => {
         fisher_id: parseInt(data.fisherid),
         fish_type_id: parseInt(data.fish),
         weight: parseFloat(data.weight),
-        weight_unit: data.unit,
-        fishing_gear: data.gear,
+        weight_unit_id: parseInt(data.unit),
+        fishing_gear_id: parseInt(data.gear),
         fishing_area: data.area,
         auction_weight: parseFloat(data.weightauction),
-        auction_weight_unit: data.unitauction
+        auction_weight_unit: parseInt(data.unitauction)
       };
 
       return app
@@ -227,8 +227,8 @@ export default ({ app }, inject) => {
         fisher_id: parseInt(data.fisher_id),
         fish_type_id: parseInt(data.fish_type_id),
         weight: parseFloat(data.weight),
-        weight_unit: data.weight_unit,
-        fishing_gear: data.fishing_gear,
+        weight_unit_id: parseInt(data.weight_unit_id),
+        fishing_gear_id: parseInt(data.fishing_gear_id),
         fishing_area: data.fishing_area
       };
       return app
@@ -263,7 +263,7 @@ export default ({ app }, inject) => {
     store(data) {
       const body = {
         weight: parseFloat(data.weightauction),
-        weight_unit: data.unitauction
+        weight_unit_id: parseInt(data.unitauction)
       };
 
       return app
@@ -311,7 +311,7 @@ export default ({ app }, inject) => {
       const body = {
         id: data.id,
         weight: parseFloat(data.weight),
-        weight_unit: data.weight_unit
+        weight_unit_id: parseInt(data.weight_unit_id)
       };
       return app
         .$axios({

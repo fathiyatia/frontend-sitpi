@@ -54,14 +54,14 @@
                   outlined
                   label="Satuan"
                   :rules="required"
-                  v-model="input.weight_unit"
+                  v-model="input.weight_unit_id"
                   :items="weightunit"
                   clearable
-                  item-text="name"
+                  item-text="unit"
                   item-value="id"
                 >
                   <template v-slot:selection="{ item }">{{
-                    item.name
+                    item.unit
                   }}</template></v-autocomplete
                 >
               </v-col>
@@ -70,7 +70,7 @@
               outlined
               label="Alat Tangkap"
               :rules="required"
-              v-model="input.fishing_gear"
+              v-model="input.fishing_gear_id"
               :items="fishinggear"
               clearable
               item-text="name"
@@ -115,10 +115,10 @@ export default {
     input: {
       fisher_id: null,
       fish_type_id: null,
-      fishing_gear: null,
+      fishing_gear_id: null,
       fishing_area: null,
       weight: null,
-      weight_unit: null
+      weight_unit_id: null
     },
     required: [v => !!v || "Data ini harus diisi"]
   }),

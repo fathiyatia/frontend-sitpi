@@ -58,12 +58,12 @@
                   v-model="input.unit"
                   :items="weightunit"
                   clearable
-                  item-text="name"
+                  item-text="unit"
                   item-value="id"
                   @change="checkweight"
                 >
                   <template v-slot:selection="{ item }">{{
-                    item.name
+                    item.unit
                   }}</template></v-autocomplete
                 >
               </v-col>
@@ -120,12 +120,12 @@
                   v-model="input.unitauction"
                   :items="weightunit"
                   clearable
-                  item-text="name"
+                  item-text="unit"
                   item-value="id"
                   @change="changeweight"
                 >
                   <template v-slot:selection="{ item }">{{
-                    item.name
+                    item.unit
                   }}</template></v-autocomplete
                 >
               </v-col>
