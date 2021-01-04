@@ -18,6 +18,7 @@
       </v-container>
 
       <v-list>
+        <v-list-item-group color="white">
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -32,6 +33,7 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar color="primary" :clipped-left="clipped" fixed app>
@@ -45,7 +47,7 @@
       </v-container>
     </v-main>
 
-    <v-footer :absolute="!fixed" app>
+    <v-footer :absolute="fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>

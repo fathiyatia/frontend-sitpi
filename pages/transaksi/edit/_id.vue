@@ -86,7 +86,6 @@ export default {
     }
   }),
   mounted() {
-    this.getById();
     this.getAllBuyer();
     this.getAllAuction();
   },
@@ -114,7 +113,11 @@ export default {
     },
     async getAllAuction() {
       try {
-        this.auction = await this.$api("auction", "inquiry", null);
+        this.auction = await this.$api("auction", "inquiry", null).finally(
+          async () => {
+            await this.getById();
+          }
+        );
         this.auction.push({
           id: this.input.auction_id,
           fish_type: this.input.fish_type,

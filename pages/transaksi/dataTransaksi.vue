@@ -3,7 +3,8 @@
     :headers="headers"
     :items="transaction"
     :search="search"
-    sort-by="date"
+    sort-by="created_at"
+    sort-desc
     class="elevation-1"
   >
     <template v-slot:top>
