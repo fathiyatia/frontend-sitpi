@@ -47,6 +47,8 @@ export default ({ app }, inject) => {
             return Caught.get_by_id(data, other);
           case "update":
             return Caught.update(data, other);
+          case "total_production":
+            return Caught.total_production(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -178,7 +180,7 @@ export default ({ app }, inject) => {
         fishing_gear_id: parseInt(data.gear),
         fishing_area: data.area,
         auction_weight: parseFloat(data.weightauction),
-        auction_weight_unit: parseInt(data.unitauction)
+        auction_weight_unit_id: parseInt(data.unitauction)
       };
 
       return app
@@ -236,6 +238,24 @@ export default ({ app }, inject) => {
           method: "put",
           url: "/caught_fish/" + data.id,
           data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    total_production(data) {
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/caught_fish/total_production?from=" +
+            data.date_start +
+            "&to=" +
+            data.date_end
         })
         .then(response => {
           console.log(response);
