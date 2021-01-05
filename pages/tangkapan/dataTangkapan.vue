@@ -38,9 +38,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.created_at="{ item }">
-      <span>{{
-        new Date(item.created_at).toLocaleDateString(["id-ID"], {})
-      }}</span>
+      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
     </template>
     <template v-slot:item.weightunit="{ item }">
       {{ item.weight }} {{ item.weight_unit }}

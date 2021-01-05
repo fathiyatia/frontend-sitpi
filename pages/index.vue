@@ -44,18 +44,20 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="input.date_start"
+                  v-model="date_start_formatted"
                   label="Tanggal Awal"
                   prepend-icon="mdi-calendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                ></v-text-field>
+                >
+                </v-text-field>
               </template>
               <v-date-picker
                 v-model="input.date_start"
                 scrollable
                 color="primary"
+                :max="date_max"
               >
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="modal_start = false">
@@ -85,18 +87,21 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="input.date_end"
+                  v-model="date_end_formatted"
                   label="Tanggal Akhir"
                   prepend-icon="mdi-calendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                ></v-text-field>
+                >
+                </v-text-field>
               </template>
               <v-date-picker
                 v-model="input.date_end"
                 scrollable
                 color="primary"
+                :max="date_max"
+                :min="input.date_start"
               >
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="modal_end = false">
@@ -281,6 +286,8 @@ export default {
       date_end: new Date().toISOString().substr(0, 10)
     },
     total_production: null,
+    date_max: new Date().toISOString().substr(0, 10),
+    //total_production: null,
     //end date
     search: "",
     headers: [
@@ -348,6 +355,15 @@ export default {
 
   mounted() {
     this.getTotalProduction();
+  },
+
+  computed: {
+    date_start_formatted: function() {
+      return new Date(this.input.date_start).toLocaleDateString();
+    },
+    date_end_formatted: function() {
+      return new Date(this.input.date_end).toLocaleDateString();
+    }
   },
 
   methods: {
