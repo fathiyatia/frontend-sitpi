@@ -68,7 +68,9 @@
                   color="primary"
                   @click="
                     $refs.dialog_start.save(input.date_start),
-                      getTotalProduction()
+                      getTotalProduction(),
+                      getTotalFisher(),
+                      getTotalBuyer()
                   "
                 >
                   OK
@@ -111,7 +113,10 @@
                   text
                   color="primary"
                   @click="
-                    $refs.dialog_end.save(input.date_end), getTotalProduction()
+                    $refs.dialog_end.save(input.date_end),
+                      getTotalFisher(),
+                      getTotalProduction(),
+                      getTotalBuyer()
                   "
                 >
                   OK
@@ -142,7 +147,7 @@
               >
               <br />
               <v-list-item-title class="font-weight-black">{{
-                this.total_production
+                this.total_production + " Kg"
               }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -186,9 +191,9 @@
                 >Jumlah Nelayan</v-list-item-subtitle
               >
               <br />
-              <v-list-item-title class="font-weight-black"
-                >100 orang</v-list-item-title
-              >
+              <v-list-item-title class="font-weight-black">{{
+                this.total_fisher + " orang"
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -211,9 +216,9 @@
                 >Jumlah Pembeli</v-list-item-subtitle
               >
               <br />
-              <v-list-item-title class="font-weight-black"
-                >77 Orang</v-list-item-title
-              >
+              <v-list-item-title class="font-weight-black">{{
+                this.total_buyer + " orang"
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -285,9 +290,10 @@ export default {
       date_start: new Date().toISOString().substr(0, 10),
       date_end: new Date().toISOString().substr(0, 10)
     },
-    total_production: null,
+    total_production: "",
+    total_fisher: "",
+    total_buyer: "",
     date_max: new Date().toISOString().substr(0, 10),
-    //total_production: null,
     //end date
     search: "",
     headers: [
@@ -355,6 +361,8 @@ export default {
 
   mounted() {
     this.getTotalProduction();
+    this.getTotalFisher();
+    this.getTotalBuyer();
   },
 
   computed: {
@@ -372,6 +380,28 @@ export default {
         this.total_production = await this.$api(
           "caught",
           "total_production",
+          this.input
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getTotalFisher() {
+      try {
+        this.total_fisher = await this.$api(
+          "caught",
+          "total_fisher",
+          this.input
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getTotalBuyer() {
+      try {
+        this.total_buyer = await this.$api(
+          "transaction",
+          "total_buyer",
           this.input
         );
       } catch (e) {

@@ -49,6 +49,8 @@ export default ({ app }, inject) => {
             return Caught.update(data, other);
           case "total_production":
             return Caught.total_production(data, other);
+          case "total_fisher":
+            return Caught.total_fisher(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -87,6 +89,8 @@ export default ({ app }, inject) => {
             return Transaction.get_by_id(data, other);
           case "update":
             return Transaction.update(data, other);
+          case "total_buyer":
+            return Transaction.total_buyer(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -264,6 +268,24 @@ export default ({ app }, inject) => {
         .catch(error => {
           throw error.response;
         });
+    },
+    total_fisher(data) {
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/caught_fish/total_fisher?from=" +
+            data.date_start +
+            "&to=" +
+            data.date_end
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     }
   };
 
@@ -417,6 +439,24 @@ export default ({ app }, inject) => {
           method: "put",
           url: "/transaction/" + data.id,
           data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    total_buyer(data) {
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/transaction/total_buyer?from=" +
+            data.date_start +
+            "&to=" +
+            data.date_end
         })
         .then(response => {
           console.log(response);
