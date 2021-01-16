@@ -21,44 +21,35 @@
           single-line
           hide-details
         ></v-text-field>
-
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline"
-              >Anda yakin ingin menghapus data ini?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteAuction">Hapus</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-toolbar>
     </template>
+
     <template v-slot:item.created_at="{ item }">
-      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+      <span
+        >{{
+          new Date(item.created_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.created_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
     </template>
     <template v-slot:item.weightunit="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
     </template>
     <template v-slot:item.action="{ item }">
       <v-btn
-        x-small
+        small
+        block
         color="secondary"
-        depressed
-        :to="'/pelelangan/edit/' + item.id"
+        :to="'/transaksi/formTransaksi/' + item.id"
       >
-        Edit
-      </v-btn>
-      <v-btn
-        x-small
-        color="error"
-        depressed
-        @click="popupDialogDelete(item.id)"
-      >
-        Hapus
+        Jual
       </v-btn>
     </template>
   </v-data-table>
@@ -76,7 +67,7 @@ export default {
         sortable: false,
         value: "id"
       },
-      { text: "Tanggal", value: "created_at" },
+      { text: "Waktu", value: "created_at" },
       { text: "Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weightunit" },

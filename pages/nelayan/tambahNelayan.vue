@@ -1,29 +1,60 @@
 <template>
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
-      <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendaftaran Nelayan</v-toolbar-title>
-      </v-toolbar>
-      <v-spacer></v-spacer>
+      <v-card color="secondary" dark elevation="0">
+        <v-card-title class="mb-1">Pendataan Nelayan</v-card-title>
+      </v-card>
       <v-card-text>
         <v-form ref="form">
+          <h3 class="mb-3 mt-2 primary--text">
+            NIK Nelayan / Nahkoda
+          </h3>
           <v-text-field
             outlined
-            label="NIK Nelayan"
+            single-line
+            label="NIK Nelayan / Nahkoda"
             :rules="required"
             v-model="input.nik"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Lengkap Nelayan / Nahkoda
+          </h3>
           <v-text-field
             outlined
-            label="Nama"
+            single-line
+            label="Nama Lengkap Nelayan / Nahkoda"
             :rules="required"
             v-model="input.name"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            Alamat
+          </h3>
           <v-text-field
             outlined
+            single-line
             label="Alamat"
             :rules="required"
             v-model="input.address"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Jenis Kapal
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Jenis Kapal"
+            :rules="required"
+            v-model="input.ship_type"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Jumlah Anak Buah Kapal (ABK)
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Jumlah Anak Buah Kapal (ABK)"
+            :rules="required"
+            v-model="input.abk_total"
           />
         </v-form>
       </v-card-text>
@@ -51,7 +82,9 @@ export default {
     input: {
       nik: null,
       name: null,
-      address: null
+      address: null,
+      ship_type: null,
+      abk_total: null
     }
   }),
   methods: {

@@ -33,10 +33,12 @@
       </v-toolbar>
       <template>
         <v-text-field
-          class="px-5 mb-5"
+          outlined
+          dense
+          class="mt-2 px-5 mb-5 rounded-xl"
           v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
+          prepend-inner-icon="mdi-magnify"
+          label="Cari"
           single-line
           hide-details
         ></v-text-field>
@@ -77,7 +79,8 @@ export default {
       },
       { text: "Nama", value: "name" },
       { text: "Alamat", value: "address" },
-      { text: "Actions", value: "id", sortable: false }
+      { text: "Penanggung Jawab", value: "user_id" },
+      { text: "Aksi", value: "id", sortable: false }
     ],
     buyer: []
   }),

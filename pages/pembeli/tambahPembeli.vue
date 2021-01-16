@@ -2,25 +2,37 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendaftaran Pembeli</v-toolbar-title>
+        <v-toolbar-title>Pendataan Pembeli</v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
         <v-form ref="form">
+          <h3 class="mb-3 mt-2 primary--text">
+            NIK Pembeli
+          </h3>
           <v-text-field
             outlined
+            single-line
             label="NIK Pembeli"
             :rules="required"
             v-model="input.nik"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Pembeli
+          </h3>
           <v-text-field
             outlined
-            label="Nama"
+            single-line
+            label="Nama Pembeli"
             :rules="required"
             v-model="input.name"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            Alamat
+          </h3>
           <v-text-field
             outlined
+            single-line
             label="Alamat"
             :rules="required"
             v-model="input.address"

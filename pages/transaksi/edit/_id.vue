@@ -1,28 +1,36 @@
 <template>
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
-      <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Edit Transaksi </v-toolbar-title>
-      </v-toolbar>
+      <v-card color="secondary" dark elevation="0">
+        <v-card-title class="mb-1">Edit Transaksi</v-card-title>
+      </v-card>
       <v-spacer></v-spacer>
       <v-card-text>
         <v-form ref="form">
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Pembeli
+          </h3>
           <v-autocomplete
             outlined
-            label="NIK Pembeli"
+            single-line
+            label="Nama Pembeli"
             :rules="required"
             v-model="input.buyer_id"
             :items="buyer"
             clearable
-            item-text="nik"
+            item-text="name"
             item-value="id"
           >
             <template v-slot:selection="{ item }">{{
-              item.nik + " - " + item.name
+              item.name + " - " + item.nik
             }}</template></v-autocomplete
           >
+          <h3 class="mb-3 mt-2 primary--text">
+            No. Pelelangan
+          </h3>
           <v-autocomplete
             outlined
+            single-line
             label="No. Pelelangan"
             :rules="required"
             v-model="input.auction_id"
@@ -40,14 +48,23 @@
                 item.weight_unit
             }}</template></v-autocomplete
           >
+          <h3 class="mb-3 mt-2 primary--text">
+            Total Harga
+          </h3>
           <v-text-field
             outlined
-            label="Total Harga (Rp)"
+            single-line
+            prefix="Rp"
+            label="Total Harga"
             :rules="required"
             v-model="input.price"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            Daerah Penjualan Ikan
+          </h3>
           <v-text-field
             outlined
+            single-line
             label="Daerah Penjualan Ikan"
             :rules="required"
             v-model="input.distribution_area"

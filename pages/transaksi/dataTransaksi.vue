@@ -36,7 +36,19 @@
       </v-toolbar>
     </template>
     <template v-slot:item.created_at="{ item }">
-      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
+      <span
+        >{{
+          new Date(item.created_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.created_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
     </template>
     <template v-slot:item.price="{ item }">
       <span> Rp{{ item.price }}</span>
@@ -78,14 +90,14 @@ export default {
         sortable: false,
         value: "id"
       },
-      { text: "Tanggal", value: "created_at" },
+      { text: "Waktu", value: "created_at" },
       { text: "Nama Pembeli", value: "buyer_name" },
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weightunit" },
       { text: "Total Harga", value: "price" },
       { text: "Daerah Penjualan", value: "distribution_area" },
-      { text: "Actions", value: "action", sortable: false }
+      { text: "Aksi", value: "action", sortable: false }
     ],
     transaction: []
   }),
