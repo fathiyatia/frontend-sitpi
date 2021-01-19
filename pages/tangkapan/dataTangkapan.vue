@@ -5,15 +5,10 @@
     :search="search"
     sort-by="created_at"
     sort-desc
-    class="elevation-1"
+    class="elevation-1 px-3"
   >
     <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title class="accent--text"
-          >Data Tangkapan Ikan</v-toolbar-title
-        >
-        <v-spacer></v-spacer>
-
+      <!---
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -21,21 +16,85 @@
           single-line
           hide-details
         ></v-text-field>
+        --->
+      <v-row class="mx-0 px-4 pt-6">
+        <h2 class="accent--text">Data Tangkapan Ikan</h2>
+      </v-row>
+      <v-row class="mx-0 px-4 pt-2 pb-6"
+        ><span>
+          Data tangkapan ikan yang didaratkan di
+          <span class="primary--text font-weight-bold">TPI xxx </span> pada
+          tanggal
 
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline"
-              >Anda yakin ingin menghapus data ini?</v-card-title
+          <span class="primary--text font-weight-bold">{{
+            new Date().toLocaleDateString()
+          }}</span>
+        </span>
+      </v-row>
+
+      <v-card
+        elevation="0"
+        rounded
+        class="mx-3 px-4 pt-5 mb-6 rounded-lg"
+        color="#C5DEF0"
+      >
+        <span class="primary--text font-weight-bold">
+          <v-icon medium color="primary">mdi-magnify</v-icon> Cari
+        </span>
+        <v-row>
+          <v-col>
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="Nama Nelayan"
+              v-model="input.fisherid"
+              :items="fisher"
+              clearable
+              item-text="name"
+              item-value="id"
             >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteCaught">Hapus</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
+          </v-col>
+
+          <v-col>
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="Jenis Ikan"
+              v-model="input.fish"
+              :items="fishtype"
+              clearable
+              item-text="name"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
+          </v-col>
+        </v-row>
+      </v-card>
+
+      <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-card>
+          <v-card-title class="headline"
+            >Anda yakin ingin menghapus data ini?</v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+            <v-btn color="error" text @click="deleteCaught">Hapus</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </template>
     <template v-slot:item.created_at="{ item }">
       <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
@@ -73,6 +132,10 @@ export default {
     unittype: ["Kg", "Kwintal", "Ton"],
     dialogDelete: false,
     search: "",
+    input: {
+      fisherid: null,
+      fish: null
+    },
     headers: [
       {
         text: "NIK Nelayan",
@@ -81,13 +144,15 @@ export default {
         value: "fisher_nik"
       },
       { text: "Nama Nelayan", value: "fisher_name" },
-      { text: "Tanggal", value: "created_at" },
-      { text: "Jenis Ikan", value: "fish_type" },
-      { text: "Berat", value: "weightunit" },
+      { text: "Jumlah Hari Trip", value: "created_at" },
       { text: "Alat Tangkap", value: "fishing_gear" },
       { text: "Daerah Tangkapan", value: "fishing_area" },
-      { text: "Actions", value: "id", sortable: false }
+      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Berat", value: "weightunit" },
+      { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
+    fisher: [],
+    fishtype: [],
     caughtfish: []
   }),
 
@@ -102,6 +167,8 @@ export default {
 
   mounted() {
     this.getAllCaught();
+    this.getAllFish();
+    this.getAllFisher();
   },
 
   methods: {
@@ -132,6 +199,20 @@ export default {
     async getAllCaught() {
       try {
         this.caughtfish = await this.$api("caught", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFish() {
+      try {
+        this.fishtype = await this.$api("fish", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFisher() {
+      try {
+        this.fisher = await this.$api("fisher", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

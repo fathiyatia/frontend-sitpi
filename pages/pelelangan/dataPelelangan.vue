@@ -5,23 +5,105 @@
     :search="search"
     sort-by="created_at"
     sort-desc
-    class="elevation-1"
+    class="elevation-1 px-3"
   >
     <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title class="accent--text"
-          >Data Pelelangan Ikan</v-toolbar-title
-        >
-        <v-spacer></v-spacer>
+      <v-row class="mx-0 px-4 pt-6">
+        <h2 class="accent--text">Data Pelelangan</h2>
+      </v-row>
+      <v-row class="mx-0 px-4 pt-2 pb-6"
+        ><span>
+          Data ikan yang sedang dilelang atau sudah terjual di
+          <span class="primary--text font-weight-bold">TPI xxx </span> pada
+          tanggal
 
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-toolbar>
+          <span class="primary--text font-weight-bold">{{
+            new Date().toLocaleDateString()
+          }}</span>
+        </span>
+      </v-row>
+
+      <v-card
+        elevation="0"
+        rounded
+        class="mx-3 px-4 pt-5 mb-6 rounded-lg"
+        color="#C5DEF0"
+      >
+        <span class="primary--text font-weight-bold">
+          <v-icon medium color="primary">mdi-magnify</v-icon> Cari
+        </span>
+        <v-row>
+          <v-col>
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="No. Pelelangan"
+              v-model="input.auction"
+              :items="auction"
+              clearable
+              item-text="id"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.id
+              }}</template></v-autocomplete
+            >
+          </v-col>
+          <v-col>
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="Nama Nelayan"
+              v-model="input.fisherid"
+              :items="fisher"
+              clearable
+              item-text="name"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
+          </v-col>
+
+          <v-col>
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="Jenis Ikan"
+              v-model="input.fish"
+              :items="fishtype"
+              clearable
+              item-text="name"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
+          </v-col>
+          <v-col>
+            <v-select
+              :items="status"
+              item-text="status"
+              item-value="id"
+              label="Status Pelelangan"
+              solo
+              dense
+              block
+              single-line
+              clearable
+              v-model="input.status"
+            ></v-select>
+          </v-col>
+        </v-row>
+      </v-card>
     </template>
 
     <template v-slot:item.created_at="{ item }">
@@ -48,6 +130,7 @@
         block
         color="secondary"
         :to="'/transaksi/formTransaksi/' + item.id"
+        :disabled="isDisabled(item.status_name)"
       >
         Jual
       </v-btn>
@@ -60,6 +143,16 @@ export default {
   data: () => ({
     dialogDelete: false,
     search: "",
+    disabled: 1,
+    status: [
+      { status: "Belum Terjual", id: "1" },
+      { status: "Sudah Terjual", id: "2" }
+    ],
+    input: {
+      fisherid: null,
+      fish: null,
+      auction: null
+    },
     headers: [
       {
         text: "No. Pelelangan",
@@ -72,9 +165,12 @@ export default {
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weightunit" },
       { text: "Status Pelelangan", value: "status_name" },
-      { text: "Actions", value: "action", sortable: false }
+      { text: "Aksi", value: "action", sortable: false }
     ],
-    auction: []
+    auction: [],
+    auction_id: [],
+    fisher: [],
+    fishtype: []
   }),
 
   watch: {
@@ -88,9 +184,16 @@ export default {
 
   mounted() {
     this.getAllAuction();
+    this.getAllFish();
+    this.getAllFisher();
   },
 
   methods: {
+    isDisabled(status) {
+      if (status == "Sudah Terjual") {
+        return true;
+      }
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
@@ -118,6 +221,20 @@ export default {
     async getAllAuction() {
       try {
         this.auction = await this.$api("auction", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFish() {
+      try {
+        this.fishtype = await this.$api("fish", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFisher() {
+      try {
+        this.fisher = await this.$api("fisher", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

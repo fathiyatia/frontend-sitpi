@@ -9,7 +9,7 @@
         >
       </v-card>
 
-      <v-card color="#F2F2F2" class="rounded-0 mx-3 mt-5" elevation="0">
+      <v-card color="#DEDEDE" class="rounded-0 mx-3 mt-5" elevation="0">
         <v-row no-gutters class="mx-5">
           <v-col>
             <h4 class="accent--text mt-3 ">
@@ -72,7 +72,7 @@
         </v-row>
       </v-card>
       <v-card-text>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
             Nama Pembeli
           </h3>
@@ -87,13 +87,14 @@
             item-text="name"
             item-value="id"
           >
-            <template v-slot:selection="{ item }">{{
-              item.name + " - " + item.nik
-            }}</template></v-autocomplete
-          >
+          </v-autocomplete>
           <h3 class="mb-3 mt-2 primary--text">
             Total Harga
+            <span class="accent--text font-weight-regular">{{
+              this.input.price
+            }}</span>
           </h3>
+
           <v-text-field
             outlined
             single-line
@@ -103,6 +104,7 @@
             :rules="required"
             v-model="input.price"
           />
+
           <h3 class="mb-3 mt-2 primary--text">
             Daerah Penjualan Ikan
           </h3>
@@ -134,10 +136,33 @@
 </template>
 <script>
 export default {
+  filters: {
+    currencyFormat(value) {
+      if (value != null) {
+        const minus = Number(value) < 0;
+        if (value.toString().split(".").length > 2) return " :  Rp";
+        else if (value.toString().split(".").length > 1) {
+          value = value.toString().split(".");
+          value = value[0];
+        }
+        try {
+          const result = value
+            .toString()
+            .match(/\d{1,3}(?=(\d{3})*$)/g)
+            .join(".");
+          return " : Rp" + (minus === true ? " :  -" : "") + result;
+        } catch (error) {
+          return "";
+        }
+      }
+    }
+  },
   data: () => ({
+    valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     buyer: [],
     auction: [],
+    price: null,
     input: {
       auction_id: null,
       buyer_id: null,
@@ -153,6 +178,10 @@ export default {
   },
 
   methods: {
+    handlePrice(input) {
+      this.input.price = "Rp" + this.input.price;
+      return this.input.price;
+    },
     reset() {
       this.$refs.form.reset();
     },
@@ -185,17 +214,19 @@ export default {
       }
     },
     async storeTransaction() {
-      try {
-        const result = await this.$api(
-          "transaction",
-          "store",
-          this.input
-        ).finally(response => {
-          this.$router.push("/transaksi/dataTransaksi");
-          return response;
-        });
-      } catch (e) {
-        console.log(e);
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api(
+            "transaction",
+            "store",
+            this.input
+          ).finally(response => {
+            this.$router.push("/transaksi/dataTransaksi");
+            return response;
+          });
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }

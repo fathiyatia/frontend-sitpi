@@ -1,33 +1,81 @@
 <template>
   <v-container>
     <v-card tile elevation="4" class="rounded-lg front-card">
-      <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Edit Tangkapan Ikan</v-toolbar-title>
-      </v-toolbar>
-      <v-spacer></v-spacer>
+      <v-card color="secondary" dark elevation="0">
+        <v-card-title class="mb-1">Edit Tangkapan Ikan</v-card-title>
+      </v-card>
       <v-card-text>
         <v-form ref="form">
-          <h3 class="accent--text">Identitas Nelayan</h3>
-          <br />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Nelayan / Nahkoda
+          </h3>
           <v-autocomplete
             outlined
-            label="NIK Nelayan"
+            single-line
+            label="Nama Nelayan / Nahkoda"
             :rules="required"
             v-model="input.fisher_id"
             :items="fisher"
             clearable
-            item-text="nik"
+            item-text="name"
             item-value="id"
           >
             <template v-slot:selection="{ item }">{{
-              item.nik + " - " + item.name
+              item.name + " - " + item.nik
+            }}</template></v-autocomplete
+          >
+          <h3 class="mb-3 primary--text">
+            Jumlah Hari Trip
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Jumlah Hari Trip"
+            v-model="input.trip_day"
+          />
+          <h3 class="mb-3 primary--text">
+            Jenis Alat Tangkap
+          </h3>
+          <v-autocomplete
+            outlined
+            single-line
+            label="Jenis Alat Tangkap"
+            :rules="required"
+            v-model="input.fishing_gear_id"
+            :items="fishinggear"
+            clearable
+            item-text="name"
+            item-value="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.name
+            }}</template></v-autocomplete
+          >
+          <h3 class="mb-3 primary--text">
+            Daerah Tangkapan
+          </h3>
+          <v-autocomplete
+            outlined
+            single-line
+            label="Daerah Tangkapan"
+            :rules="required"
+            v-model="input.fishing_area"
+            :items="fishinggear"
+            clearable
+            item-text="name"
+            item-value="id"
+          >
+            <template v-slot:selection="{ item }">{{
+              item.name
             }}</template></v-autocomplete
           >
           <template>
-            <h3 class="accent--text">Hasil Tangkapan</h3>
-            <br />
+            <h3 class="mb-3 primary--text">
+              Jenis Ikan
+            </h3>
             <v-autocomplete
               outlined
+              single-line
               label="Jenis Ikan"
               :rules="required"
               v-model="input.fish_type_id"
@@ -42,49 +90,33 @@
             >
             <v-row>
               <v-col md="6">
+                <h3 class="mb-3 primary--text">
+                  Berat
+                </h3>
                 <v-text-field
                   outlined
+                  single-line
                   label="Berat"
                   type="number"
                   v-model="input.weight"
                 />
               </v-col>
               <v-col md="6">
-                <v-autocomplete
-                  outlined
-                  label="Satuan"
+                <h3 class="mb-3 primary--text">
+                  Satuan
+                </h3>
+                <v-radio-group
+                  v-model="input.unit"
                   :rules="required"
-                  v-model="input.weight_unit_id"
-                  :items="weightunit"
-                  clearable
-                  item-text="unit"
-                  item-value="id"
+                  row
+                  class="check"
                 >
-                  <template v-slot:selection="{ item }">{{
-                    item.unit
-                  }}</template></v-autocomplete
-                >
+                  <v-radio label="Kg" value="Kg"></v-radio>
+                  <v-radio label="Kwintal" value="Kwintal"></v-radio>
+                  <v-radio label="Ton" value="Ton"></v-radio>
+                </v-radio-group>
               </v-col>
             </v-row>
-            <v-autocomplete
-              outlined
-              label="Alat Tangkap"
-              :rules="required"
-              v-model="input.fishing_gear_id"
-              :items="fishinggear"
-              clearable
-              item-text="name"
-              item-value="id"
-            >
-              <template v-slot:selection="{ item }">{{
-                item.name
-              }}</template></v-autocomplete
-            >
-            <v-text-field
-              outlined
-              label="Daerah Tangkapan"
-              v-model="input.fishing_area"
-            />
           </template>
         </v-form>
       </v-card-text>
@@ -114,6 +146,7 @@ export default {
     fisher: [],
     input: {
       fisher_id: null,
+      trip_day: null,
       fish_type_id: null,
       fishing_gear_id: null,
       fishing_area: null,
@@ -134,7 +167,6 @@ export default {
       this.$refs.form.reset();
     },
     async getById() {
-      console.log("Masuk");
       try {
         this.input = await this.$api(
           "caught",

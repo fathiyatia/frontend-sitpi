@@ -5,17 +5,18 @@
     :search="search"
     sort-by="created_at"
     sort-desc
-    class="elevation-1"
+    class="elevation-1 px-3"
   >
     <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>Data Alat Tangkap</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <template>
-          <v-btn small color="success" @click="popupDialogTambah()">
+      <v-row class="mx-0  pt-6">
+        <v-col cols="12" lg="9" md="9">
+          <h2 class="accent--text">Data Alat Tangkap</h2>
+        </v-col>
+        <v-col lg="3" md="3">
+          <v-btn block small color="success" @click="popupDialogTambah()">
             + Tambah Alat Tangkap
           </v-btn>
-        </template>
+        </v-col>
 
         <!--Dialog Tambah--->
         <v-dialog v-model="dialogTambah" persistent max-width="600px">
@@ -87,12 +88,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-      </v-toolbar>
+      </v-row>
+
       <template>
         <v-text-field
           outlined
           dense
-          class="mt-2 px-5 mb-5 rounded-xl"
+          class="mt-2 px-2 mb-5 rounded-xl"
           v-model="search"
           prepend-inner-icon="mdi-magnify"
           label="Cari"
@@ -120,6 +122,8 @@
 <script>
 export default {
   data: () => ({
+    valid: true,
+    required: [v => !!v || "Data ini harus diisi"],
     dialogDelete: false,
     dialogTambah: false,
     dialogEdit: false,

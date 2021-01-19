@@ -5,7 +5,7 @@
         <v-card-title class="mb-1">Pendataan Nelayan</v-card-title>
       </v-card>
       <v-card-text>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
             NIK Nelayan / Nahkoda
           </h3>
@@ -78,6 +78,7 @@
 <script>
 export default {
   data: () => ({
+    valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       nik: null,
@@ -92,15 +93,17 @@ export default {
       this.$refs.form.reset();
     },
     async storeFisher() {
-      try {
-        const result = await this.$api("fisher", "store", this.input).finally(
-          response => {
-            this.$router.push("/nelayan/dataNelayan");
-            return response;
-          }
-        );
-      } catch (e) {
-        console.log(e);
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api("fisher", "store", this.input).finally(
+            response => {
+              this.$router.push("/nelayan/dataNelayan");
+              return response;
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }

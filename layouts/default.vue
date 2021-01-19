@@ -7,11 +7,14 @@
       :clipped="clipped"
       fixed
       app
+      width="260"
       ><v-container>
-        <v-row>
-          <v-col cols="4"> </v-col>
+        <v-row no-gutters class="pt-4">
+          <v-col cols="4">
+            <v-avatar color="secondary" size="36"> </v-avatar>
+          </v-col>
           <v-col cols="8" class="white--text">
-            <h3>SITPI</h3>
+            <h3 class="pt-1">SITPI</h3>
           </v-col>
         </v-row>
       </v-container>
@@ -28,14 +31,13 @@
             <v-list-item-action>
               <v-icon color="white">{{ item.icon }}</v-icon>
             </v-list-item-action>
-            <v-list-item-content class="white--text">
-              <v-list-item-title v-text="item.title" />
+            <v-list-item-content>
+              <v-list-item-title class="white--text" v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-      </v-list>
-      <v-divider class="mx-4" color="white"></v-divider>
-      <v-list>
+        <v-divider class="mx-3 mb-2" color="white"></v-divider>
+        <span class="ml-3 caption white--text">Sebelum Lelang </span>
         <v-list-item-group color="white">
           <v-list-item
             v-for="(item, i) in before"
@@ -52,9 +54,8 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-      </v-list>
-      <v-divider class="mx-4" color="white"></v-divider>
-      <v-list>
+        <v-divider class="mx-3 mb-2" color="white"></v-divider>
+        <span class="ml-3 caption white--text">Sesudah Lelang</span>
         <v-list-item-group color="white">
           <v-list-item
             v-for="(item, i) in after"
@@ -71,9 +72,8 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-      </v-list>
-      <v-divider class="mx-4" color="white"></v-divider>
-      <v-list>
+        <v-divider class="mx-3 mb-2" color="white"></v-divider>
+        <span class="ml-3 caption white--text">Pendataan</span>
         <v-list-item-group color="white">
           <v-list-item
             v-for="(item, i) in data"
@@ -102,8 +102,7 @@
         <nuxt />
       </v-container>
     </v-main>
-
-    <v-footer :absolute="fixed" app>
+    <v-footer :absolute="fixed">
       <span>&copy; {{ new Date().getFullYear() }} </span>
     </v-footer>
   </v-app>
@@ -124,7 +123,7 @@ export default {
       ],
       before: [
         {
-          icon: "mdi-fish",
+          icon: "mdi-clipboard-edit",
           title: "Form Tangkapan Ikan",
           to: "/tangkapan/formTangkapan"
         },
@@ -149,21 +148,21 @@ export default {
       data: [
         {
           icon: "mdi-sail-boat",
-          title: "Data Nelayan",
+          title: "Nelayan",
           to: "/nelayan/dataNelayan"
         },
         {
           icon: "mdi-account",
-          title: "Data Pembeli",
+          title: "Pembeli",
           to: "/pembeli/dataPembeli"
         },
         {
-          icon: "mdi-cog",
+          icon: "mdi-map-marker",
           title: "Daerah Tangkapan",
           to: "/daerah/dataDaerah"
         },
         {
-          icon: "mdi-cog",
+          icon: "mdi-hook",
           title: "Alat Tangkap",
           to: "/alat/dataAlat"
         }

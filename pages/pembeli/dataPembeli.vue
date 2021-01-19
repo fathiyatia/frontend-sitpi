@@ -5,17 +5,18 @@
     :search="search"
     sort-by="created_at"
     sort-desc
-    class="elevation-1"
+    class="elevation-1 px-3"
   >
     <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>Data Pembeli</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <template>
-          <v-btn small color="success" :to="'/pembeli/tambahPembeli'">
+      <v-row class="mx-0 pt-6">
+        <v-col cols="12" lg="9" md="9">
+          <h2 class="accent--text">Data Pembeli</h2>
+        </v-col>
+        <v-col lg="3" md="3">
+          <v-btn small block color="success" :to="'/pembeli/tambahPembeli'">
             + Tambah Pembeli
           </v-btn>
-        </template>
+        </v-col>
 
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -30,12 +31,12 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-      </v-toolbar>
+      </v-row>
       <template>
         <v-text-field
           outlined
           dense
-          class="mt-2 px-5 mb-5 rounded-xl"
+          class="mt-2 px-2 mb-5 rounded-xl"
           v-model="search"
           prepend-inner-icon="mdi-magnify"
           label="Cari"

@@ -6,7 +6,7 @@
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
             NIK Pembeli
           </h3>
@@ -59,6 +59,7 @@
 <script>
 export default {
   data: () => ({
+    valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       nik: null,
@@ -71,15 +72,17 @@ export default {
       this.$refs.form.reset();
     },
     async storeBuyer() {
-      try {
-        const result = await this.$api("buyer", "store", this.input).finally(
-          response => {
-            this.$router.push("/pembeli/dataPembeli");
-            return response;
-          }
-        );
-      } catch (e) {
-        console.log(e);
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api("buyer", "store", this.input).finally(
+            response => {
+              this.$router.push("/pembeli/dataPembeli");
+              return response;
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }
