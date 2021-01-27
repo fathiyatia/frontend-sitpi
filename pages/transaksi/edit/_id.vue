@@ -25,6 +25,7 @@
               item.name + " - " + item.nik
             }}</template></v-autocomplete
           >
+          <!---------
           <h3 class="mb-3 mt-2 primary--text">
             No. Pelelangan
           </h3>
@@ -48,6 +49,7 @@
                 item.weight_unit
             }}</template></v-autocomplete
           >
+          ----->
           <h3 class="mb-3 mt-2 primary--text">
             Total Harga
           </h3>
@@ -96,7 +98,7 @@ export default {
     auction: [],
     input: {
       buyer_id: null,
-      auction_id: null,
+      //auction_id: null,
       distribution_area: null,
       weight_unit: null,
       price: null
@@ -135,12 +137,13 @@ export default {
             await this.getById();
           }
         );
-        this.auction.push({
+        /*this.auction.push({
           id: this.input.auction_id,
           fish_type: this.input.fish_type,
           weight: this.input.weight,
           weight_unit: this.input.weight_unit
         });
+        */
       } catch (e) {
         console.log(e);
       }

@@ -53,6 +53,7 @@
             outlined
             single-line
             label="Jumlah Anak Buah Kapal (ABK)"
+            type="number"
             :rules="required"
             v-model="input.abk_total"
           />

@@ -29,11 +29,11 @@
         class="mx-3 px-4 pt-5 mb-6 rounded-lg"
         color="#C5DEF0"
       >
-        <span class="primary--text font-weight-bold">
+        <span class="px-2 primary--text font-weight-bold">
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
-        <v-row>
-          <v-col>
+        <v-row no-gutters class="pt-3">
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -41,6 +41,7 @@
               single-line
               label="No. Pelelangan"
               v-model="input.auction"
+              @change="getAllAuction()"
               :items="auction"
               clearable
               item-text="id"
@@ -51,7 +52,7 @@
               }}</template></v-autocomplete
             >
           </v-col>
-          <v-col>
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -59,6 +60,7 @@
               single-line
               label="Nama Nelayan"
               v-model="input.fisherid"
+              @change="getAllAuction()"
               :items="fisher"
               clearable
               item-text="name"
@@ -70,7 +72,7 @@
             >
           </v-col>
 
-          <v-col>
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -78,6 +80,7 @@
               single-line
               label="Jenis Ikan"
               v-model="input.fish"
+              @change="getAllAuction()"
               :items="fishtype"
               clearable
               item-text="name"
@@ -88,7 +91,7 @@
               }}</template></v-autocomplete
             >
           </v-col>
-          <v-col>
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-select
               :items="status"
               item-text="status"
@@ -100,6 +103,7 @@
               single-line
               clearable
               v-model="input.status"
+              @change="getAllAuction()"
             ></v-select>
           </v-col>
         </v-row>
@@ -149,9 +153,10 @@ export default {
       { status: "Sudah Terjual", id: "2" }
     ],
     input: {
-      fisherid: null,
-      fish: null,
-      auction: null
+      auction: "0",
+      fisherid: "0",
+      fish: "0",
+      status: "0"
     },
     headers: [
       {
@@ -220,7 +225,7 @@ export default {
 
     async getAllAuction() {
       try {
-        this.auction = await this.$api("auction", "index", null);
+        this.auction = await this.$api("auction", "index", this.input);
       } catch (e) {
         console.log(e);
       }

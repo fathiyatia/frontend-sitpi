@@ -29,11 +29,11 @@
         class="mx-3 px-4 pt-5 mb-6 rounded-lg"
         color="#C5DEF0"
       >
-        <span class="primary--text font-weight-bold">
+        <span class="px-2 primary--text font-weight-bold">
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
-        <v-row>
-          <v-col>
+        <v-row no-gutters class="pt-3">
+          <v-col cols="12" lg="6" md="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -45,6 +45,7 @@
               clearable
               item-text="name"
               item-value="id"
+              @change="getAllTransaction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -52,7 +53,7 @@
             >
           </v-col>
 
-          <v-col>
+          <v-col lg="6" md="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -64,6 +65,7 @@
               clearable
               item-text="name"
               item-value="id"
+              @change="getAllTransaction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -72,6 +74,19 @@
           </v-col>
         </v-row>
       </v-card>
+      <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-card>
+          <v-card-title class="headline"
+            >Anda yakin ingin menghapus data ini?</v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+            <v-btn color="error" text @click="deleteTransaction">Hapus</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </template>
     <template v-slot:item.created_at="{ item }">
       <span
@@ -120,20 +135,22 @@
 export default {
   filters: {
     currencyFormat(value) {
-      const minus = Number(value) < 0;
-      if (value.toString().split(".").length > 2) return "Rp ~";
-      else if (value.toString().split(".").length > 1) {
-        value = value.toString().split(".");
-        value = value[0];
-      }
-      try {
-        const result = value
-          .toString()
-          .match(/\d{1,3}(?=(\d{3})*$)/g)
-          .join(".");
-        return "Rp" + (minus === true ? " -" : "") + result;
-      } catch (error) {
-        return "Rp ~";
+      if (value != null) {
+        const minus = Number(value) < 0;
+        if (value.toString().split(".").length > 2) return "Rp ~";
+        else if (value.toString().split(".").length > 1) {
+          value = value.toString().split(".");
+          value = value[0];
+        }
+        try {
+          const result = value
+            .toString()
+            .match(/\d{1,3}(?=(\d{3})*$)/g)
+            .join(".");
+          return "Rp" + (minus === true ? " -" : "") + result;
+        } catch (error) {
+          return "Rp ~";
+        }
       }
     }
   },
@@ -141,8 +158,8 @@ export default {
     dialogDelete: false,
     search: "",
     input: {
-      buyerid: null,
-      fish: null
+      buyerid: "0",
+      fish: "0"
     },
     headers: [
       {
@@ -158,7 +175,7 @@ export default {
       { text: "Berat", value: "weightunit" },
       { text: "Total Harga", value: "price" },
       { text: "Daerah Penjualan", value: "distribution_area" },
-      { text: "Aksi", value: "action", sortable: false }
+      { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
     buyer: [],
     fishtype: [],
@@ -207,7 +224,7 @@ export default {
 
     async getAllTransaction() {
       try {
-        this.transaction = await this.$api("transaction", "index", null);
+        this.transaction = await this.$api("transaction", "index", this.input);
       } catch (e) {
         console.log(e);
       }

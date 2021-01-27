@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="buyer"
+    :items="gear"
     :search="search"
     sort-by="created_at"
     sort-desc
@@ -29,6 +29,7 @@
                 <v-row>
                   <v-text-field
                     label="Nama Alat Tangkap"
+                    v-model="input.name"
                     required
                   ></v-text-field>
                 </v-row>
@@ -39,7 +40,7 @@
               <v-btn color="accent" text @click="closeTambah">
                 Batal
               </v-btn>
-              <v-btn color="primary" text @click="closeTambah">
+              <v-btn color="primary" text @click="storeGear">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -50,7 +51,7 @@
         <v-dialog v-model="dialogEdit" persistent max-width="600px">
           <v-card>
             <v-card-title>
-              <span class="headline">Edit Alat Tangkap</span>
+              <span class="headline">Edit Alat Tangkap </span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -58,7 +59,7 @@
                   <v-text-field
                     label="Nama Alat Tangkap"
                     required
-                    v-model="input.name"
+                    v-model="inputedit.name"
                   ></v-text-field>
                 </v-row>
               </v-container>
@@ -68,7 +69,7 @@
               <v-btn color="accent" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn color="primary" text @click="closeEdit">
+              <v-btn color="primary" text @click="updateGear()">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -104,7 +105,7 @@
       </template>
     </template>
     <template v-slot:item.id="{ item }">
-      <v-btn x-small color="secondary" depressed @click="popupDialogEdit()">
+      <v-btn x-small color="secondary" depressed @click="getById(item.id)">
         Edit
       </v-btn>
       <v-btn
@@ -140,8 +141,10 @@ export default {
     input: {
       name: null
     },
-    gear: [],
-    buyer: []
+    inputedit: {
+      name: null
+    },
+    gear: []
   }),
 
   watch: {
@@ -172,8 +175,10 @@ export default {
     popupDialogTambah() {
       this.dialogTambah = true;
     },
-    popupDialogEdit() {
+
+    popupDialogEdit(id) {
       this.dialogEdit = true;
+      this.currentId = id;
     },
 
     closeDelete() {
@@ -194,8 +199,8 @@ export default {
 
     deleteGear() {
       try {
-        this.$api("buyer", "delete", this.currentId).finally(() => {
-          this.getAllBuyer();
+        this.$api("fishing_gear", "delete", this.currentId).finally(() => {
+          this.getAllGear();
           this.dialogDelete = false;
         });
       } catch (e) {
@@ -205,7 +210,50 @@ export default {
 
     async getAllGear() {
       try {
-        this.buyer = await this.$api("buyer", "index", null);
+        this.gear = await this.$api("fishing_gear", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async storeGear() {
+      try {
+        const result = await this.$api(
+          "fishing_gear",
+          "store",
+          this.input
+        ).finally(response => {
+          this.getAllGear();
+          this.dialogTambah = false;
+          this.input.name = null;
+          return response;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getById(id) {
+      console.log("tes");
+      try {
+        this.inputedit = await this.$api("fishing_gear", "get_by_id", id);
+        this.dialogEdit = true;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async updateGear() {
+      try {
+        const result = await this.$api(
+          "fishing_gear",
+          "update",
+          this.inputedit
+        ).finally(response => {
+          this.getAllGear();
+          this.dialogEdit = false;
+          return response;
+        });
       } catch (e) {
         console.log(e);
       }

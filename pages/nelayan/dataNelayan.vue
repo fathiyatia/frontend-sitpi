@@ -83,8 +83,8 @@ export default {
       { text: "Alamat", value: "address" },
       { text: "Jenis Kapal", value: "ship_type" },
       { text: "Jumlah ABK", value: "abk_total" },
-      { text: "Penanggung Jawab", value: "user_id" },
-      { text: "Aksi", value: "id", sortable: false }
+      { text: "Penanggung Jawab", value: "user_name" },
+      { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     fisher: []
   }),

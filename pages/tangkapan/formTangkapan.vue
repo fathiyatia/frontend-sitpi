@@ -41,7 +41,7 @@
           <h3 class="mb-3 primary--text">
             Jenis Alat Tangkap
           </h3>
-          <v-combobox
+          <v-autocomplete
             outlined
             single-line
             label="Jenis Alat Tangkap"
@@ -52,7 +52,8 @@
             item-text="name"
             item-value="id"
           >
-          </v-combobox>
+            <template v-slot:selection="{ item }">{{ item.name }}</template>
+          </v-autocomplete>
           <h3 class="mb-3 primary--text">
             Daerah Tangkapan
           </h3>
@@ -62,7 +63,7 @@
             label="Daerah Tangkapan"
             :rules="required"
             v-model="input.area"
-            :items="fishinggear"
+            :items="fishingarea"
             clearable
             item-text="name"
             item-value="id"
@@ -77,7 +78,7 @@
               <v-divider class="mb-6"></v-divider>
               <v-row no-gutters class="mb-2" :key="index">
                 <v-col md="10">
-                  <h2 class="accent--text">Hasil Tangkapan {{ index + 1 }}</h2>
+                  <h3 class="accent--text">Hasil Tangkapan {{ index + 1 }}</h3>
                 </v-col>
                 <v-col md="2" align="right">
                   <v-btn
@@ -134,17 +135,17 @@
                     row
                     class="check"
                   >
-                    <v-radio label="Kg" value="Kg"></v-radio>
-                    <v-radio label="Kwintal" value="Kwintal"></v-radio>
-                    <v-radio label="Ton" value="Ton"></v-radio>
+                    <v-radio class="pb-3" label="Kg" value="1"></v-radio>
+                    <v-radio class="pb-3" label="Kwintal" value="2"></v-radio>
+                    <v-radio class="pb-3" label="Ton" value="3"></v-radio>
                   </v-radio-group>
                 </v-col>
               </v-row>
             </div>
           </template>
-          <v-card-actions>
-            <v-btn large block color="success" @click.stop="tambah()">
-              <v-icon>mdi-plus</v-icon> &nbsp; Tambah Hasil Tangkapan</v-btn
+          <v-card-actions class="justify-center ">
+            <v-btn depressed large block color="success" @click.stop="tambah()">
+              <v-icon>mdi-plus</v-icon> &nbsp; Hasil Tangkapan</v-btn
             >
           </v-card-actions>
         </v-form>
@@ -172,6 +173,7 @@ export default {
   data: () => ({
     valid: true,
     fishinggear: [],
+    fishingarea: [],
     fishtype: [],
     fisher: [],
     //weightunit: [],
@@ -185,7 +187,7 @@ export default {
         {
           fish: null,
           weight: null,
-          unit: "Kg"
+          unit: "1"
         }
       ]
     },
@@ -196,7 +198,7 @@ export default {
     this.getAllFisher();
     this.getAllFish();
     this.getAllFishingGear();
-    //this.getAllWeightUnit();
+    this.getAllFishingArea();
   },
 
   methods: {
@@ -232,6 +234,13 @@ export default {
     async getAllFishingGear() {
       try {
         this.fishinggear = await this.$api("fishing_gear", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFishingArea() {
+      try {
+        this.fishingarea = await this.$api("fishing_area", "index", null);
       } catch (e) {
         console.log(e);
       }

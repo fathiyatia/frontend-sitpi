@@ -59,8 +59,8 @@
             single-line
             label="Daerah Tangkapan"
             :rules="required"
-            v-model="input.fishing_area"
-            :items="fishinggear"
+            v-model="input.fishing_area_id"
+            :items="fishingarea"
             clearable
             item-text="name"
             item-value="id"
@@ -106,7 +106,7 @@
                   Satuan
                 </h3>
                 <v-radio-group
-                  v-model="input.unit"
+                  v-model="input.weight_unit"
                   :rules="required"
                   row
                   class="check"
@@ -141,6 +141,7 @@
 export default {
   data: () => ({
     fishinggear: [],
+    fishingarea: [],
     fishtype: [],
     weightunit: [],
     fisher: [],
@@ -160,6 +161,7 @@ export default {
     this.getAllFisher();
     this.getAllFish();
     this.getAllFishingGear();
+    this.getAllFishingArea();
     this.getAllWeightUnit();
   },
   methods: {
@@ -194,6 +196,13 @@ export default {
     async getAllFishingGear() {
       try {
         this.fishinggear = await this.$api("fishing_gear", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllFishingArea() {
+      try {
+        this.fishingarea = await this.$api("fishing_area", "index", null);
       } catch (e) {
         console.log(e);
       }

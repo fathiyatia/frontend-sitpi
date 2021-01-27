@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Pendataan Daerah Tangkapan</v-toolbar-title>
+        <v-toolbar-title>Edit Daerah Tangkapan</v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
       <v-card-text>
@@ -108,7 +108,7 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeArea()">
+            <v-btn large block color="primary" @click="updateArea()">
               Simpan
             </v-btn>
           </v-col>
@@ -131,16 +131,30 @@ export default {
       east_longitude_second: null
     }
   }),
+  mounted() {
+    this.getById();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
     },
-    async storeArea() {
+    async getById() {
+      try {
+        this.input = await this.$api(
+          "fishing_area",
+          "get_by_id",
+          this.$route.params.id
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async updateArea() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api(
             "fishing_area",
-            "store",
+            "update",
             this.input
           ).finally(response => {
             this.$router.push("/daerah/dataDaerah");

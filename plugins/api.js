@@ -19,6 +19,32 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Fishing_gear.index(data, other);
+          case "store":
+            return Fishing_gear.store(data, other);
+          case "delete":
+            return Fishing_gear.delete(data, other);
+          case "get_by_id":
+            return Fishing_gear.get_by_id(data, other);
+          case "update":
+            return Fishing_gear.update(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "fishing_area":
+        switch (action) {
+          case "index":
+            return Fishing_area.index(data, other);
+          case "store":
+            return Fishing_area.store(data, other);
+          case "delete":
+            return Fishing_area.delete(data, other);
+          case "get_by_id":
+            return Fishing_area.get_by_id(data, other);
+          case "update":
+            return Fishing_area.update(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -156,6 +182,155 @@ export default ({ app }, inject) => {
         console.log(response);
         return response.data.response_data;
       });
+    },
+    store(data) {
+      const body = {
+        name: data.name
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/fishing_gear",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        });
+    },
+    delete(data) {
+      const body = {
+        id: data
+      };
+      return app
+        .$axios({
+          method: "delete",
+          url: "/fishing_gear/" + data,
+          data: body
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    get_by_id(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/fishing_gear/" + data
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    update(data) {
+      const body = {
+        name: data.name
+      };
+      return app
+        .$axios({
+          method: "put",
+          url: "/fishing_gear/" + data.id,
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    }
+  };
+
+  const Fishing_area = {
+    index() {
+      return app.$axios.get("/fishing_area").then(response => {
+        console.log(response.data.response_data);
+        return response.data.response_data;
+      });
+    },
+    store(data) {
+      const body = {
+        name: data.name,
+        south_latitude_degree: data.south_latitude_degree,
+        south_latitude_minute: data.south_latitude_minute,
+        south_latitude_second: data.south_latitude_second,
+        east_longitude_degree: data.east_longitude_degree,
+        east_longitude_minute: data.east_longitude_minute,
+        east_longitude_second: data.east_longitude_second
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/fishing_area",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        });
+    },
+    delete(data) {
+      const body = {
+        id: data
+      };
+      return app
+        .$axios({
+          method: "delete",
+          url: "/fishing_area/" + data,
+          data: body
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    get_by_id(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/fishing_area/" + data
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    update(data) {
+      const body = {
+        name: data.name,
+        south_latitude_degree: data.south_latitude_degree,
+        south_latitude_minute: data.south_latitude_minute,
+        south_latitude_second: data.south_latitude_second,
+        east_longitude_degree: data.east_longitude_degree,
+        east_longitude_minute: data.east_longitude_minute,
+        east_longitude_second: data.east_longitude_second
+      };
+      return app
+        .$axios({
+          method: "put",
+          url: "/fishing_area/" + data.id,
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     }
   };
 
@@ -169,22 +344,49 @@ export default ({ app }, inject) => {
   };
 
   const Caught = {
-    index() {
-      return app.$axios.get("/caught_fish").then(response => {
-        console.log(response);
-        return response.data.response_data;
-      });
+    index(data) {
+      if (data.fish == null) {
+        data.fish = "0";
+      }
+      if (data.fisherid == null) {
+        data.fisherid = "0";
+      }
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/caught_fish?from=" +
+            "&to=" +
+            "&fish_type_id=" +
+            data.fish +
+            "&fisher_id=" +
+            data.fisherid
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     },
+
     store(data) {
+      var caught = [];
+      for (let index = 0; index < data.caughts.length; index++) {
+        caught.push({
+          fish_type_id: parseInt(data.caughts[index].fish),
+          weight: parseFloat(data.caughts[index].weight),
+          weight_unit_id: parseInt(data.caughts[index].unit)
+        });
+      }
+
       const body = {
         fisher_id: parseInt(data.fisherid),
-        fish_type_id: parseInt(data.fish),
-        weight: parseFloat(data.weight),
-        weight_unit_id: parseInt(data.unit),
+        trip_day: parseInt(data.trip_day),
         fishing_gear_id: parseInt(data.gear),
-        fishing_area: data.area,
-        auction_weight: parseFloat(data.weightauction),
-        auction_weight_unit_id: parseInt(data.unitauction)
+        fishing_area_id: parseInt(data.area),
+        caught_fish_data: caught
       };
 
       return app
@@ -231,11 +433,12 @@ export default ({ app }, inject) => {
     update(data) {
       const body = {
         fisher_id: parseInt(data.fisher_id),
+        trip_day: parseInt(data.trip_day),
+        fishing_gear_id: parseInt(data.fishing_gear_id),
+        fishing_area_id: parseInt(data.fishing_area_id),
         fish_type_id: parseInt(data.fish_type_id),
         weight: parseFloat(data.weight),
-        weight_unit_id: parseInt(data.weight_unit_id),
-        fishing_gear_id: parseInt(data.fishing_gear_id),
-        fishing_area: data.fishing_area
+        weight_unit_id: parseInt(data.weight_unit_id)
       };
       return app
         .$axios({
@@ -290,12 +493,43 @@ export default ({ app }, inject) => {
   };
 
   const Auction = {
-    index() {
-      return app.$axios.get("/auction").then(response => {
-        console.log(response.data.response_data);
-        return response.data.response_data;
-      });
+    index(data) {
+      if (data.fish == null) {
+        data.fish = "0";
+      }
+      if (data.fisherid == null) {
+        data.fisherid = "0";
+      }
+      if (data.fish_type_id == null) {
+        data.fish_type_id = "0";
+      }
+      if (data.status == null) {
+        data.status = "0";
+      }
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/auction?from=" +
+            "&to=" +
+            "&auction_id=" +
+            data.auction +
+            "&fisher_id=" +
+            data.fisherid +
+            "&fish_type_id=" +
+            data.fish +
+            "&status_id=" +
+            data.status
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     },
+
     inquiry() {
       return app.$axios.get("/auction/inquiry").then(response => {
         console.log(response);
@@ -372,12 +606,33 @@ export default ({ app }, inject) => {
   };
 
   const Transaction = {
-    index() {
-      return app.$axios.get("/transaction").then(response => {
-        console.log(response);
-        return response.data.response_data;
-      });
+    index(data) {
+      if (data.fish == null) {
+        data.fish = "0";
+      }
+      if (data.buyerid == null) {
+        data.buyerid = "0";
+      }
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/transaction?from=" +
+            "&to=" +
+            "&fish_type_id=" +
+            data.fish +
+            "&buyer_id=" +
+            data.buyerid
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     },
+
     store(data) {
       const body = {
         buyer_id: parseInt(data.buyer_id),
@@ -485,7 +740,9 @@ export default ({ app }, inject) => {
       const body = {
         nik: data.nik,
         name: data.name,
-        address: data.address
+        address: data.address,
+        ship_type: data.ship_type,
+        abk_total: parseInt(data.abk_total)
       };
 
       return app
@@ -534,7 +791,9 @@ export default ({ app }, inject) => {
         id: data.id,
         nik: data.nik,
         name: data.name,
-        address: data.address
+        address: data.address,
+        ship_type: data.ship_type,
+        abk_total: parseInt(data.abk_total)
       };
       return app
         .$axios({

@@ -91,7 +91,7 @@
           <h3 class="mb-3 mt-2 primary--text">
             Total Harga
             <span class="accent--text font-weight-regular">{{
-              this.input.price
+              this.input.price | currencyFormat
             }}</span>
           </h3>
 

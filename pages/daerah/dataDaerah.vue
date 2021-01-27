@@ -27,7 +27,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-                <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
+                <v-btn color="error" text @click="deleteArea">Hapus</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
@@ -94,18 +94,15 @@ export default {
         text: "Nama Daerah",
         align: "start",
         sortable: false,
-        value: "nik"
+        value: "name"
       },
-      {
-        text: "Bujur D",
-        value: "south_latitude_degree"
-      },
-      { text: "Bujur M", value: "south_latitude_minute" },
-      { text: "Bujur S", value: "south_latitude_second" },
-      { text: "Lintang D", value: "east_latitude_degree" },
-      { text: "Lintang M", value: "east_latitude_minute" },
-      { text: "Lintang S", value: "east_latitude_second" },
-      { text: "Aksi", value: "id", sortable: false }
+      { text: "Bujur D", value: "east_longitude_degree" },
+      { text: "Bujur M", value: "east_longitude_minute" },
+      { text: "Bujur S", value: "east_longitude_second" },
+      { text: "Lintang D", value: "south_latitude_degree" },
+      { text: "Lintang M", value: "south_latitude_minute" },
+      { text: "Lintang S", value: "south_latitude_second" },
+      { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     area: []
   }),
@@ -139,7 +136,7 @@ export default {
 
     deleteArea() {
       try {
-        this.$api("buyer", "delete", this.currentId).finally(() => {
+        this.$api("fishing_area", "delete", this.currentId).finally(() => {
           this.getAllArea();
           this.dialogDelete = false;
         });
@@ -150,7 +147,7 @@ export default {
 
     async getAllArea() {
       try {
-        this.area = await this.$api("buyer", "index", null);
+        this.area = await this.$api("fishing_area", "index", null);
       } catch (e) {
         console.log(e);
       }

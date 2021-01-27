@@ -55,6 +55,7 @@
             single-line
             label="Jumlah Anak Buah Kapal (ABK)"
             :rules="required"
+            type="number"
             v-model="input.abk_total"
           />
         </v-form>

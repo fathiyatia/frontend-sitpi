@@ -2,7 +2,6 @@
   <v-data-table
     :headers="headers"
     :items="caughtfish"
-    :search="search"
     sort-by="created_at"
     sort-desc
     class="elevation-1 px-3"
@@ -38,11 +37,11 @@
         class="mx-3 px-4 pt-5 mb-6 rounded-lg"
         color="#C5DEF0"
       >
-        <span class="primary--text font-weight-bold">
+        <span class="px-2 primary--text font-weight-bold">
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
-        <v-row>
-          <v-col>
+        <v-row no-gutters class="pt-3">
+          <v-col cols="12" lg="6" md="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -54,6 +53,7 @@
               clearable
               item-text="name"
               item-value="id"
+              @change="getAllCaught()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -61,7 +61,7 @@
             >
           </v-col>
 
-          <v-col>
+          <v-col lg="6" md="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -73,6 +73,7 @@
               clearable
               item-text="name"
               item-value="id"
+              @change="getAllCaught()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -96,6 +97,7 @@
         </v-card>
       </v-dialog>
     </template>
+
     <template v-slot:item.created_at="{ item }">
       <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
     </template>
@@ -131,10 +133,10 @@ export default {
     fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
     unittype: ["Kg", "Kwintal", "Ton"],
     dialogDelete: false,
-    search: "",
+    //search: "",
     input: {
-      fisherid: null,
-      fish: null
+      fisherid: "0",
+      fish: "0"
     },
     headers: [
       {
@@ -144,7 +146,7 @@ export default {
         value: "fisher_nik"
       },
       { text: "Nama Nelayan", value: "fisher_name" },
-      { text: "Jumlah Hari Trip", value: "created_at" },
+      { text: "Jumlah Hari Trip", value: "trip_day" },
       { text: "Alat Tangkap", value: "fishing_gear" },
       { text: "Daerah Tangkapan", value: "fishing_area" },
       { text: "Jenis Ikan", value: "fish_type" },
@@ -198,7 +200,7 @@ export default {
 
     async getAllCaught() {
       try {
-        this.caughtfish = await this.$api("caught", "index", null);
+        this.caughtfish = await this.$api("caught", "index", this.input);
       } catch (e) {
         console.log(e);
       }

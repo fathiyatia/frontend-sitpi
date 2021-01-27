@@ -80,8 +80,8 @@ export default {
       },
       { text: "Nama", value: "name" },
       { text: "Alamat", value: "address" },
-      { text: "Penanggung Jawab", value: "user_id" },
-      { text: "Aksi", value: "id", sortable: false }
+      { text: "Penanggung Jawab", value: "user_name" },
+      { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     buyer: []
   }),
