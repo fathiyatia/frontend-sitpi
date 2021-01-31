@@ -2,9 +2,9 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-card color="secondary" dark elevation="0">
-        <v-card-title class="mb-1">Form Tangkapan Ikan</v-card-title>
+        <v-card-title class="mb-1">Isi Hasil Tangkapan Ikan</v-card-title>
         <v-card-subtitle class="white--text font-weight-light"
-          >Isi form untuk mencatat tangkapan ikan yang akan
+          >Isi data dibawah ini untuk mencatat tangkapan ikan yang akan
           dilelang</v-card-subtitle
         >
       </v-card>
@@ -23,11 +23,13 @@
             clearable
             item-text="name"
             item-value="id"
+            @change="getByIdFisher()"
           >
             <template v-slot:selection="{ item }">{{
               item.name + " - " + item.nik
-            }}</template></v-autocomplete
-          >
+            }}</template>
+          </v-autocomplete>
+
           <h3 class="mb-3 primary--text">
             Jumlah Hari Trip
           </h3>
@@ -51,9 +53,11 @@
             clearable
             item-text="name"
             item-value="id"
+            @change="getByIdFishingGear()"
           >
             <template v-slot:selection="{ item }">{{ item.name }}</template>
           </v-autocomplete>
+
           <h3 class="mb-3 primary--text">
             Daerah Tangkapan
           </h3>
@@ -67,12 +71,12 @@
             clearable
             item-text="name"
             item-value="id"
+            @change="getByIdFishingArea()"
           >
-            <template v-slot:selection="{ item }">{{
+            <template v-slot:areaname="{ item }">{{
               item.name
             }}</template></v-autocomplete
           >
-
           <template class="caughtfish" v-for="(caught, index) in input.caughts">
             <div no-gutters :key="index">
               <v-divider class="mb-6"></v-divider>
@@ -106,6 +110,7 @@
                 clearable
                 item-text="name"
                 item-value="id"
+                @change="getByIdFish(index)"
               >
                 <template v-slot:selection="{ item }">{{
                   item.name
@@ -159,26 +164,146 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeCaught">
+            <v-btn large block color="primary" @click="confirm()">
               Simpan
             </v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
     </v-card>
+    <!----- Confirmation Dialog ----->
+    <v-dialog v-model="dialog" width="600px">
+      <v-card>
+        <v-card-title>
+          <h3 class="primary--text">Konfirmasi Data</h3>
+        </v-card-title>
+        <v-card-text>
+          <v-divider></v-divider>
+          <v-row no-gutters>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                NIK Nelayan / Nahkoda
+              </h3>
+            </v-col>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                : {{ this.fisher_confirm.nik }}
+              </h3></v-col
+            >
+          </v-row>
+          <v-row no-gutters>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                Nama Nelayan / Nahkoda
+              </h3>
+            </v-col>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                : {{ this.fisher_confirm.name }}
+              </h3></v-col
+            >
+          </v-row>
+          <v-row no-gutters>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                Jumlah Hari Trip
+              </h3>
+            </v-col>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                : {{ this.input.trip_day }} Hari
+              </h3></v-col
+            >
+          </v-row>
+          <v-row no-gutters>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                Jenis Alat Tangkap
+              </h3>
+            </v-col>
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                : {{ this.fishinggear_confirm.name }}
+              </h3></v-col
+            >
+          </v-row>
+          <v-row no-gutters class="mb-3">
+            <v-col>
+              <h3 class="accent--text mt-4 font-weight-regular">
+                Daerah Tangkapan
+              </h3>
+            </v-col>
+
+            <v-col>
+              <h3 class="accent--text mt-3 mb-6 font-weight-regular">
+                : {{ this.fishingarea_confirm.name }}
+              </h3></v-col
+            >
+          </v-row>
+          <v-divider></v-divider>
+          <v-row no-gutters>
+            <h3 class="accent--text mt-5">
+              Daftar Hasil Tangkapan
+            </h3>
+          </v-row>
+          <div
+            class="caughtfish"
+            v-for="(caught, index) in input.caughts"
+            :key="index"
+          >
+            <v-row no-gutters>
+              <v-col>
+                <h3 class="accent--text mt-4 font-weight-regular">
+                  {{ index + 1 }}) {{ all_fish_name_confirm[index] }}
+                </h3>
+              </v-col>
+              <v-col>
+                <h3 class="accent--text mt-4 font-weight-regular">
+                  {{ caught.weight }}
+                  {{ caught.unit | unitFormat }}
+                </h3></v-col
+              >
+            </v-row>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" text @click="dialog = false">
+            Edit
+          </v-btn>
+          <v-btn color="primary" @click="storeCaught()">
+            Simpan
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script>
 export default {
+  filters: {
+    unitFormat(value) {
+      if (value == 1) {
+        return "Kg";
+      } else if (value == 2) {
+        return "Kwintal";
+      } else if (value == 3) {
+        return "Ton";
+      } else {
+        return "";
+      }
+    }
+  },
   data: () => ({
+    dialog: false,
     valid: true,
     fishinggear: [],
     fishingarea: [],
     fishtype: [],
     fisher: [],
-    //weightunit: [],
     input: {
       fisherid: null,
+      fishername: null,
       trip_day: null,
       gear: null,
       area: null,
@@ -191,6 +316,11 @@ export default {
         }
       ]
     },
+    fisher_confirm: [],
+    fishingarea_confirm: [],
+    fishinggear_confirm: [],
+    fish_confirm: [],
+    all_fish_name_confirm: [],
     required: [v => !!v || "Data ini harus diisi"]
   }),
 
@@ -199,6 +329,11 @@ export default {
     this.getAllFish();
     this.getAllFishingGear();
     this.getAllFishingArea();
+
+    //this.getByIdFisher();
+    //this.getByIdFish();
+    //this.getByIdFishingArea();
+    //this.getByIdFishingGear();
   },
 
   methods: {
@@ -212,10 +347,16 @@ export default {
     hapus(index) {
       if (index != 0) {
         this.input.caughts.splice(index, 1);
+        this.all_fish_name_confirm.splice(index, 1);
       }
     },
     reset() {
       this.$refs.form.reset();
+    },
+    confirm() {
+      if (this.$refs.form.validate()) {
+        this.dialog = true;
+      }
     },
     async getAllFisher() {
       try {
@@ -245,24 +386,59 @@ export default {
         console.log(e);
       }
     },
-    /*
-    async getAllWeightUnit() {
+    async getByIdFisher() {
       try {
-        this.weightunit = await this.$api("weight_unit", "index", null);
+        this.fisher_confirm = await this.$api(
+          "fisher",
+          "get_by_id",
+          this.input.fisherid
+        );
       } catch (e) {
         console.log(e);
       }
     },
-    */
+    async getByIdFish(index) {
+      try {
+        this.fish_confirm = await this.$api(
+          "fish",
+          "get_by_id",
+          this.input.caughts[index].fish
+        );
+        this.all_fish_name_confirm[index] = this.fish_confirm.name;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getByIdFishingArea() {
+      try {
+        this.fishingarea_confirm = await this.$api(
+          "fishing_area",
+          "get_by_id",
+          this.input.area
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getByIdFishingGear() {
+      try {
+        this.fishinggear_confirm = await this.$api(
+          "fishing_gear",
+          "get_by_id",
+          this.input.gear
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async storeCaught() {
       if (this.$refs.form.validate()) {
         try {
-          const result = await this.$api("caught", "store", this.input).finally(
-            response => {
-              this.$router.push("/tangkapan/dataTangkapan");
-              return response;
-            }
-          );
+          await this.$api("caught", "store", this.input).finally(response => {
+            this.dialog = false;
+            this.$router.push("/tangkapan/dataTangkapan");
+            return response;
+          });
         } catch (e) {
           console.log(e);
         }
