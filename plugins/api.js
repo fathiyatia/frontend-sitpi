@@ -9,6 +9,8 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Fish.index(data, other);
+          case "get_by_id":
+            return Fish.get_by_id(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -173,6 +175,19 @@ export default ({ app }, inject) => {
         console.log(response);
         return response.data.response_data;
       });
+    },
+    get_by_id(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/fish_type/" + data
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     }
   };
 
@@ -780,6 +795,7 @@ export default ({ app }, inject) => {
           url: "/fisher/" + data
         })
         .then(response => {
+          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
