@@ -1,21 +1,12 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="showHeaders"
     :items="caughtfish"
     sort-by="created_at"
     sort-desc
     class="elevation-1 px-3"
   >
     <template v-slot:top>
-      <!---
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-        --->
       <v-row class="mx-0 px-4 pt-6">
         <h2 class="accent--text">Data Tangkapan Ikan</h2>
       </v-row>
@@ -101,7 +92,7 @@
     <template v-slot:item.created_at="{ item }">
       <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
     </template>
-    <template v-slot:item.weightunit="{ item }">
+    <template v-slot:item.weight="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
     </template>
     <template v-slot:item.id="{ item }">
@@ -133,12 +124,11 @@ export default {
     fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
     unittype: ["Kg", "Kwintal", "Ton"],
     dialogDelete: false,
-    //search: "",
     input: {
       fisherid: "0",
       fish: "0"
     },
-    headers: [
+    all_headers: [
       {
         text: "NIK Nelayan",
         align: "start",
@@ -150,7 +140,7 @@ export default {
       { text: "Alat Tangkap", value: "fishing_gear" },
       { text: "Daerah Tangkapan", value: "fishing_area" },
       { text: "Jenis Ikan", value: "fish_type" },
-      { text: "Berat", value: "weightunit" },
+      { text: "Berat", value: "weight" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     fisher: [],
@@ -171,6 +161,34 @@ export default {
     this.getAllCaught();
     this.getAllFish();
     this.getAllFisher();
+  },
+
+  computed: {
+    showHeaders() {
+      if (this.input.fish == "0") {
+        if (this.input.fisherid == "0") {
+          return this.all_headers;
+        } else {
+          return this.all_headers.filter(
+            header =>
+              header.text !== "Nama Nelayan" && header.text !== "NIK Nelayan"
+          );
+        }
+      } else {
+        if (this.input.fisherid == "0") {
+          return this.all_headers.filter(
+            header => header.text !== "Jenis Ikan"
+          );
+        } else {
+          return this.all_headers.filter(
+            header =>
+              header.text !== "Jenis Ikan" &&
+              header.text !== "Nama Nelayan" &&
+              header.text !== "NIK Nelayan"
+          );
+        }
+      }
+    }
   },
 
   methods: {

@@ -27,6 +27,19 @@
             v-model="input.name"
           />
           <h3 class="mb-3 mt-2 primary--text">
+            Status
+          </h3>
+          <v-select
+            outlined
+            single-line
+            :items="status"
+            item-text="status"
+            item-value="id"
+            label="Status"
+            clearable
+            v-model="input.status"
+          ></v-select>
+          <h3 class="mb-3 mt-2 primary--text">
             Alamat
           </h3>
           <v-text-field
@@ -37,21 +50,36 @@
             v-model="input.address"
           />
           <h3 class="mb-3 mt-2 primary--text">
-            Jenis Kapal
+            No. Telepon
           </h3>
           <v-text-field
+            outlined
+            single-line
+            label="No. Telepon"
+            :rules="required"
+            v-model="input.phone"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Jenis Kapal
+          </h3>
+          <v-combobox
             outlined
             single-line
             label="Jenis Kapal"
             :rules="required"
             v-model="input.ship_type"
-          />
+            :items="ship_type"
+            clearable
+          >
+          </v-combobox>
+
           <h3 class="mb-3 mt-2 primary--text">
             Jumlah Anak Buah Kapal (ABK)
           </h3>
           <v-text-field
             outlined
             single-line
+            suffix="orang"
             label="Jumlah Anak Buah Kapal (ABK)"
             type="number"
             :rules="required"
@@ -84,11 +112,21 @@ export default {
     input: {
       nik: null,
       name: null,
+      status: null,
       address: null,
+      phone: null,
       ship_type: null,
       abk_total: null
-    }
+    },
+    ship_type: [],
+    status: [
+      { status: "Tetap", id: "1" },
+      { status: "Pendatang", id: "2" }
+    ]
   }),
+  mounted() {
+    this.getAllShip();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
@@ -105,6 +143,13 @@ export default {
         } catch (e) {
           console.log(e);
         }
+      }
+    },
+    async getAllShip() {
+      try {
+        this.ship_type = await this.$api("fisher", "inquiry", null);
+      } catch (e) {
+        console.log(e);
       }
     }
   }

@@ -7,7 +7,7 @@
       :clipped="clipped"
       fixed
       app
-      width="260"
+      width="300"
       ><v-container>
         <v-row no-gutters class="pt-4">
           <v-col cols="4">
@@ -20,9 +20,10 @@
       </v-container>
 
       <v-list>
+        <!--- Dashboard --->
         <v-list-item-group color="white">
           <v-list-item
-            v-for="(item, i) in items"
+            v-for="(item, i) in dashboard"
             :key="i"
             :to="item.to"
             router
@@ -36,11 +37,12 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <!--- Tangkapan --->
         <v-divider class="mx-3 mb-2" color="white"></v-divider>
-        <span class="ml-3 caption white--text">Sebelum Lelang </span>
+        <span class="ml-3 caption white--text">Tangkapan Ikan</span>
         <v-list-item-group color="white">
           <v-list-item
-            v-for="(item, i) in before"
+            v-for="(item, i) in caught"
             :key="i"
             :to="item.to"
             router
@@ -54,11 +56,29 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <!--- Lelang --->
         <v-divider class="mx-3 mb-2" color="white"></v-divider>
-        <span class="ml-3 caption white--text">Sesudah Lelang</span>
+        <span class="ml-3 caption white--text">Lelang</span>
+        <v-list-item
+          v-for="(item, i) in auction"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon color="white">{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title class="white--text" v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
+        <!--- Transaksi --->
+        <v-divider class="mx-3 mb-2" color="white"></v-divider>
+        <span class="ml-3 caption white--text">Transaksi</span>
         <v-list-item-group color="white">
           <v-list-item
-            v-for="(item, i) in after"
+            v-for="(item, i) in transaction"
             :key="i"
             :to="item.to"
             router
@@ -72,6 +92,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <!--- Pendataan --->
         <v-divider class="mx-3 mb-2" color="white"></v-divider>
         <span class="ml-3 caption white--text">Pendataan</span>
         <v-list-item-group color="white">
@@ -90,6 +111,22 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <!--- Laporan ---->
+        <v-divider class="mx-3 mb-2" color="white"></v-divider>
+        <v-list-item
+          v-for="(item, i) in report"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon color="white">{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title class="white--text" v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar color="primary" :clipped-left="clipped" fixed app>
@@ -114,17 +151,17 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
+      dashboard: [
         {
           icon: "mdi-view-dashboard",
           title: "Dashboard",
           to: "/"
         }
       ],
-      before: [
+      caught: [
         {
           icon: "mdi-clipboard-edit",
-          title: "Form Tangkapan Ikan",
+          title: "Isi Tangkapan Ikan",
           to: "/tangkapan/formTangkapan"
         },
         {
@@ -133,11 +170,18 @@ export default {
           to: "/tangkapan/dataTangkapan"
         }
       ],
-      after: [
+      auction: [
         {
           icon: "mdi-handshake",
-          title: "Data Pelelangan",
+          title: "Data Proses Lelang",
           to: "/pelelangan/dataPelelangan"
+        }
+      ],
+      transaction: [
+        {
+          icon: "mdi-clipboard-edit",
+          title: "Isi Transaksi",
+          to: "/transaksi/formTransaksi"
         },
         {
           icon: "mdi-cash-multiple",
@@ -165,6 +209,13 @@ export default {
           icon: "mdi-hook",
           title: "Alat Tangkap",
           to: "/alat/dataAlat"
+        }
+      ],
+      report: [
+        {
+          icon: "mdi-file-chart",
+          title: "Laporan",
+          to: "/"
         }
       ],
       miniVariant: false,

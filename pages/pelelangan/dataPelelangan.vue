@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="showHeaders"
     :items="auction"
     :search="search"
     sort-by="created_at"
@@ -9,7 +9,7 @@
   >
     <template v-slot:top>
       <v-row class="mx-0 px-4 pt-6">
-        <h2 class="accent--text">Data Pelelangan</h2>
+        <h2 class="accent--text">Data Proses Lelang</h2>
       </v-row>
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
@@ -33,26 +33,7 @@
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
         <v-row no-gutters class="pt-3">
-          <v-col cols="12" lg="3" sm="6" class="px-2">
-            <v-autocomplete
-              solo
-              dense
-              block
-              single-line
-              label="No. Pelelangan"
-              v-model="input.auction"
-              @change="getAllAuction()"
-              :items="auction"
-              clearable
-              item-text="id"
-              item-value="id"
-            >
-              <template v-slot:selection="{ item }">{{
-                item.id
-              }}</template></v-autocomplete
-            >
-          </v-col>
-          <v-col cols="12" lg="3" sm="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -72,7 +53,7 @@
             >
           </v-col>
 
-          <v-col cols="12" lg="3" sm="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -91,7 +72,7 @@
               }}</template></v-autocomplete
             >
           </v-col>
-          <v-col cols="12" lg="3" sm="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-select
               :items="status"
               item-text="status"
@@ -125,7 +106,7 @@
         }}
       </span>
     </template>
-    <template v-slot:item.weightunit="{ item }">
+    <template v-slot:item.weight="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
     </template>
     <template v-slot:item.action="{ item }">
@@ -158,19 +139,19 @@ export default {
       fish: "0",
       status: "0"
     },
-    headers: [
+    all_headers: [
       {
         text: "No. Pelelangan",
         align: "start",
         sortable: false,
         value: "id"
       },
-      { text: "Waktu", value: "created_at" },
+      { text: "Jam Masuk", value: "created_at" },
+      { text: "Jam Terjual", value: "created_at" },
       { text: "Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
-      { text: "Berat", value: "weightunit" },
-      { text: "Status Pelelangan", value: "status_name" },
-      { text: "Aksi", value: "action", sortable: false }
+      { text: "Berat", value: "weight" },
+      { text: "Status Pelelangan", value: "status_name" }
     ],
     auction: [],
     auction_id: [],
@@ -191,6 +172,59 @@ export default {
     this.getAllAuction();
     this.getAllFish();
     this.getAllFisher();
+  },
+
+  computed: {
+    showHeaders() {
+      if (this.input.fish == "0") {
+        if (this.input.fisherid == "0") {
+          if (this.input.status == "0") {
+            return this.all_headers;
+          } else {
+            return this.all_headers.filter(
+              header => header.text !== "Status Pelelangan"
+            );
+          }
+        } else {
+          if (this.input.status == "0") {
+            return this.all_headers.filter(header => header.text !== "Nelayan");
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Nelayan" && header.text !== "Status Pelelangan"
+            );
+          }
+        }
+      } else {
+        if (this.input.fisherid == "0") {
+          if (this.input.status == "0") {
+            return this.all_headers.filter(
+              header => header.text !== "Jenis Ikan"
+            );
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" &&
+                header.text !== "Status Pelelangan"
+            );
+          }
+        } else {
+          if (this.input.status == "0") {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" && header.text !== "Nelayan"
+            );
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" &&
+                header.text !== "Nelayan" &&
+                header.text !== "Status Pelelangan"
+            );
+          }
+        }
+      }
+    }
   },
 
   methods: {

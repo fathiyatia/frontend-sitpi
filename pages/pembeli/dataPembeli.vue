@@ -79,7 +79,9 @@ export default {
         value: "nik"
       },
       { text: "Nama", value: "name" },
+      { text: "Status", value: "status" },
       { text: "Alamat", value: "address" },
+      { text: "No. Telepon", value: "phone" },
       { text: "Penanggung Jawab", value: "user_name" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],

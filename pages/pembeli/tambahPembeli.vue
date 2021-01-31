@@ -28,6 +28,19 @@
             v-model="input.name"
           />
           <h3 class="mb-3 mt-2 primary--text">
+            Status
+          </h3>
+          <v-select
+            outlined
+            single-line
+            :items="status"
+            item-text="status"
+            item-value="id"
+            label="Status"
+            clearable
+            v-model="input.status"
+          ></v-select>
+          <h3 class="mb-3 mt-2 primary--text">
             Alamat
           </h3>
           <v-text-field
@@ -36,6 +49,16 @@
             label="Alamat"
             :rules="required"
             v-model="input.address"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            No. Telepon
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="No. Telepon"
+            :rules="required"
+            v-model="input.phone"
           />
         </v-form>
       </v-card-text>
@@ -64,8 +87,14 @@ export default {
     input: {
       nik: null,
       name: null,
-      address: null
-    }
+      status: null,
+      address: null,
+      phone: null
+    },
+    status: [
+      { status: "Tetap", id: "1" },
+      { status: "Pendatang", id: "2" }
+    ]
   }),
   methods: {
     reset() {

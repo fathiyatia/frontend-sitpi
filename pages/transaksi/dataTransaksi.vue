@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="showHeaders"
     :items="transaction"
     :search="search"
     sort-by="created_at"
@@ -106,7 +106,7 @@
     <template v-slot:item.price="{ item }">
       <span> {{ item.price | currencyFormat }}</span>
     </template>
-    <template v-slot:item.weightunit="{ item }">
+    <template v-slot:item.weight="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
     </template>
     <template v-slot:item.action="{ item }">
@@ -161,7 +161,7 @@ export default {
       buyerid: "0",
       fish: "0"
     },
-    headers: [
+    all_headers: [
       {
         text: "No. Transaksi",
         align: "start",
@@ -172,7 +172,7 @@ export default {
       { text: "Nama Pembeli", value: "buyer_name" },
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
-      { text: "Berat", value: "weightunit" },
+      { text: "Berat", value: "weight" },
       { text: "Total Harga", value: "price" },
       { text: "Daerah Penjualan", value: "distribution_area" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
@@ -195,6 +195,31 @@ export default {
     this.getAllTransaction();
     this.getAllFish();
     this.getAllBuyer();
+  },
+
+  computed: {
+    showHeaders() {
+      if (this.input.fish == "0") {
+        if (this.input.buyerid == "0") {
+          return this.all_headers;
+        } else {
+          return this.all_headers.filter(
+            header => header.text !== "Nama Pembeli"
+          );
+        }
+      } else {
+        if (this.input.buyerid == "0") {
+          return this.all_headers.filter(
+            header => header.text !== "Jenis Ikan"
+          );
+        } else {
+          return this.all_headers.filter(
+            header =>
+              header.text !== "Jenis Ikan" && header.text !== "Nama Pembeli"
+          );
+        }
+      }
+    }
   },
 
   methods: {
