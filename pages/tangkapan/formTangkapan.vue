@@ -86,7 +86,7 @@
                 </v-col>
                 <v-col md="2" align="right">
                   <v-btn
-                    v-if="index != 0"
+                    v-if="input.caughts.length > 1"
                     color="red"
                     dark
                     depressed
@@ -140,9 +140,13 @@
                     row
                     class="check"
                   >
-                    <v-radio class="pb-3" label="Kg" value="1"></v-radio>
-                    <v-radio class="pb-3" label="Kwintal" value="2"></v-radio>
-                    <v-radio class="pb-3" label="Ton" value="3"></v-radio>
+                    <v-radio class="pb-3" label="Kg" value="Kg"></v-radio>
+                    <v-radio
+                      class="pb-3"
+                      label="Kwintal"
+                      value="Kwintal"
+                    ></v-radio>
+                    <v-radio class="pb-3" label="Ton" value="Ton"></v-radio>
                   </v-radio-group>
                 </v-col>
               </v-row>
@@ -260,7 +264,7 @@
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
                   {{ caught.weight }}
-                  {{ caught.unit | unitFormat }}
+                  {{ caught.unit }}
                 </h3></v-col
               >
             </v-row>
@@ -281,19 +285,6 @@
 </template>
 <script>
 export default {
-  filters: {
-    unitFormat(value) {
-      if (value == 1) {
-        return "Kg";
-      } else if (value == 2) {
-        return "Kwintal";
-      } else if (value == 3) {
-        return "Ton";
-      } else {
-        return "";
-      }
-    }
-  },
   data: () => ({
     dialog: false,
     valid: true,
@@ -345,10 +336,8 @@ export default {
       });
     },
     hapus(index) {
-      if (index != 0) {
-        this.input.caughts.splice(index, 1);
-        this.all_fish_name_confirm.splice(index, 1);
-      }
+      this.input.caughts.splice(index, 1);
+      this.all_fish_name_confirm.splice(index, 1);
     },
     reset() {
       this.$refs.form.reset();

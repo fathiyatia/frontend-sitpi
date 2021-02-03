@@ -38,6 +38,7 @@
             item-value="id"
             label="Status"
             clearable
+            :rules="required"
             v-model="input.status"
           ></v-select>
           <h3 class="mb-3 mt-2 primary--text">
@@ -57,8 +58,7 @@
             outlined
             single-line
             label="No. Telepon"
-            :rules="required"
-            v-model="input.phone"
+            v-model="input.phone_number"
           />
         </v-form>
       </v-card-text>
@@ -89,12 +89,9 @@ export default {
       name: null,
       status: null,
       address: null,
-      phone: null
+      phone_number: null
     },
-    status: [
-      { status: "Tetap", id: "1" },
-      { status: "Pendatang", id: "2" }
-    ]
+    status: ["Tetap", "Pendatang"]
   }),
   methods: {
     reset() {

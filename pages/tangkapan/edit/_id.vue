@@ -152,7 +152,7 @@ export default {
       fishing_gear_id: null,
       fishing_area: null,
       weight: null,
-      weight_unit_id: null
+      weight_unit: null
     },
     required: [v => !!v || "Data ini harus diisi"]
   }),
@@ -203,13 +203,6 @@ export default {
     async getAllFishingArea() {
       try {
         this.fishingarea = await this.$api("fishing_area", "index", null);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async getAllWeightUnit() {
-      try {
-        this.weightunit = await this.$api("weight_unit", "index", null);
       } catch (e) {
         console.log(e);
       }

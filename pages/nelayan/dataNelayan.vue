@@ -82,7 +82,7 @@ export default {
       { text: "Nama", value: "name" },
       { text: "Status", value: "status" },
       { text: "Alamat", value: "address" },
-      { text: "No. Telepon", value: "phone" },
+      { text: "No. Telepon", value: "phone_number" },
       { text: "Jenis Kapal", value: "ship_type" },
       { text: "Jumlah ABK", value: "abk_total" },
       { text: "Penanggung Jawab", value: "user_name" },

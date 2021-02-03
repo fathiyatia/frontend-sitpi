@@ -392,7 +392,7 @@ export default ({ app }, inject) => {
         caught.push({
           fish_type_id: parseInt(data.caughts[index].fish),
           weight: parseFloat(data.caughts[index].weight),
-          weight_unit_id: parseInt(data.caughts[index].unit)
+          weight_unit: data.caughts[index].unit
         });
       }
 
@@ -453,7 +453,7 @@ export default ({ app }, inject) => {
         fishing_area_id: parseInt(data.fishing_area_id),
         fish_type_id: parseInt(data.fish_type_id),
         weight: parseFloat(data.weight),
-        weight_unit_id: parseInt(data.weight_unit_id)
+        weight_unit: data.weight_unit
       };
       return app
         .$axios({
@@ -649,11 +649,18 @@ export default ({ app }, inject) => {
     },
 
     store(data) {
+      var transaction = [];
+      for (let index = 0; index < data.orders.length; index++) {
+        transaction.push({
+          auction_id: parseInt(data.orders[index].auction_id),
+          price: parseInt(data.orders[index].price)
+        });
+      }
+
       const body = {
         buyer_id: parseInt(data.buyer_id),
-        auction_id: parseInt(data.auction_id),
         distribution_area: data.distribution_area,
-        price: parseInt(data.price)
+        transaction_data: transaction
       };
 
       return app
@@ -755,6 +762,8 @@ export default ({ app }, inject) => {
       const body = {
         nik: data.nik,
         name: data.name,
+        status: data.status,
+        phone_number: data.phone_number,
         address: data.address,
         ship_type: data.ship_type,
         abk_total: parseInt(data.abk_total)
@@ -807,6 +816,8 @@ export default ({ app }, inject) => {
         id: data.id,
         nik: data.nik,
         name: data.name,
+        status: data.status,
+        phone_number: data.phone_number,
         address: data.address,
         ship_type: data.ship_type,
         abk_total: parseInt(data.abk_total)
@@ -844,6 +855,8 @@ export default ({ app }, inject) => {
       const body = {
         nik: data.nik,
         name: data.name,
+        status: data.status,
+        phone_number: data.phone_number,
         address: data.address
       };
 
@@ -893,6 +906,8 @@ export default ({ app }, inject) => {
         id: data.id,
         nik: data.nik,
         name: data.name,
+        status: data.status,
+        phone_number: data.phone_number,
         address: data.address
       };
       return app

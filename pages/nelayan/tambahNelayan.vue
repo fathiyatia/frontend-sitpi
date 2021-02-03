@@ -36,6 +36,7 @@
             item-text="status"
             item-value="id"
             label="Status"
+            :rules="required"
             clearable
             v-model="input.status"
           ></v-select>
@@ -56,8 +57,7 @@
             outlined
             single-line
             label="No. Telepon"
-            :rules="required"
-            v-model="input.phone"
+            v-model="input.phone_number"
           />
           <h3 class="mb-3 mt-2 primary--text">
             Jenis Kapal
@@ -114,19 +114,23 @@ export default {
       name: null,
       status: null,
       address: null,
-      phone: null,
+      phone_number: null,
       ship_type: null,
       abk_total: null
     },
-    ship_type: [],
-    status: [
-      { status: "Tetap", id: "1" },
-      { status: "Pendatang", id: "2" }
-    ]
+    ship_type: [
+      "Perahu Tak Bermotor - Jukung",
+      "Perahu Tak Bermotor - Perahu Papan",
+      "Perahu Motor Tempel",
+      "Kapal Motor < 5 GT",
+      "Kapal Motor 5-10 GT",
+      "Kapal Motor 11-20 GT",
+      "Kapal Motor 21-50 GT",
+      "Kapal Motor 51-100 GT",
+      "Kapal Motor > 100 GT"
+    ],
+    status: ["Tetap", "Pendatang"]
   }),
-  mounted() {
-    this.getAllShip();
-  },
   methods: {
     reset() {
       this.$refs.form.reset();
@@ -143,13 +147,6 @@ export default {
         } catch (e) {
           console.log(e);
         }
-      }
-    },
-    async getAllShip() {
-      try {
-        this.ship_type = await this.$api("fisher", "inquiry", null);
-      } catch (e) {
-        console.log(e);
       }
     }
   }
