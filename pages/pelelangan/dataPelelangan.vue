@@ -17,9 +17,7 @@
           <span class="primary--text font-weight-bold">TPI xxx </span> pada
           tanggal
 
-          <span class="primary--text font-weight-bold">{{
-            new Date().toLocaleDateString()
-          }}</span>
+          <date-format></date-format>
         </span>
       </v-row>
 
@@ -33,7 +31,26 @@
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
         <v-row no-gutters class="pt-3">
-          <v-col cols="12" lg="4" sm="6" class="px-2">
+          <v-col cols="12" lg="3" sm="6" class="px-2">
+            <v-autocomplete
+              solo
+              dense
+              block
+              single-line
+              label="No. Pelelangan"
+              v-model="input.auction"
+              @change="getAllAuction()"
+              :items="auction"
+              clearable
+              item-text="id"
+              item-value="id"
+            >
+              <template v-slot:selection="{ item }">{{
+                item.id
+              }}</template></v-autocomplete
+            >
+          </v-col>
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -53,7 +70,7 @@
             >
           </v-col>
 
-          <v-col cols="12" lg="4" sm="6" class="px-2">
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -72,7 +89,7 @@
               }}</template></v-autocomplete
             >
           </v-col>
-          <v-col cols="12" lg="4" sm="6" class="px-2">
+          <v-col cols="12" lg="3" sm="6" class="px-2">
             <v-select
               :items="status"
               item-text="status"
@@ -100,6 +117,21 @@
             .padStart(2, "0")
         }}:{{
           new Date(item.created_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
+    </template>
+    <template v-slot:item.sold_at="{ item }">
+      <span
+        >{{
+          new Date(item.sold_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.sold_at)
             .getMinutes()
             .toLocaleString()
             .padStart(2, "0")
@@ -147,7 +179,7 @@ export default {
         value: "id"
       },
       { text: "Jam Masuk", value: "created_at" },
-      { text: "Jam Terjual", value: "created_at" },
+      { text: "Jam Terjual", value: "sold_at" },
       { text: "Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
@@ -277,6 +309,54 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    }
+  },
+  filters: {
+    dateFormat(value) {
+      var date = value;
+      var tahun = date.getFullYear();
+      var bulan = date.getMonth();
+      var tanggal = date.getDate();
+      switch (bulan) {
+        case 0:
+          bulan = "Januari";
+          break;
+        case 1:
+          bulan = "Februari";
+          break;
+        case 2:
+          bulan = "Maret";
+          break;
+        case 3:
+          bulan = "April";
+          break;
+        case 4:
+          bulan = "Mei";
+          break;
+        case 5:
+          bulan = "Juni";
+          break;
+        case 6:
+          bulan = "Juli";
+          break;
+        case 7:
+          bulan = "Agustus";
+          break;
+        case 8:
+          bulan = "September";
+          break;
+        case 9:
+          bulan = "Oktober";
+          break;
+        case 10:
+          bulan = "November";
+          break;
+        case 11:
+          bulan = "Desember";
+          break;
+      }
+
+      return tanggal + " " + bulan + " " + tahun;
     }
   }
 };

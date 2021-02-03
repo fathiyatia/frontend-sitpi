@@ -17,9 +17,7 @@
           <span class="primary--text font-weight-bold">TPI xxx </span> pada
           tanggal
 
-          <span class="primary--text font-weight-bold">{{
-            new Date().toLocaleDateString()
-          }}</span>
+          <date-format></date-format>
         </span>
       </v-row>
 

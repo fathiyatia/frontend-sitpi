@@ -16,9 +16,7 @@
           <span class="primary--text font-weight-bold">TPI xxx </span> pada
           tanggal
 
-          <span class="primary--text font-weight-bold">{{
-            new Date().toLocaleDateString()
-          }}</span>
+          <date-format></date-format>
         </span>
       </v-row>
 
@@ -120,9 +118,6 @@
 <script>
 export default {
   data: () => ({
-    geartype: ["Jaring", "Pancingan"],
-    fishtype: ["Tuna", "Bandeng", "Bawal", "Kakap"],
-    unittype: ["Kg", "Kwintal", "Ton"],
     dialogDelete: false,
     input: {
       fisherid: "0",
