@@ -162,7 +162,6 @@ export default {
     this.getAllFish();
     this.getAllFishingGear();
     this.getAllFishingArea();
-    this.getAllWeightUnit();
   },
   methods: {
     reset() {

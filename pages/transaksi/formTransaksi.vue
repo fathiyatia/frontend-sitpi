@@ -199,13 +199,6 @@ export default {
     buyer: [],
     auction: [],
     total: null,
-    //nggak usah pake ini
-    dummy: {
-      auction: "0",
-      fisherid: "0",
-      fish: "0",
-      status: "1"
-    },
     input: {
       buyer_id: null,
       distribution_area: null,
@@ -235,6 +228,7 @@ export default {
 
   mounted() {
     this.getAllAuction();
+    this.getAllBuyer();
   },
 
   methods: {
@@ -301,7 +295,15 @@ export default {
 
     async getAllAuction() {
       try {
-        this.auction = await this.$api("auction", "index", this.dummy);
+        this.auction = await this.$api("auction", "inquiry", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllBuyer() {
+      try {
+        this.buyer = await this.$api("buyer", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

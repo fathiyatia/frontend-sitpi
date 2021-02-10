@@ -12,13 +12,7 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    is_dark() {
-      return this.$vuetify.theme.isDark;
-    }
-  }
-};
+export default {};
 </script>
 
 <style>

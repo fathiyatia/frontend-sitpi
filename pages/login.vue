@@ -4,7 +4,7 @@
       Aplikasi Pelelangan Ikan Terintegrasi
     </v-card-title>
     <v-card-subtitle class="d-flex justify-center">
-      Isi username dan password untuk masuk ke dalam sistem
+      Isi username dan kata sandi untuk masuk ke dalam sistem
     </v-card-subtitle>
     <v-form class="pt-3" ref="form" v-model="valid" lazy-validation>
       <v-text-field
@@ -18,7 +18,7 @@
         outlined
         single-line
         :rules="required"
-        label="Password"
+        label="Kata Sandi"
         prepend-inner-icon="mdi-lock"
         :type="showPassword ? 'text' : 'password'"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"

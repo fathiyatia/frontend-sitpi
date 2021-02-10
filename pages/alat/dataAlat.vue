@@ -26,13 +26,20 @@
             </v-card-title>
             <v-card-text>
               <v-container>
-                <v-row>
+                <v-form
+                  class="ma-o"
+                  no-gutters
+                  ref="form"
+                  v-model="valid"
+                  lazy-validation
+                >
                   <v-text-field
                     label="Nama Alat Tangkap"
                     v-model="input.name"
+                    :rules="required"
                     required
                   ></v-text-field>
-                </v-row>
+                </v-form>
               </v-container>
             </v-card-text>
             <v-card-actions>
@@ -217,19 +224,21 @@ export default {
     },
 
     async storeGear() {
-      try {
-        const result = await this.$api(
-          "fishing_gear",
-          "store",
-          this.input
-        ).finally(response => {
-          this.getAllGear();
-          this.dialogTambah = false;
-          this.input.name = null;
-          return response;
-        });
-      } catch (e) {
-        console.log(e);
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api(
+            "fishing_gear",
+            "store",
+            this.input
+          ).finally(response => {
+            this.getAllGear();
+            this.dialogTambah = false;
+            this.input.name = null;
+            return response;
+          });
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
 
