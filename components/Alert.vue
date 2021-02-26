@@ -1,8 +1,10 @@
 <template>
-  <div class="text-center">
+  <div class="">
     <v-snackbar
       v-model="show"
       top
+      right
+      multi-line
       :timeout="success ? timeout.success : timeout.error"
       :color="success ? color.success : color.error"
     >

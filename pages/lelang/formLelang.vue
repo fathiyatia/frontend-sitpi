@@ -3,121 +3,24 @@
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <!----- Title ----->
       <v-card color="secondary" dark elevation="0">
-        <v-card-title class="mb-1">Isi Transaksi</v-card-title>
+        <v-card-title class="mb-1">Catat Hasil Lelang</v-card-title>
         <v-card-subtitle class="white--text font-weight-light"
-          >Pilih ikan dan isi data dibawah ini untuk mencatat transaksi
-          pembelian hasil lelang</v-card-subtitle
+          >Isi data dibawah ini untuk mencatat hasil lelang</v-card-subtitle
         >
       </v-card>
-      <!----- Auction Table ----->
-      <v-data-table
-        :headers="headers"
-        :items="auction"
-        :search="search"
-        :items-per-page="5"
-        sort-by="created_at"
-        sort-desc
-        class="elevation-0 px-3"
-      >
-        <template v-slot:top>
-          <v-row class="mx-0 pt-6 pl-2">
-            <h3 class="accent--text">Pilih Ikan</h3>
-          </v-row>
-          <template>
-            <v-text-field
-              outlined
-              dense
-              class="mt-2 px-2 mb-5 rounded-xl"
-              v-model="search"
-              prepend-inner-icon="mdi-magnify"
-              label="Cari"
-              single-line
-              hide-details
-            ></v-text-field>
-          </template>
-        </template>
-        <template v-slot:item.weight="{ item }">
-          {{ item.weight }} {{ item.weight_unit }}
-        </template>
-        <template v-slot:item.action="{ item }">
-          <v-btn
-            block
-            small
-            color="secondary"
-            depressed
-            :disabled="isDisabled(item.id)"
-            @click="
-              addToCart(item.id, item.fish_type, item.weight, item.weight_unit)
-            "
-          >
-            Jual
-          </v-btn>
-        </template>
-      </v-data-table>
-
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <!----- Form ----->
-      <!----- Order List ----->
-      <v-card-text class="mt-4">
+      <v-card-text class="mt-2">
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-row class="mx-0 pl-1 pb-5">
-            <h2 class="primary--text ">
-              Daftar Ikan yang sudah dipilih
-            </h2>
-          </v-row>
-          <div v-if="!isEmpty">
-            <div v-for="(order, index) in input.orders" :key="index">
-              <v-divider></v-divider>
-              <v-row class="mx-5 mb-3 pt-2">
-                <v-col lg="3" sm="6">
-                  <h3 class="accent--text mt-3 font-weight-regular">
-                    {{ index + 1 }} ) &nbsp; {{ order.fish_type }}
-                  </h3></v-col
-                >
-                <v-col lg="3" sm="6">
-                  <h3 class="accent--text mt-3 font-weight-regular">
-                    {{ order.weight }} {{ order.weight_unit }}
-                  </h3></v-col
-                >
-                <v-col cols="12" lg="3" sm="6">
-                  <v-text-field
-                    dense
-                    outlined
-                    single-line
-                    prefix="Rp"
-                    type="number"
-                    label="Masukkan Harga"
-                    :rules="required"
-                    v-model="input.orders[index].price"
-                    @input="getTotal()"
-                  />
-                </v-col>
-                <v-col lg="3" sm="6">
-                  <v-btn
-                    class="pl-4"
-                    color="red"
-                    dark
-                    depressed
-                    small
-                    @click="hapus(index)"
-                    >Hapus</v-btn
-                  >
-                </v-col>
-              </v-row>
-              <v-divider></v-divider>
-            </div>
-            <v-row class="mx-0 pl-1 pb-5 pt-5">
-              <h2 class="accent--text">
-                Total Harga : {{ total | totalFormat }}
-              </h2>
-            </v-row>
-          </div>
-          <div v-else>
-            <v-row class="mx-0 pl-1 pb-3">
-              <h3 class="font-weight-regular">Belum ada ikan yang dipilih</h3>
-            </v-row>
-          </div>
-
-          <h3 class="mb-3 mt-7 primary--text">
+          <!----- Input Buyer and Area ----->
+          <h3 class="mb-3 primary--text">
             Nama Pembeli
           </h3>
           <v-autocomplete
@@ -143,6 +46,111 @@
             :rules="required"
             v-model="input.distribution_area"
           />
+
+          <!----- Auction Table ----->
+          <!----- Dummy ----->
+          <v-data-table
+            :headers="headers"
+            :items="dummy"
+            :search="search"
+            :items-per-page="5"
+            sort-by="created_at"
+            sort-desc
+            class="elevation-0 px-2"
+          >
+            <template v-slot:top>
+              <v-row class="mt-3 px-2">
+                <h3 class="accent--text">Pilih Ikan</h3>
+              </v-row>
+              <v-text-field
+                outlined
+                dense
+                class="mx-0 mt-4 mb-5 rounded-xl"
+                v-model="search"
+                prepend-inner-icon="mdi-magnify"
+                label="Cari"
+                single-line
+                hide-details
+              ></v-text-field>
+            </template>
+            <template v-slot:item.weight="{ item }">
+              {{ item.weight }} {{ item.weight_unit }}
+            </template>
+            <template v-slot:item.action="{ item }">
+              <v-btn
+                block
+                small
+                color="secondary"
+                depressed
+                :disabled="isDisabled(item.id)"
+                @click="
+                  addToCart(
+                    item.id,
+                    item.fisher_name,
+                    item.fish_type,
+                    item.weight,
+                    item.weight_unit
+                  )
+                "
+              >
+                Jual
+              </v-btn>
+            </template>
+          </v-data-table>
+
+          <!----- Cart ----->
+          <v-row class="mx-0 pl-1 pb-5">
+            <h2 class="primary--text ">
+              Daftar Ikan yang sudah dipilih
+            </h2>
+          </v-row>
+          <div v-if="!isEmpty">
+            <div v-for="(order, index) in input.orders" :key="index">
+              <v-divider></v-divider>
+              <v-row class="mx-2 pt-1">
+                <v-col lg="4" sm="6">
+                  <h3 class="accent--text mt-3 font-weight-regular">
+                    {{ index + 1 }}. &nbsp;{{ order.fish_type }}
+                    {{ order.weight }} {{ order.weight_unit }}
+                  </h3></v-col
+                >
+                <v-col lg="3" sm="6">
+                  <h3 class="accent--text mt-3 font-weight-regular">
+                    {{ order.fisher_name }}
+                  </h3></v-col
+                >
+                <v-col cols="12" lg="3" sm="10">
+                  <v-text-field
+                    dense
+                    outlined
+                    single-line
+                    prefix="Rp"
+                    type="number"
+                    label="Masukkan Harga"
+                    :rules="required"
+                    v-model="input.orders[index].price"
+                    @input="getTotal()"
+                  />
+                </v-col>
+                <v-col lg="2" sm="2">
+                  <v-btn color="red" dark depressed small @click="hapus(index)"
+                    >Hapus</v-btn
+                  >
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+            </div>
+            <v-row class="mx-0 pl-1 pb-5 pt-5">
+              <h2 class="accent--text">
+                Total Harga : {{ total | totalFormat }}
+              </h2>
+            </v-row>
+          </div>
+          <div v-else>
+            <v-row class="mx-0 pl-1 pb-3">
+              <h3 class="font-weight-regular">Belum ada ikan yang dipilih</h3>
+            </v-row>
+          </div>
         </v-form>
       </v-card-text>
       <!----- End of Form ----->
@@ -155,7 +163,7 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeTransaction()">
+            <v-btn large block color="primary" @click.stop="storeAuction()">
               Simpan
             </v-btn>
           </v-col>
@@ -198,6 +206,21 @@ export default {
     required: [v => !!v || "Data ini harus diisi"],
     buyer: [],
     auction: [],
+    //dummy
+    dummy: [
+      {
+        id: "1",
+        fisher_name: "Fisher",
+        fish_type: "Tenggiri",
+        weight: "70 Kg"
+      },
+      {
+        id: "2",
+        fisher_name: "Fisher",
+        fish_type: "Tenggiri",
+        weight: "50 Kg"
+      }
+    ],
     total: null,
     input: {
       buyer_id: null,
@@ -205,6 +228,7 @@ export default {
       orders: [
         {
           auction_id: null,
+          fisher_name: null,
           fish_type: null,
           weight: null,
           price: null
@@ -214,16 +238,23 @@ export default {
     search: "",
     headers: [
       {
-        text: "No. Pelelangan",
+        text: "ID",
         align: "start",
         sortable: false,
         value: "id"
       },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
+      { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Aksi", value: "action", sortable: false, width: 160 }
     ],
-    auction: []
+    auction: [],
+    //test alert
+    snackbar: false,
+    success: false,
+    messages: "",
+    icon: "",
+    timeout: 2000
   }),
 
   mounted() {
@@ -232,17 +263,19 @@ export default {
   },
 
   methods: {
-    addToCart(id, fish_type, weight, weight_unit) {
+    addToCart(id, fisher_name, fish_type, weight, weight_unit) {
       if (this.isEmpty == true) {
         this.isEmpty = false;
         if (this.input.orders.length == 1) {
           this.input.orders[0].auction_id = id;
+          this.input.orders[0].fisher_name = fisher_name;
           this.input.orders[0].fish_type = fish_type;
           this.input.orders[0].weight = weight;
           this.input.orders[0].weight_unit = weight_unit;
         } else {
           this.input.orders.push({
             auction_id: id,
+            fisher_name: fisher_name,
             fish_type: fish_type,
             weight: weight,
             weight_unit: weight_unit,
@@ -252,6 +285,7 @@ export default {
       } else {
         this.input.orders.push({
           auction_id: id,
+          fisher_name: fisher_name,
           fish_type: fish_type,
           weight: weight,
           weight_unit: weight_unit,
@@ -259,16 +293,18 @@ export default {
         });
       }
     },
+    // cek
     isDisabled(id) {
-      let isCart = false;
+      //let isCart = false;
       for (let index = 0; index < this.input.orders.length; index++) {
         if (id == this.input.orders[index].auction_id) {
-          isCart = true;
+          //isCart = true;
+          return true;
         }
       }
-      if (isCart == true) {
-        return true;
-      }
+      //if (isCart == true) {
+      //  return true;
+      //}
     },
 
     getTotal() {
@@ -292,7 +328,7 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-
+    //cek
     async getAllAuction() {
       try {
         this.auction = await this.$api("auction", "inquiry", null);
@@ -308,16 +344,20 @@ export default {
         console.log(e);
       }
     },
-
-    async storeTransaction() {
-      if (this.$refs.form.validate()) {
+    // res
+    async storeAuction() {
+      if (this.isEmpty) {
+        this.success = false;
+        this.messages = "Belum ada ikan yang dipilih";
+        this.snackbar = true;
+      } else if (this.$refs.form.validate()) {
         try {
           const result = await this.$api(
-            "transaction",
+            "auction",
             "store",
             this.input
           ).finally(response => {
-            this.$router.push("/transaksi/dataTransaksi");
+            this.$router.push("/lelang/dataLelang");
             return response;
           });
         } catch (e) {

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer color="primary" v-model="drawer" fixed app width="260"
+  <v-navigation-drawer color="primary" v-model="drawer" fixed app width="265"
     ><v-container>
       <v-row no-gutters class="pt-4">
         <v-col cols="4">
@@ -29,16 +29,17 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
-      <!--- Tangkapan --->
+      <!--- Form --->
       <v-divider class="mx-3 mb-2" color="white"></v-divider>
-      <span class="ml-3 caption white--text">Tangkapan Ikan</span>
-      <v-list-item-group color="white">
+      <!---  <span class="ml-3 caption white--text">Tangkapan Ikan</span> -->
+      <!--- comment <v-list-item-group color="white">
         <v-list-item
-          v-for="(item, i) in caught"
+          v-for="(item, i) in form"
           :key="i"
           :to="item.to"
           router
           exact
+          color="success"
         >
           <v-list-item-action>
             <v-icon color="white">{{ item.icon }}</v-icon>
@@ -47,13 +48,35 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
-      </v-list-item-group>
-      <!--- Lelang --->
+      </v-list-item-group> --->
+      <v-card
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/tangkapan/formTangkapan'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-clipboard-edit </v-icon> Catat
+          Tangkapan Ikan
+        </h4>
+      </v-card>
+      <v-card
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/lelang/formLelang'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-book-open-variant </v-icon>
+          Catat Hasil Lelang
+        </h4>
+      </v-card>
+      <!--- Rekap --->
       <v-divider class="mx-3 mb-2" color="white"></v-divider>
-      <span class="ml-3 caption white--text">Lelang</span>
+      <span class="ml-3 caption white--text">Rekap</span>
       <v-list-item-group color="white">
         <v-list-item
-          v-for="(item, i) in auction"
+          v-for="(item, i) in recap"
           :key="i"
           :to="item.to"
           router
@@ -64,25 +87,6 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="white--text" v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-      <!--- Transaksi --->
-      <v-divider class="mx-3 mb-2" color="white"></v-divider>
-      <span class="ml-3 caption white--text">Transaksi</span>
-      <v-list-item-group color="white">
-        <v-list-item
-          v-for="(item, i) in transaction"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon color="white">{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -105,22 +109,25 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
-      <!--- Laporan ---->
+      <!--- Laporan --->
       <v-divider class="mx-3 mb-2" color="white"></v-divider>
-      <v-list-item
-        v-for="(item, i) in report"
-        :key="i"
-        :to="item.to"
-        router
-        exact
-      >
-        <v-list-item-action>
-          <v-icon color="white">{{ item.icon }}</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title class="white--text" v-text="item.title" />
-        </v-list-item-content>
-      </v-list-item>
+      <span class="ml-3 caption white--text">Laporan</span>
+      <v-list-item-group color="white">
+        <v-list-item
+          v-for="(item, i) in report"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon color="white">{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content class="white--text">
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -141,35 +148,17 @@ export default {
           to: "/"
         }
       ],
-      caught: [
+
+      recap: [
         {
-          icon: "mdi-clipboard-edit",
-          title: "Isi Tangkapan Ikan",
-          to: "/tangkapan/formTangkapan"
-        },
-        {
-          icon: "mdi-fish",
-          title: "Data Tangkapan Ikan",
+          icon: "mdi-basket",
+          title: "Tangkapan Ikan",
           to: "/tangkapan/dataTangkapan"
-        }
-      ],
-      auction: [
-        {
-          icon: "mdi-handshake",
-          title: "Data Proses Lelang",
-          to: "/pelelangan/dataPelelangan"
-        }
-      ],
-      transaction: [
-        {
-          icon: "mdi-clipboard-edit",
-          title: "Isi Transaksi",
-          to: "/transaksi/formTransaksi"
         },
         {
           icon: "mdi-cash-multiple",
-          title: "Data Transaksi",
-          to: "/transaksi/dataTransaksi"
+          title: "Hasil Lelang",
+          to: "/lelang/dataLelang"
         }
       ],
       data: [
@@ -184,21 +173,36 @@ export default {
           to: "/pembeli/dataPembeli"
         },
         {
+          icon: "mdi-hook",
+          title: "Alat Tangkap",
+          to: "/alat/dataAlat"
+        },
+        {
           icon: "mdi-map-marker",
           title: "Daerah Tangkapan",
           to: "/daerah/dataDaerah"
         },
         {
-          icon: "mdi-hook",
-          title: "Alat Tangkap",
-          to: "/alat/dataAlat"
+          icon: "mdi-fish",
+          title: "Ikan",
+          to: "/ikan/dataIkan"
+        },
+        {
+          icon: "mdi-badge-account",
+          title: "User",
+          to: "/user/dataUser"
         }
       ],
       report: [
         {
           icon: "mdi-file-chart",
-          title: "Laporan",
-          to: "/"
+          title: "Produksi Ikan",
+          to: "/laporan/produksiIkan"
+        },
+        {
+          icon: "mdi-file-chart",
+          title: "Transaksi Lelang",
+          to: "/laporan/transaksiLelang"
         }
       ]
     };

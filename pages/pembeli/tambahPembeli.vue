@@ -97,6 +97,7 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    // res
     async storeBuyer() {
       if (this.$refs.form.validate()) {
         try {

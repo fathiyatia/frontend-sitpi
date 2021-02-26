@@ -1,12 +1,19 @@
 <template>
   <v-card max-width="1200px" class="pa-7 rounded-lg" tile elevation="5">
+    <!---- Alert ----->
+    <template>
+      <alert v-model="snackbar" :success="success" :messages="messages"></alert>
+    </template>
     <v-card-title class="d-flex justify-center">
       Aplikasi Pelelangan Ikan Terintegrasi
     </v-card-title>
-    <v-card-subtitle class="d-flex justify-center">
+    <v-card-subtitle class="pt-2 d-flex justify-center">
       Isi username dan kata sandi untuk masuk ke dalam sistem
     </v-card-subtitle>
-    <v-form class="pt-3" ref="form" v-model="valid" lazy-validation>
+    <span v-if="showEror" class="pt-2 d-flex justify-center red--text"
+      >Username atau password yang Anda masukkan salah</span
+    >
+    <v-form class="pt-5" ref="form" v-model="valid" lazy-validation>
       <v-text-field
         outlined
         single-line
@@ -24,14 +31,9 @@
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="handleclick"
       />
-      <span>Masuk sebagai : </span>
-      <v-radio-group row class="check" :rules="required">
-        <v-radio class="pb-3" label="Petugas TPI" value="1"></v-radio>
-        <v-radio class="pb-3" label="Dinas Kabupaten" value="2"></v-radio>
-      </v-radio-group>
     </v-form>
     <v-card-actions class="px-0">
-      <v-btn color="primary" block @click="login()">Masuk</v-btn>
+      <v-btn color="primary" large block @click="login()">Masuk</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -41,6 +43,13 @@ export default {
   layout: "blank",
   data() {
     return {
+      showEror: false,
+      //test alert
+      snackbar: false,
+      success: false,
+      messages: "",
+      icon: "",
+      timeout: 2000,
       showPassword: false,
       valid: true,
       required: [v => !!v || "Data ini harus diisi"]
@@ -52,7 +61,8 @@ export default {
     },
     login() {
       if (this.$refs.form.validate()) {
-        this.$router.push("/");
+        this.showEror = true;
+        //this.$router.push("/");
       }
     }
   }

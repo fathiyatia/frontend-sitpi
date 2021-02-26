@@ -1,7 +1,8 @@
 <template>
+  <!----- Dummy --->
   <v-data-table
     :headers="showHeaders"
-    :items="transaction"
+    :items="dummy"
     :search="search"
     sort-by="created_at"
     sort-desc
@@ -9,11 +10,11 @@
   >
     <template v-slot:top>
       <v-row class="mx-0 px-4 pt-6">
-        <h2 class="accent--text">Data Transaksi</h2>
+        <h2 class="accent--text">Data Hasil Lelang</h2>
       </v-row>
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
-          Data transaksi pembelian hasil lelang di
+          Data hasil lelang di
           <span class="primary--text font-weight-bold">TPI xxx </span> pada
           tanggal
 
@@ -43,7 +44,7 @@
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllTransaction()"
+              @change="getAllAuction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -63,7 +64,7 @@
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllTransaction()"
+              @change="getAllAuction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -74,18 +75,19 @@
       </v-card>
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
-          <v-card-title class="headline"
+          <v-card-title class="justify-center"
             >Anda yakin ingin menghapus data ini?</v-card-title
           >
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-            <v-btn color="error" text @click="deleteTransaction">Hapus</v-btn>
+            <v-btn color="error" text @click="deleteAuction">Hapus</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </template>
+    <!---- Uncomment dummy
     <template v-slot:item.created_at="{ item }">
       <span
         >{{
@@ -100,9 +102,11 @@
             .padStart(2, "0")
         }}
       </span>
-    </template>
+    </template> --->
+
     <template v-slot:item.price="{ item }">
-      <span> {{ item.price | currencyFormat }}</span>
+      <!---- Test angka align end -->
+      <span class="d-flex justify-end"> {{ item.price | currencyFormat }}</span>
     </template>
     <template v-slot:item.weight="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
@@ -112,7 +116,7 @@
         x-small
         color="secondary"
         depressed
-        :to="'/transaksi/edit/' + item.id"
+        :to="'/lelang/edit/' + item.id"
       >
         Edit
       </v-btn>
@@ -159,9 +163,30 @@ export default {
       buyerid: "0",
       fish: "0"
     },
+    //dummy
+    dummy: [
+      {
+        created_at: "13:00",
+        buyer_name: "Buyer",
+        fisher_name: "Fisher",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        price: "250000",
+        distribution_area: "Indramayu"
+      },
+      {
+        created_at: "13:00",
+        buyer_name: "Buyer",
+        fisher_name: "Fisher",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        price: "250000",
+        distribution_area: "Indramayu"
+      }
+    ],
     all_headers: [
       {
-        text: "No. Transaksi",
+        text: "ID",
         align: "start",
         sortable: false,
         value: "id"
@@ -171,31 +196,29 @@ export default {
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
-      { text: "Total Harga", value: "price" },
+      { text: "Total Harga", value: "price", align: "center" },
       { text: "Daerah Penjualan", value: "distribution_area" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
     buyer: [],
     fishtype: [],
-    transaction: []
+    auction: []
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     }
   },
 
   mounted() {
-    this.getAllTransaction();
+    this.getAllAuction();
     this.getAllFish();
     this.getAllBuyer();
   },
 
   computed: {
+    //adj
     showHeaders() {
       if (this.input.fish == "0") {
         if (this.input.buyerid == "0") {
@@ -234,10 +257,10 @@ export default {
       });
     },
 
-    deleteTransaction() {
+    deleteAuction() {
       try {
-        this.$api("transaction", "delete", this.currentId).finally(() => {
-          this.getAllTransaction();
+        this.$api("auction", "delete", this.currentId).finally(() => {
+          this.getAllAuction();
           this.dialogDelete = false;
         });
       } catch (e) {
@@ -245,9 +268,9 @@ export default {
       }
     },
 
-    async getAllTransaction() {
+    async getAllAuction() {
       try {
-        this.transaction = await this.$api("transaction", "index", this.input);
+        this.auction = await this.$api("auction", "index", this.input);
       } catch (e) {
         console.log(e);
       }

@@ -9,8 +9,14 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Fish.index(data, other);
+          case "store":
+            return Fish.store(data, other);
+          case "delete":
+            return Fish.delete(data, other);
           case "get_by_id":
             return Fish.get_by_id(data, other);
+          case "update":
+            return Fish.update(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -53,6 +59,7 @@ export default ({ app }, inject) => {
             );
             break;
         }
+      /*  
       case "weight_unit":
         switch (action) {
           case "index":
@@ -62,7 +69,7 @@ export default ({ app }, inject) => {
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
             );
             break;
-        }
+        } */
       case "caught":
         switch (action) {
           case "index":
@@ -75,6 +82,7 @@ export default ({ app }, inject) => {
             return Caught.get_by_id(data, other);
           case "update":
             return Caught.update(data, other);
+          //check
           case "total_production":
             return Caught.total_production(data, other);
           case "total_fisher":
@@ -85,6 +93,7 @@ export default ({ app }, inject) => {
             );
             break;
         }
+      /*
       case "auction":
         switch (action) {
           case "index":
@@ -105,20 +114,22 @@ export default ({ app }, inject) => {
             );
             break;
         }
-      case "transaction":
+        */
+      case "auction":
         switch (action) {
           case "index":
-            return Transaction.index(data, other);
+            return Auction.index(data, other);
           case "store":
-            return Transaction.store(data, other);
+            return Auction.store(data, other);
           case "delete":
-            return Transaction.delete(data, other);
+            return Auction.delete(data, other);
           case "get_by_id":
-            return Transaction.get_by_id(data, other);
+            return Auction.get_by_id(data, other);
           case "update":
-            return Transaction.update(data, other);
+            return Auction.update(data, other);
+          //check
           case "total_buyer":
-            return Transaction.total_buyer(data, other);
+            return Auction.total_buyer(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -176,6 +187,39 @@ export default ({ app }, inject) => {
         return response.data.response_data;
       });
     },
+    store(data) {
+      const body = {
+        name: data.name
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/fish_type",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        });
+    },
+    delete(data) {
+      const body = {
+        id: data
+      };
+      return app
+        .$axios({
+          method: "delete",
+          url: "/fish_type/" + data,
+          data: body
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
     get_by_id(data) {
       return app
         .$axios({
@@ -183,6 +227,24 @@ export default ({ app }, inject) => {
           url: "/fish_type/" + data
         })
         .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    update(data) {
+      const body = {
+        name: data.name
+      };
+      return app
+        .$axios({
+          method: "put",
+          url: "/fish_type/" + data.id,
+          data: body
+        })
+        .then(response => {
+          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -348,7 +410,7 @@ export default ({ app }, inject) => {
         });
     }
   };
-
+  /*
   const Weight_unit = {
     index() {
       return app.$axios.get("/weight_unit").then(response => {
@@ -356,7 +418,7 @@ export default ({ app }, inject) => {
         return response.data.response_data;
       });
     }
-  };
+  };*/
 
   const Caught = {
     index(data) {
@@ -365,6 +427,9 @@ export default ({ app }, inject) => {
       }
       if (data.fisherid == null) {
         data.fisherid = "0";
+      }
+      if (data.status == null) {
+        data.status = "0";
       }
       return app
         .$axios({
@@ -507,7 +572,7 @@ export default ({ app }, inject) => {
     }
   };
 
-  const Auction = {
+  /* const Auction = {
     index(data) {
       if (data.fish == null) {
         data.fish = "0";
@@ -618,9 +683,9 @@ export default ({ app }, inject) => {
           throw error.response;
         });
     }
-  };
+  }; */
 
-  const Transaction = {
+  const Auction = {
     index(data) {
       if (data.fish == null) {
         data.fish = "0";
@@ -632,7 +697,7 @@ export default ({ app }, inject) => {
         .$axios({
           method: "get",
           url:
-            "/transaction?from=" +
+            "/auction?from=" +
             "&to=" +
             "&fish_type_id=" +
             data.fish +
@@ -649,10 +714,10 @@ export default ({ app }, inject) => {
     },
 
     store(data) {
-      var transaction = [];
+      var auction = [];
       for (let index = 0; index < data.orders.length; index++) {
-        transaction.push({
-          auction_id: parseInt(data.orders[index].auction_id),
+        auction.push({
+          caught_id: parseInt(data.orders[index].caught_id),
           price: parseInt(data.orders[index].price)
         });
       }
@@ -660,13 +725,13 @@ export default ({ app }, inject) => {
       const body = {
         buyer_id: parseInt(data.buyer_id),
         distribution_area: data.distribution_area,
-        transaction_data: transaction
+        auction_data: auction
       };
 
       return app
         .$axios({
           method: "post",
-          url: "/transaction",
+          url: "/auction",
           data: body
         })
         .then(response => {
@@ -681,7 +746,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "delete",
-          url: "/transaction/" + data,
+          url: "/auction/" + data,
           data: body
         })
         .then(response => {
@@ -695,7 +760,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/transaction/" + data
+          url: "/auction/" + data
         })
         .then(response => {
           return response.data.response_data;
@@ -714,7 +779,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "put",
-          url: "/transaction/" + data.id,
+          url: "/auction/" + data.id,
           data: body
         })
         .then(response => {
@@ -730,7 +795,7 @@ export default ({ app }, inject) => {
         .$axios({
           method: "get",
           url:
-            "/transaction/total_buyer?from=" +
+            "/auction/total_buyer?from=" +
             data.date_start +
             "&to=" +
             data.date_end

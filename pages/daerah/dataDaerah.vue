@@ -21,7 +21,7 @@
 
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="headline"
+              <v-card-title class="justify-center"
                 >Anda yakin ingin menghapus data ini?</v-card-title
               >
               <v-card-actions>
@@ -91,9 +91,13 @@ export default {
     search: "",
     headers: [
       {
-        text: "Nama Daerah",
+        text: "Kode Daerah",
         align: "start",
         sortable: false,
+        value: "code"
+      },
+      {
+        text: "Nama Daerah",
         value: "name"
       },
       { text: "Bujur D", value: "east_longitude_degree" },
@@ -104,13 +108,20 @@ export default {
       { text: "Lintang S", value: "south_latitude_second" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    area: []
+    area: [
+      {
+        name: "Indramayu",
+        south_latitude_degree: "90",
+        south_latitude_minute: "123",
+        south_latitude_second: "123123",
+        east_longitude_degree: "12312",
+        east_longitude_minute: "1231",
+        east_longitude_second: "123"
+      }
+    ]
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     }
@@ -128,10 +139,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     deleteArea() {

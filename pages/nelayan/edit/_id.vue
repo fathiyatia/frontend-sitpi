@@ -146,6 +146,7 @@ export default {
         console.log(e);
       }
     },
+    //res
     async updateFisher() {
       if (this.$refs.form.validate()) {
         try {

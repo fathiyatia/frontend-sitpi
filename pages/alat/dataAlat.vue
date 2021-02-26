@@ -18,7 +18,7 @@
           </v-btn>
         </v-col>
 
-        <!--Dialog Tambah--->
+        <!--Dialog Tambah Alat Tangkap--->
         <v-dialog v-model="dialogTambah" persistent max-width="600px">
           <v-card>
             <v-card-title>
@@ -27,7 +27,7 @@
             <v-card-text>
               <v-container>
                 <v-form
-                  class="ma-o"
+                  class=""
                   no-gutters
                   ref="form"
                   v-model="valid"
@@ -85,7 +85,7 @@
         <!--Dialog Delete--->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline"
+            <v-card-title class="justify-center"
               >Anda yakin ingin menghapus data ini?</v-card-title
             >
             <v-card-actions>
@@ -138,9 +138,13 @@ export default {
     search: "",
     headers: [
       {
-        text: "Jenis Alat Tangkap",
+        text: "Kode Alat",
         align: "start",
         sortable: false,
+        value: "code"
+      },
+      {
+        text: "Jenis Alat Tangkap",
         value: "name"
       },
       { text: "Aksi", value: "id", sortable: false }
@@ -151,13 +155,14 @@ export default {
     inputedit: {
       name: null
     },
-    gear: []
+    gear: [
+      {
+        name: "Pancingan"
+      }
+    ]
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     },
@@ -190,10 +195,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeTambah() {
@@ -223,6 +224,7 @@ export default {
       }
     },
 
+    //res
     async storeGear() {
       if (this.$refs.form.validate()) {
         try {
@@ -243,7 +245,6 @@ export default {
     },
 
     async getById(id) {
-      console.log("tes");
       try {
         this.inputedit = await this.$api("fishing_gear", "get_by_id", id);
         this.dialogEdit = true;
@@ -252,6 +253,7 @@ export default {
       }
     },
 
+    //res
     async updateGear() {
       try {
         const result = await this.$api(

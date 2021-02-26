@@ -2,14 +2,16 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-card color="secondary" dark elevation="0">
-        <v-card-title class="mb-1">Isi Hasil Tangkapan Ikan</v-card-title>
+        <v-card-title class="mb-1">Catat Tangkapan Ikan</v-card-title>
         <v-card-subtitle class="white--text font-weight-light"
           >Isi data dibawah ini untuk mencatat tangkapan ikan yang akan
           dilelang</v-card-subtitle
         >
       </v-card>
+
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
+          <!-- Fisher Identitiy etc ---->
           <h3 class="mb-3 mt-2 primary--text">
             Nama Nelayan / Nahkoda
           </h3>
@@ -40,6 +42,7 @@
             :rules="required"
             v-model="input.trip_day"
           />
+
           <h3 class="mb-3 primary--text">
             Jenis Alat Tangkap
           </h3>
@@ -77,6 +80,7 @@
               item.name
             }}</template></v-autocomplete
           >
+          <!-- Hasil Tangkapan ---->
           <template class="caughtfish" v-for="(caught, index) in input.caughts">
             <div no-gutters :key="index">
               <v-divider class="mb-6"></v-divider>
@@ -303,7 +307,7 @@ export default {
         {
           fish: null,
           weight: null,
-          unit: "1"
+          unit: "Kg"
         }
       ]
     },
@@ -343,9 +347,9 @@ export default {
       this.$refs.form.reset();
     },
     confirm() {
-      if (this.$refs.form.validate()) {
-        this.dialog = true;
-      }
+      //if (this.$refs.form.validate()) {
+      this.dialog = true;
+      //}
     },
     async getAllFisher() {
       try {

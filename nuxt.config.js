@@ -77,7 +77,8 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: "#4CAF50"
+          success: "#4CAF50",
+          background_login: "#C5DEF0"
         }
       }
     }

@@ -109,6 +109,7 @@ export default {
         console.log(e);
       }
     },
+    //res
     async updateBuyer() {
       if (this.$refs.form.validate()) {
         try {

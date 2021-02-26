@@ -135,6 +135,7 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    //res
     async storeFisher() {
       if (this.$refs.form.validate()) {
         try {

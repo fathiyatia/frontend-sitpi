@@ -82,16 +82,20 @@ export default {
       { text: "Status", value: "status" },
       { text: "Alamat", value: "address" },
       { text: "No. Telepon", value: "phone_number" },
-      { text: "Penanggung Jawab", value: "user_name" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    buyer: []
+    buyer: [
+      {
+        nik: "123124213123",
+        status: "Pendatang",
+        name: "Yudit",
+        address: "Candrabaga",
+        phone_number: "213123213213"
+      }
+    ]
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     }
@@ -109,10 +113,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     deleteBuyer() {

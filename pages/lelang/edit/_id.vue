@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-card color="secondary" dark elevation="0">
-        <v-card-title class="mb-1">Edit Transaksi</v-card-title>
+        <v-card-title class="mb-1">Edit Hasil Lelang</v-card-title>
       </v-card>
       <v-spacer></v-spacer>
       <v-card-text>
@@ -25,31 +25,7 @@
               item.name + " - " + item.nik
             }}</template></v-autocomplete
           >
-          <!---------
-          <h3 class="mb-3 mt-2 primary--text">
-            No. Pelelangan
-          </h3>
-          <v-autocomplete
-            outlined
-            single-line
-            label="No. Pelelangan"
-            :rules="required"
-            v-model="input.auction_id"
-            :items="auction"
-            clearable
-            item-text="id"
-          >
-            <template v-slot:selection="{ item }">{{
-              item.id +
-                " - Jenis Ikan : " +
-                item.fish_type +
-                " - Berat : " +
-                item.weight +
-                " " +
-                item.weight_unit
-            }}</template></v-autocomplete
-          >
-          ----->
+
           <h3 class="mb-3 mt-2 primary--text">
             Total Harga
           </h3>
@@ -61,6 +37,7 @@
             :rules="required"
             v-model="input.price"
           />
+
           <h3 class="mb-3 mt-2 primary--text">
             Daerah Penjualan Ikan
           </h3>
@@ -76,12 +53,12 @@
       <v-card-actions class="justify-center px-3">
         <v-row>
           <v-col md="6">
-            <v-btn large block color="accent" :to="'/transaksi/dataTransaksi'">
+            <v-btn large block color="accent" :to="'/lelang/dataLelang'">
               Batal
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click="updateTransaction">
+            <v-btn large block color="primary" @click="updateAuction">
               Simpan
             </v-btn>
           </v-col>
@@ -96,6 +73,7 @@ export default {
     required: [v => !!v || "Data ini harus diisi"],
     buyer: [],
     auction: [],
+    //cek
     input: {
       buyer_id: null,
       //auction_id: null,
@@ -115,7 +93,7 @@ export default {
     async getById() {
       try {
         this.input = await this.$api(
-          "transaction",
+          "auction",
           "get_by_id",
           this.$route.params.id
         );
@@ -130,6 +108,7 @@ export default {
         console.log(e);
       }
     },
+    //cek
     async getAllAuction() {
       try {
         this.auction = await this.$api("auction", "inquiry", null).finally(
@@ -148,16 +127,15 @@ export default {
         console.log(e);
       }
     },
-    async updateTransaction() {
+    //res
+    async updateAuction() {
       try {
-        const result = await this.$api(
-          "transaction",
-          "update",
-          this.input
-        ).finally(response => {
-          this.$router.push("/transaksi/dataTransaksi");
-          return response;
-        });
+        const result = await this.$api("auction", "update", this.input).finally(
+          response => {
+            this.$router.push("/lelang/dataLelang");
+            return response;
+          }
+        );
       } catch (e) {
         console.log(e);
       }

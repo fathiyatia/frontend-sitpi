@@ -1,7 +1,8 @@
 <template>
+  <!---- Dummy ----->
   <v-data-table
     :headers="showHeaders"
-    :items="caughtfish"
+    :items="dummy"
     sort-by="created_at"
     sort-desc
     class="elevation-1 px-3"
@@ -9,6 +10,17 @@
     <template v-slot:top>
       <v-row class="mx-0 px-4 pt-6">
         <h2 class="accent--text">Data Tangkapan Ikan</h2>
+        <!---- Test Alert    
+        <template>
+          <v-btn dark color="orange darken-2" @click="testalert()">
+            Open Snackbar
+          </v-btn>
+          <alert
+            v-model="snackbar"
+            :success="success"
+            :messages="messages"
+          ></alert>
+        </template> --->
       </v-row>
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
@@ -30,7 +42,7 @@
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
         <v-row no-gutters class="pt-3">
-          <v-col cols="12" lg="6" md="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -50,7 +62,7 @@
             >
           </v-col>
 
-          <v-col lg="6" md="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -69,12 +81,27 @@
               }}</template></v-autocomplete
             >
           </v-col>
+          <v-col cols="12" lg="4" sm="6" class="px-2">
+            <v-select
+              :items="status"
+              item-text="status"
+              item-value="id"
+              label="Status Pelelangan"
+              solo
+              dense
+              block
+              single-line
+              clearable
+              v-model="input.status"
+              @change="getAllCaught()"
+            ></v-select>
+          </v-col>
         </v-row>
       </v-card>
 
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
-          <v-card-title class="headline"
+          <v-card-title class="justify-center"
             >Anda yakin ingin menghapus data ini?</v-card-title
           >
           <v-card-actions>
@@ -86,14 +113,43 @@
         </v-card>
       </v-dialog>
     </template>
-
-    <template v-slot:item.created_at="{ item }">
-      <span>{{ new Date(item.created_at).toLocaleDateString() }}</span>
-    </template>
     <template v-slot:item.weight="{ item }">
       {{ item.weight }} {{ item.weight_unit }}
     </template>
-    <template v-slot:item.id="{ item }">
+
+    <!---- Uncomment Dummy
+    <template v-slot:item.created_at="{ item }">
+      <span
+        >{{
+          new Date(item.created_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.created_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
+    </template>
+    <template v-slot:item.sold_at="{ item }">
+      <span
+        >{{
+          new Date(item.sold_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.sold_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
+    </template>
+    ---->
+    <template v-slot:item.action="{ item }">
       <v-btn
         x-small
         color="secondary"
@@ -118,25 +174,64 @@
 <script>
 export default {
   data: () => ({
+    //test alert
+    snackbar: false,
+    success: false,
+    messages: "",
+    icon: "",
+    text: "Data Hasil Tangkapan berhasil ditambahkan",
+    timeout: 2000,
+    //
     dialogDelete: false,
     input: {
       fisherid: "0",
-      fish: "0"
+      fish: "0",
+      status: "0"
     },
-    all_headers: [
+    status: [
+      { status: "Belum Terjual", id: "1" },
+      { status: "Sudah Terjual", id: "2" }
+    ],
+    //dummy
+    dummy: [
       {
-        text: "NIK Nelayan",
-        align: "start",
-        sortable: false,
-        value: "fisher_nik"
+        fisher_nik: "12345566",
+        fisher_name: "Fisher",
+        trip_day: "10",
+        fishing_area: "Indramayu",
+        fishing_gear: "Kail",
+        fish_type: "Tenggiri",
+        weight: "70 Kg",
+        created_at: "10:00",
+        sold_at: "",
+        status_name: "Belum terjual"
       },
+      {
+        fisher_nik: "12345566",
+        fisher_name: "Fisher",
+        trip_day: "10",
+        fishing_area: "Indramayu",
+        fishing_gear: "Kail",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        created_at: "10:00",
+        sold_at: "",
+        status_name: "Belum terjual"
+      }
+    ],
+    all_headers: [
+      { text: "ID", align: "start", value: "id" },
+      ,
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jumlah Hari Trip", value: "trip_day" },
       { text: "Alat Tangkap", value: "fishing_gear" },
       { text: "Daerah Tangkapan", value: "fishing_area" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
-      { text: "Aksi", value: "id", sortable: false, width: 135 }
+      { text: "Jam Masuk", value: "created_at" },
+      { text: "Jam Terjual", value: "sold_at" },
+      { text: "Status Pelelangan", value: "status_name" },
+      { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
     fisher: [],
     fishtype: [],
@@ -144,9 +239,6 @@ export default {
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     }
@@ -159,34 +251,67 @@ export default {
   },
 
   computed: {
+    //adj
     showHeaders() {
       if (this.input.fish == "0") {
         if (this.input.fisherid == "0") {
-          return this.all_headers;
+          if (this.input.status == "0") {
+            return this.all_headers;
+          } else {
+            return this.all_headers.filter(
+              header => header.text !== "Status Pelelangan"
+            );
+          }
         } else {
-          return this.all_headers.filter(
-            header =>
-              header.text !== "Nama Nelayan" && header.text !== "NIK Nelayan"
-          );
+          if (this.input.status == "0") {
+            return this.all_headers.filter(header => header.text !== "Nelayan");
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Nelayan" && header.text !== "Status Pelelangan"
+            );
+          }
         }
       } else {
         if (this.input.fisherid == "0") {
-          return this.all_headers.filter(
-            header => header.text !== "Jenis Ikan"
-          );
+          if (this.input.status == "0") {
+            return this.all_headers.filter(
+              header => header.text !== "Jenis Ikan"
+            );
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" &&
+                header.text !== "Status Pelelangan"
+            );
+          }
         } else {
-          return this.all_headers.filter(
-            header =>
-              header.text !== "Jenis Ikan" &&
-              header.text !== "Nama Nelayan" &&
-              header.text !== "NIK Nelayan"
-          );
+          if (this.input.status == "0") {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" && header.text !== "Nelayan"
+            );
+          } else {
+            return this.all_headers.filter(
+              header =>
+                header.text !== "Jenis Ikan" &&
+                header.text !== "Nelayan" &&
+                header.text !== "Status Pelelangan"
+            );
+          }
         }
       }
     }
   },
 
   methods: {
+    //test alert
+    async testalert() {
+      (this.success = true),
+        (this.messages = "Data berhasil ditambahkan"),
+        (this.snackbar = true);
+    },
+
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
@@ -194,10 +319,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     deleteCaught() {

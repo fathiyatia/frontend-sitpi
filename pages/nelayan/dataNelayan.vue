@@ -20,7 +20,7 @@
 
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline"
+            <v-card-title class="justify-center"
               >Anda yakin ingin menghapus data ini?</v-card-title
             >
             <v-card-actions>
@@ -85,16 +85,22 @@ export default {
       { text: "No. Telepon", value: "phone_number" },
       { text: "Jenis Kapal", value: "ship_type" },
       { text: "Jumlah ABK", value: "abk_total" },
-      { text: "Penanggung Jawab", value: "user_name" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    fisher: []
+    fisher: [
+      {
+        nik: "3214022207990014",
+        name: "Bambang",
+        status: "Pendatang",
+        phone_number: "123124123123",
+        address: "Candrabaga",
+        ship_type: "Kapal Motor < 5 GT",
+        abk_total: 20
+      }
+    ]
   }),
 
   watch: {
-    dialog(val) {
-      val || this.close();
-    },
     dialogDelete(val) {
       val || this.closeDelete();
     }
@@ -112,10 +118,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     deleteBuyer() {
