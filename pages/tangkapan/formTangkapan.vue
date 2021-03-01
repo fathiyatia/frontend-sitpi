@@ -429,13 +429,13 @@ export default {
         try {
           await this.$api("caught", "store", this.input).finally(response => {
             this.dialog = false;
-            this.$router.push("/tangkapan/dataTangkapan");
             return response;
           });
         } catch (e) {
           console.log(e);
         }
       }
+      this.$refs.form.reset();
     }
   }
 };

@@ -167,8 +167,8 @@ export default {
     dummy: [
       {
         created_at: "13:00",
-        buyer_name: "Buyer",
-        fisher_name: "Fisher",
+        buyer_name: "Adi",
+        fisher_name: "Bambang",
         fish_type: "Tenggiri",
         weight: "50 Kg",
         price: "250000",
@@ -176,12 +176,10 @@ export default {
       },
       {
         created_at: "13:00",
-        buyer_name: "Buyer",
-        fisher_name: "Fisher",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: "250000",
-        distribution_area: "Indramayu"
+        fisher_name: "Agung",
+        fish_type: "Tuna",
+        weight: "70 Kg",
+        price: "250000"
       }
     ],
     all_headers: [

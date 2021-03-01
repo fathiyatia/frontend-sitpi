@@ -67,8 +67,19 @@
         :to="'/lelang/formLelang'"
       >
         <h4 class="white--text font-weight-regular">
-          <v-icon class="pr-2" color="white"> mdi-book-open-variant </v-icon>
-          Catat Hasil Lelang
+          <v-icon class="pr-2" color="white"> mdi-handshake </v-icon>
+          Lelang
+        </h4>
+      </v-card>
+      <v-card
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/transaksi/formTransaksi'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-account-cash </v-icon>
+          Pembayaran
         </h4>
       </v-card>
       <!--- Rekap --->
@@ -156,9 +167,14 @@ export default {
           to: "/tangkapan/dataTangkapan"
         },
         {
-          icon: "mdi-cash-multiple",
+          icon: "mdi-file-document-multiple",
           title: "Hasil Lelang",
           to: "/lelang/dataLelang"
+        },
+        {
+          icon: "mdi-cash-multiple",
+          title: "Transaksi",
+          to: "/transaksi/dataTransaksi"
         }
       ],
       data: [
