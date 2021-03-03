@@ -4,7 +4,6 @@
     :headers="showHeaders"
     :items="dummy"
     sort-by="created_at"
-    sort-desc
     class="elevation-1 px-3"
   >
     <template v-slot:top>
@@ -31,7 +30,7 @@
           <date-format></date-format>
         </span>
       </v-row>
-
+      <!---- Filter ----->
       <v-card
         elevation="0"
         rounded
@@ -133,21 +132,6 @@
         }}
       </span>
     </template>
-    <template v-slot:item.sold_at="{ item }">
-      <span
-        >{{
-          new Date(item.sold_at)
-            .getHours()
-            .toLocaleString()
-            .padStart(2, "0")
-        }}:{{
-          new Date(item.sold_at)
-            .getMinutes()
-            .toLocaleString()
-            .padStart(2, "0")
-        }}
-      </span>
-    </template>
     ---->
     <template v-slot:item.action="{ item }">
       <v-btn
@@ -190,15 +174,16 @@ export default {
     },
     status: [
       { status: "Belum Terjual", id: "1" },
-      { status: "Sudah Terjual", id: "2" }
+      { status: "Menunggu Pembayaran", id: "2" },
+      { status: "Selesai", id: "3" }
     ],
     //dummy
     dummy: [
       {
         fisher_nik: "12345566",
-        fisher_name: "Fisher",
+        fisher_name: "Rahmat",
         trip_day: "10",
-        fishing_area: "Indramayu",
+        fishing_area: "WPP-RI 711",
         fishing_gear: "Kail",
         fish_type: "Tenggiri",
         weight: "70 Kg",
@@ -208,29 +193,108 @@ export default {
       },
       {
         fisher_nik: "12345566",
-        fisher_name: "Fisher",
+        fisher_name: "Rahmat",
         trip_day: "10",
-        fishing_area: "Indramayu",
+        fishing_area: "WPP-RI 711",
         fishing_gear: "Kail",
-        fish_type: "Tenggiri",
+        fish_type: "Tuna",
         weight: "50 Kg",
         created_at: "10:00",
         sold_at: "",
         status_name: "Belum terjual"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        created_at: "8:00",
+        fisher_name: "Bagas",
+        fish_type: "Tuna",
+        weight: "70 Kg",
+        status_name: "Selesai"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        created_at: "8:00",
+        fisher_name: "Bagus",
+        fish_type: "Tenggiri",
+        weight: "100 Kg",
+        status_name: "Selesai"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        fisher_name: "Agung",
+        fish_type: "Tenggiri",
+        weight: "100 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        fisher_name: "Agung",
+        fish_type: "Cakalang",
+        weight: "50 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        fisher_name: "Adi",
+        fish_type: "Kakap",
+        weight: "50 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        fisher_name: "Adi",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail",
+        fisher_name: "Bagas",
+        fish_type: "Tuna",
+        weight: "50 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Bagas",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        created_at: "9:00",
+        status_name: "Menunggu Pembayaran",
+        trip_day: "10",
+        fishing_area: "WPP-RI 711",
+        fishing_gear: "Kail"
       }
     ],
     all_headers: [
       { text: "ID", align: "start", value: "id" },
       ,
+      { text: "Waktu", value: "created_at" },
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jumlah Hari Trip", value: "trip_day" },
       { text: "Alat Tangkap", value: "fishing_gear" },
       { text: "Daerah Tangkapan", value: "fishing_area" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
-      { text: "Jam Masuk", value: "created_at" },
-      { text: "Jam Terjual", value: "sold_at" },
-      { text: "Status Pelelangan", value: "status_name" },
+      { text: "Status Lelang", value: "status_name" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
     fisher: [],

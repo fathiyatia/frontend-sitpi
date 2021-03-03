@@ -25,6 +25,7 @@
             <v-row class="mb-2 mx-2">
               <h2 class="accent--text">Pilih Ikan</h2>
             </v-row>
+            <!----- Filter ----->
             <v-card
               elevation="0"
               rounded
@@ -103,12 +104,12 @@
         <v-card-text>
           <v-row no-gutters>
             <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
+              <h3 class="accent--text mt-1 font-weight-regular">
                 Ikan : {{ this.input.fish_type }} {{ this.input.weight }}
               </h3>
             </v-col>
             <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
+              <h3 class="accent--text mt-1 font-weight-regular">
                 Nelayan : {{ this.input.fisher_name }}
               </h3>
             </v-col>
@@ -159,13 +160,13 @@ export default {
     dummy: [
       {
         id: "1",
-        fisher_name: "Bambang",
+        fisher_name: "Rahmat",
         fish_type: "Tenggiri",
         weight: "70 Kg"
       },
       {
         id: "2",
-        fisher_name: "Agung",
+        fisher_name: "Rahmat",
         fish_type: "Tuna",
         weight: "50 Kg"
       }
@@ -226,9 +227,6 @@ export default {
       this.$refs.form.reset();
     },
 
-    reset() {
-      this.$refs.form.reset();
-    },
     //cek
     async getAllCaught() {
       try {
@@ -238,6 +236,7 @@ export default {
       }
     },
 
+    //cek
     async getAllFisher() {
       try {
         this.fisher = await this.$api("buyer", "inquiry", null);
@@ -245,7 +244,7 @@ export default {
         console.log(e);
       }
     },
-    // res
+    //cek
     async storeAuction() {
       if (this.isEmpty) {
         this.success = false;

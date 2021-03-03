@@ -50,14 +50,6 @@
       <v-btn x-small color="secondary" depressed :to="'/user/edit/' + item.id">
         Edit
       </v-btn>
-      <v-btn
-        x-small
-        color="error"
-        depressed
-        @click="popupDialogDelete(item.id)"
-      >
-        Hapus
-      </v-btn>
     </template>
   </v-data-table>
 </template>

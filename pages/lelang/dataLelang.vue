@@ -5,7 +5,6 @@
     :items="dummy"
     :search="search"
     sort-by="created_at"
-    sort-desc
     class="elevation-1 px-3"
   >
     <template v-slot:top>
@@ -22,6 +21,7 @@
         </span>
       </v-row>
 
+      <!---- Filter ----->
       <v-card
         elevation="0"
         rounded
@@ -32,19 +32,19 @@
           <v-icon medium color="primary">mdi-magnify</v-icon> Cari
         </span>
         <v-row no-gutters class="pt-3">
-          <v-col cols="12" lg="6" md="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
               block
               single-line
-              label="Nama Pembeli"
-              v-model="input.buyerid"
-              :items="buyer"
+              label="Nama Nelayan"
+              v-model="input.fisherid"
+              :items="fisher"
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllAuction()"
+              @change="getAllCaught()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -52,7 +52,7 @@
             >
           </v-col>
 
-          <v-col lg="6" md="6" class="px-2">
+          <v-col cols="12" lg="4" sm="6" class="px-2">
             <v-autocomplete
               solo
               dense
@@ -64,12 +64,27 @@
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllAuction()"
+              @change="getAllCaught()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
               }}</template></v-autocomplete
             >
+          </v-col>
+          <v-col cols="12" lg="4" sm="6" class="px-2">
+            <v-select
+              :items="status"
+              item-text="status"
+              item-value="id"
+              label="Status Pelelangan"
+              solo
+              dense
+              block
+              single-line
+              clearable
+              v-model="input.status"
+              @change="getAllCaught()"
+            ></v-select>
           </v-col>
         </v-row>
       </v-card>
@@ -163,23 +178,87 @@ export default {
       buyerid: "0",
       fish: "0"
     },
+    status: [
+      { status: "Menunggu Pembayaran", id: "2" },
+      { status: "Selesai", id: "3" }
+    ],
     //dummy
     dummy: [
       {
-        created_at: "13:00",
-        buyer_name: "Adi",
-        fisher_name: "Bambang",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: "250000",
-        distribution_area: "Indramayu"
-      },
-      {
-        created_at: "13:00",
-        fisher_name: "Agung",
+        created_at: "8:00",
+        sold_at: "9:30",
+        buyer_name: "Agung",
+        fisher_name: "Bagas",
         fish_type: "Tuna",
         weight: "70 Kg",
-        price: "250000"
+        price: "50000",
+        distribution_area: "Indramayu",
+        status_name: "Selesai"
+      },
+      {
+        created_at: "8:00",
+        sold_at: "9:50",
+        buyer_name: "Agung",
+        fisher_name: "Bagus",
+        fish_type: "Tenggiri",
+        weight: "100 Kg",
+        price: "100000",
+        distribution_area: "Indramayu",
+        status_name: "Selesai"
+      },
+      {
+        fisher_name: "Agung",
+        fish_type: "Tenggiri",
+        weight: "100 Kg",
+        price: 100000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Agung",
+        fish_type: "Cakalang",
+        weight: "50 Kg",
+        price: 30000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Adi",
+        fish_type: "Kakap",
+        weight: "50 Kg",
+        price: 30000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Adi",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        price: 30000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Bagas",
+        fish_type: "Tuna",
+        weight: "50 Kg",
+        price: 40000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
+      },
+      {
+        fisher_name: "Bagas",
+        fish_type: "Tenggiri",
+        weight: "50 Kg",
+        price: 50000,
+        created_at: "9:00",
+        sold_at: "9:50",
+        status_name: "Menunggu Pembayaran"
       }
     ],
     all_headers: [
@@ -189,16 +268,17 @@ export default {
         sortable: false,
         value: "id"
       },
-      { text: "Waktu", value: "created_at" },
-      { text: "Nama Pembeli", value: "buyer_name" },
+      { text: "Jam Masuk", value: "created_at" },
+      { text: "Jam Terjual", value: "sold_at" },
       { text: "Nama Nelayan", value: "fisher_name" },
       { text: "Jenis Ikan", value: "fish_type" },
       { text: "Berat", value: "weight" },
-      { text: "Total Harga", value: "price", align: "center" },
-      { text: "Daerah Penjualan", value: "distribution_area" },
-      { text: "Aksi", value: "action", sortable: false, width: 135 }
+      { text: "Harga", value: "price" },
+      { text: "Status Lelang", value: "status_name" },
+      { text: "Nama Pembeli", value: "buyer_name" },
+      { text: "Daerah Distribusi", value: "distribution_area" }
     ],
-    buyer: [],
+    fisher: [],
     fishtype: [],
     auction: []
   }),
