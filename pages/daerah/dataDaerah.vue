@@ -32,6 +32,22 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
+          <!------- Dialog Map -------->
+          <v-dialog v-model="dialogMap">
+            <v-card>
+              <v-toolbar tile dark color="primary">
+                <v-toolbar-title>Peta Daerah Tangkapan</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon dark @click="dialogMap = false">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn></v-toolbar
+              >
+              <v-row no-gutters>
+                <v-img contain src="/peta.jpg"></v-img>
+              </v-row>
+            </v-card>
+          </v-dialog>
         </v-row>
 
         <template>
@@ -68,7 +84,11 @@
       </template>
     </v-data-table>
     <br />
-
+    <v-row class="mx-0 px-4 pt-3 pb-2">
+      <v-btn small color="secondary" @click="dialogMap = true"
+        >Lihat Peta</v-btn
+      >
+    </v-row>
     <v-row class="mx-0 px-4 pt-3 pb-2">
       <h4 class="accent--text">Keterangan</h4>
     </v-row>
@@ -88,17 +108,14 @@
 export default {
   data: () => ({
     dialogDelete: false,
+    dialogMap: false,
     search: "",
     headers: [
       {
-        text: "Kode Daerah",
+        text: "Kode Daerah Tangkapan",
         align: "start",
         sortable: false,
         value: "code"
-      },
-      {
-        text: "Nama Daerah",
-        value: "name"
       },
       { text: "Bujur D", value: "east_longitude_degree" },
       { text: "Bujur M", value: "east_longitude_minute" },
@@ -110,7 +127,7 @@ export default {
     ],
     area: [
       {
-        name: "Indramayu",
+        code: "WPP-RI 711",
         south_latitude_degree: "90",
         south_latitude_minute: "123",
         south_latitude_second: "123123",

@@ -36,6 +36,7 @@
             Jumlah Hari Trip
           </h3>
           <v-text-field
+            type="number"
             outlined
             single-line
             label="Jumlah Hari Trip"
@@ -61,9 +62,18 @@
             <template v-slot:selection="{ item }">{{ item.name }}</template>
           </v-autocomplete>
 
-          <h3 class="mb-3 primary--text">
-            Daerah Tangkapan
-          </h3>
+          <v-row no-gutters>
+            <h3 class="mb-3 primary--text">
+              Daerah Tangkapan
+            </h3>
+            <v-btn
+              class="ml-4 mb-3"
+              small
+              color="secondary"
+              @click="dialogMap = true"
+              >Lihat Peta</v-btn
+            ></v-row
+          >
           <v-autocomplete
             outlined
             single-line
@@ -285,15 +295,58 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!------- Dialog Map -------->
+    <v-dialog v-model="dialogMap">
+      <v-card>
+        <v-toolbar tile dark color="primary">
+          <v-toolbar-title>Peta Daerah Tangkapan</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon dark @click="dialogMap = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn></v-toolbar
+        >
+        <v-row no-gutters>
+          <v-col lg="9">
+            <v-img contain src="/peta.jpg"></v-img>
+          </v-col>
+          <v-col class="pa-4" lg="3">
+            <h3 class="my-3 primary--text">
+              Pilih Daerah Tangkapan
+            </h3>
+            <v-autocomplete
+              outlined
+              single-line
+              label="Daerah Tangkapan"
+              :rules="required"
+              v-model="input.area"
+              :items="fishingarea"
+              clearable
+              item-text="name"
+              item-value="id"
+              @change="getByIdFishingArea()"
+            >
+              <template v-slot:areaname="{ item }">{{
+                item.name
+              }}</template></v-autocomplete
+            >
+            <v-btn color="primary" block @click="dialogMap = false"
+              >Simpan</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script>
 export default {
   data: () => ({
     dialog: false,
+    dialogMap: false,
     valid: true,
     fishinggear: [],
-    fishingarea: [],
+    fishingarea: ["WPP-RI 571", "WPP-RI 716"],
     fishtype: [],
     fisher: [],
     input: {
