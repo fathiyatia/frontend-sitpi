@@ -309,6 +309,14 @@
         <v-row no-gutters>
           <v-col lg="9">
             <v-img contain src="/peta.jpg"></v-img>
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
           </v-col>
           <v-col class="pa-4" lg="3">
             <h3 class="my-3 primary--text">
@@ -377,11 +385,6 @@ export default {
     this.getAllFish();
     this.getAllFishingGear();
     this.getAllFishingArea();
-
-    //this.getByIdFisher();
-    //this.getByIdFish();
-    //this.getByIdFishingArea();
-    //this.getByIdFishingGear();
   },
 
   methods: {
