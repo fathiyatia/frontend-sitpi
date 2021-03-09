@@ -410,7 +410,7 @@ export default {
     },
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "inquiry", null);
+        this.fisher = await this.$api("fisher", "index", null);
       } catch (e) {
         console.log(e);
       }

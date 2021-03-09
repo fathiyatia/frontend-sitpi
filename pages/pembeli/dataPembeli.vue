@@ -84,15 +84,7 @@ export default {
       { text: "No. Telepon", value: "phone_number" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    buyer: [
-      {
-        nik: "123124213123",
-        status: "Pendatang",
-        name: "Yudit",
-        address: "Candrabaga",
-        phone_number: "213123213213"
-      }
-    ]
+    buyer: []
   }),
 
   watch: {

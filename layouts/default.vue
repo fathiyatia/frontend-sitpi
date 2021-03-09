@@ -26,7 +26,8 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                Rahmat | TPI Indramayu <v-icon>mdi-menu-down</v-icon>
+                {{ $auth.$state.user.name }} | TPI XX
+                <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
 
@@ -34,11 +35,14 @@
               <v-list>
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold accent--text"
-                      >Rahmat</v-list-item-title
-                    >
+                    <v-list-item-title class="font-weight-bold accent--text">
+                      {{ this.$auth.$state.user.name }}
+                    </v-list-item-title>
                     <v-list-item-subtitle class="pt-1 accent--text"
-                      >Username : rahmat123</v-list-item-subtitle
+                      >Username :
+                      {{
+                        this.$auth.$state.user.username
+                      }}</v-list-item-subtitle
                     >
                   </v-list-item-content>
                 </v-list-item>
@@ -47,23 +51,39 @@
 
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-title
-                    ><v-btn
+                  <v-list-item-title>
+                    <v-card
+                      elevation="0"
+                      class="py-3"
+                      :to="'/tangkapan/formTangkapan'"
+                    >
+                      <h3 class="primary--text font-weight-medium">
+                        <v-icon color="primary" class="px-2">
+                          mdi-lock-reset
+                        </v-icon>
+                        Ubah Kata Sandi
+                      </h3>
+                    </v-card>
+
+                    <!----
+                    <v-btn
+                      block
                       color="primary"
                       text
                       class="text-capitalize"
                       :to="'/user/ubahPassword'"
                     >
                       Ubah Kata Sandi
-                    </v-btn></v-list-item-title
-                  >
+                    </v-btn>
+                    --->
+                  </v-list-item-title>
                 </v-list-item>
               </v-list>
               <v-divider></v-divider>
               <v-list>
                 <v-list-item>
                   <v-list-item-title
-                    ><v-btn color="primary" block primary :to="'/'">
+                    ><v-btn color="primary" block primary @click="logout()">
                       Keluar
                     </v-btn></v-list-item-title
                   >
@@ -100,6 +120,16 @@ export default {
       rightDrawer: false,
       title: ""
     };
+  },
+  methods: {
+    async logout() {
+      try {
+        this.$api("user", "logout");
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 };
 </script>

@@ -44,7 +44,7 @@
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllCaught()"
+              @change="getAllAuction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -64,7 +64,7 @@
               clearable
               item-text="name"
               item-value="id"
-              @change="getAllCaught()"
+              @change="getAllAuction()"
             >
               <template v-slot:selection="{ item }">{{
                 item.name
@@ -83,7 +83,7 @@
               single-line
               clearable
               v-model="input.status"
-              @change="getAllCaught()"
+              @change="getAllAuction()"
             ></v-select>
           </v-col>
         </v-row>
@@ -175,8 +175,9 @@ export default {
     dialogDelete: false,
     search: "",
     input: {
-      buyerid: "0",
-      fish: "0"
+      fisherid: "0",
+      fish: "0",
+      status: "0"
     },
     status: [
       { status: "Menunggu Pembayaran", id: "2" },
@@ -292,7 +293,7 @@ export default {
   mounted() {
     this.getAllAuction();
     this.getAllFish();
-    this.getAllBuyer();
+    this.getAllFisher();
   },
 
   computed: {
@@ -353,6 +354,7 @@ export default {
         console.log(e);
       }
     },
+
     async getAllFish() {
       try {
         this.fishtype = await this.$api("fish", "index", null);
@@ -360,9 +362,10 @@ export default {
         console.log(e);
       }
     },
-    async getAllBuyer() {
+
+    async getAllFisher() {
       try {
-        this.buyer = await this.$api("buyer", "inquiry", null);
+        this.fisher = await this.$api("fisher", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

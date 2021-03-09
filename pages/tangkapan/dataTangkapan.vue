@@ -85,7 +85,7 @@
               :items="status"
               item-text="status"
               item-value="id"
-              label="Status Pelelangan"
+              label="Status Lelang"
               solo
               dense
               block
@@ -323,7 +323,7 @@ export default {
             return this.all_headers;
           } else {
             return this.all_headers.filter(
-              header => header.text !== "Status Pelelangan"
+              header => header.text !== "Status Lelang"
             );
           }
         } else {
@@ -332,7 +332,7 @@ export default {
           } else {
             return this.all_headers.filter(
               header =>
-                header.text !== "Nelayan" && header.text !== "Status Pelelangan"
+                header.text !== "Nelayan" && header.text !== "Status Lelang"
             );
           }
         }
@@ -345,8 +345,7 @@ export default {
           } else {
             return this.all_headers.filter(
               header =>
-                header.text !== "Jenis Ikan" &&
-                header.text !== "Status Pelelangan"
+                header.text !== "Jenis Ikan" && header.text !== "Status Lelang"
             );
           }
         } else {
@@ -360,7 +359,7 @@ export default {
               header =>
                 header.text !== "Jenis Ikan" &&
                 header.text !== "Nelayan" &&
-                header.text !== "Status Pelelangan"
+                header.text !== "Status Lelang"
             );
           }
         }

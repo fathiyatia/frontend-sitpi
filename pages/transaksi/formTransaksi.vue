@@ -150,7 +150,7 @@
                 </v-row>
                 <v-row class="mx-0 pb-4">
                   <h3 class="accent--text ">
-                    {{ total | currencyFormat }}
+                    {{ input.total | currencyFormat }}
                   </h3>
                   <h4 class="accent--text">
                     &nbsp; ( {{ input.orders.length }} jenis ikan )
@@ -171,6 +171,7 @@
                     clearable
                     item-text="name"
                     item-value="id"
+                    @change="getByIdBuyer()"
                   >
                   </v-autocomplete>
 
@@ -227,8 +228,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : 32760009867555
-                <!-- {{ this.input.buyer_id }} -->
+                : {{ this.buyer_confirm.nik }}
               </h3></v-col
             >
           </v-row>
@@ -240,8 +240,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : Bambang
-                <!-- {{ this.input.buyer_id }} -->
+                : {{ this.buyer_confirm.name }}
               </h3></v-col
             >
           </v-row>
@@ -299,7 +298,9 @@
               </h3>
             </v-col>
             <v-col>
-              <h3 class="accent--text mt-5">{{ total | currencyFormat }}</h3>
+              <h3 class="accent--text mt-5">
+                {{ input.total | currencyFormat }}
+              </h3>
             </v-col>
           </v-row>
         </v-card-text>
@@ -308,7 +309,7 @@
           <v-btn color="secondary" text @click="dialog = false">
             Edit
           </v-btn>
-          <v-btn color="primary" @click="store()">
+          <v-btn color="primary" @click="storeTransaction()">
             Simpan
           </v-btn>
         </v-card-actions>
@@ -345,12 +346,9 @@ export default {
   },
   data: () => ({
     dialog: false,
-    check: [],
     valid: true,
     isEmpty: true,
     required: [v => !!v || "Data ini harus diisi"],
-    buyer: [{ id: 12, name: "Bambang" }],
-    auction: [],
     //dummy
     dummy: [
       {
@@ -396,11 +394,12 @@ export default {
         price: 50000
       }
     ],
-    total: 0,
+
     input: {
       el: ".orderfish",
       buyer_id: null,
       distribution_area: null,
+      total: 0,
       orders: [
         {
           auction_id: null,
@@ -419,9 +418,11 @@ export default {
       { text: "Harga", value: "price" },
       { text: "Aksi", value: "action", sortable: false }
     ],
+    buyer: [],
     auction: [],
     fishtype: [],
     fisher: [],
+    buyer_confirm: [],
     //test alert
     snackbar: false,
     success: false,
@@ -433,16 +434,13 @@ export default {
   mounted() {
     this.getAllAuction();
     this.getAllBuyer();
+    this.getAllFish();
+    this.getAllFisher();
   },
 
   methods: {
-    store() {
-      this.input.orders.splice(0, this.input.orders.length);
-      this.total = 0;
-      this.$refs.form.reset();
-      this.isEmpty = true;
-      this.dialog = false;
-    },
+    //del soon
+
     isDisabled(id) {
       for (let index = 0; index < this.input.orders.length; index++) {
         if (id == this.input.orders[index].auction_id) {
@@ -512,13 +510,10 @@ export default {
         if (isNaN(this.input.orders[index].price)) continue;
         sum = sum + parseInt(this.input.orders[index].price);
       }
-      this.total = sum;
+      this.input.total = sum;
       return sum;
     },
 
-    reset() {
-      this.$refs.form.reset();
-    },
     //cek
     async getAllAuction() {
       try {
@@ -530,13 +525,43 @@ export default {
 
     async getAllBuyer() {
       try {
-        this.buyer = await this.$api("buyer", "inquiry", null);
+        this.buyer = await this.$api("buyer", "index", null);
       } catch (e) {
         console.log(e);
       }
     },
+
+    async getAllFisher() {
+      try {
+        this.fisher = await this.$api("fisher", "inquiry", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllFish() {
+      try {
+        this.fishtype = await this.$api("fish", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getByIdBuyer() {
+      try {
+        this.buyer_confirm = await this.$api(
+          "buyer",
+          "get_by_id",
+          this.input.buyer_id
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
     // res
-    async storeAuction() {
+    async storeTransaction() {
+      //del soon
       if (this.isEmpty) {
         this.success = false;
         this.messages = "Belum ada ikan yang dipilih";
@@ -544,11 +569,15 @@ export default {
       } else if (this.$refs.form.validate()) {
         try {
           const result = await this.$api(
-            "auction",
+            "transaction",
             "store",
             this.input
           ).finally(response => {
-            this.$router.push("/lelang/dataLelang");
+            this.input.orders.splice(0, this.input.orders.length);
+            this.input.total = 0;
+            this.$refs.form.reset();
+            this.isEmpty = true;
+            this.dialog = false;
             return response;
           });
         } catch (e) {

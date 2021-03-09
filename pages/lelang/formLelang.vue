@@ -141,7 +141,7 @@
           <v-btn color="accent" text @click="close">
             Batal
           </v-btn>
-          <v-btn color="primary" text @click="store()">
+          <v-btn color="primary" text @click="storeAuction()">
             Simpan
           </v-btn>
         </v-card-actions>
@@ -155,22 +155,22 @@ export default {
     dialog: false,
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
-    caught_fish: [],
     //dummy
     dummy: [
       {
-        id: "1",
+        id: "7",
         fisher_name: "Rahmat",
         fish_type: "Tenggiri",
         weight: "70 Kg"
       },
       {
-        id: "2",
+        id: "8",
         fisher_name: "Rahmat",
         fish_type: "Tuna",
         weight: "50 Kg"
       }
     ],
+    caught_fish: [],
     fisher: [],
     fishtype: [],
     input: {
@@ -192,6 +192,7 @@ export default {
   mounted() {
     this.getAllCaught();
     this.getAllFisher();
+    this.getAllFish();
   },
 
   watch: {
@@ -201,16 +202,8 @@ export default {
   },
 
   methods: {
-    store() {
-      if (this.isEmpty) {
-        this.success = false;
-        this.messages = "Belum ada ikan yang dipilih";
-        this.snackbar = true;
-      } else if (this.$refs.form.validate()) {
-        this.dialog = false;
-        this.$refs.form.reset();
-      }
-    },
+    //del soon
+
     getInput(item) {
       this.input.id = item.id;
       this.input.fish_type = item.fish_type;
@@ -230,40 +223,45 @@ export default {
     //cek
     async getAllCaught() {
       try {
-        this.caught_fish = await this.$api("auction", "inquiry", null);
+        this.caught_fish = await this.$api("caught", "index", null);
       } catch (e) {
         console.log(e);
       }
     },
 
-    //cek
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("buyer", "inquiry", null);
+        this.fisher = await this.$api("fisher", "inquiry", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllFish() {
+      try {
+        this.fishtype = await this.$api("fish", "index", null);
       } catch (e) {
         console.log(e);
       }
     },
     //cek
     async storeAuction() {
-      if (this.isEmpty) {
-        this.success = false;
-        this.messages = "Belum ada ikan yang dipilih";
-        this.snackbar = true;
-      } else if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         try {
           const result = await this.$api(
             "auction",
             "store",
             this.input
           ).finally(response => {
-            this.$router.push("/lelang/dataLelang");
+            this.dialog = false;
+            this.$refs.form.reset();
             return response;
           });
         } catch (e) {
           console.log(e);
         }
       }
+      this.$refs.form.reset();
     }
   }
 };

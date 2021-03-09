@@ -155,11 +155,7 @@ export default {
     inputedit: {
       name: null
     },
-    gear: [
-      {
-        name: "Pancingan"
-      }
-    ]
+    gear: []
   }),
 
   watch: {

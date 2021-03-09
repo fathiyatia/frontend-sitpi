@@ -105,9 +105,9 @@ export default {
   }),
 
   mounted() {
-    this.getTotalProduction();
-    this.getTotalFisher();
-    this.getTotalBuyer();
+    //this.getTotalProduction();
+    //this.getTotalFisher();
+    //this.getTotalBuyer();
   },
 
   computed: {
@@ -120,6 +120,7 @@ export default {
   },
 
   methods: {
+    /*
     async getTotalProduction() {
       try {
         this.total_production = await this.$api(
@@ -153,7 +154,7 @@ export default {
       } catch (e) {
         console.log(e);
       }
-    }
+    } */
   }
 };
 </script>

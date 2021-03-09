@@ -87,17 +87,7 @@ export default {
       { text: "Jumlah ABK", value: "abk_total" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    fisher: [
-      {
-        nik: "3214022207990014",
-        name: "Bambang",
-        status: "Pendatang",
-        phone_number: "123124123123",
-        address: "Candrabaga",
-        ship_type: "Kapal Motor < 5 GT",
-        abk_total: 20
-      }
-    ]
+    fisher: []
   }),
 
   watch: {

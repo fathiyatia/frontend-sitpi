@@ -166,11 +166,7 @@ export default {
       name: null,
       code: null
     },
-    fish: [
-      {
-        name: "Tenggiri"
-      }
-    ]
+    fish: []
   }),
 
   watch: {

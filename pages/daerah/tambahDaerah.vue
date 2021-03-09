@@ -8,12 +8,12 @@
       <v-card-text>
         <v-form ref="form">
           <h3 class="mb-3 mt-2 primary--text">
-            Nama Daerah
+            Kode Daerah Tangkapan
           </h3>
           <v-text-field
             outlined
             single-line
-            label="Nama Daerah"
+            label="Kode Daerah Tangkapan"
             :rules="required"
             v-model="input.name"
           />
