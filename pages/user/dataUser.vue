@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="fisher"
+    :items="all_user"
     :search="search"
     sort-by="created_at"
     sort-desc
@@ -13,7 +13,7 @@
           <h2 class="accent--text">Data User</h2>
         </v-col>
         <v-col lg="3" md="3">
-          <v-btn small block color="success" :to="'/user/register'">
+          <v-btn small block color="success" :to="'/user/register/petugasTPI'">
             + Tambah User
           </v-btn>
         </v-col>
@@ -69,20 +69,11 @@ export default {
       { text: "Nama", value: "name" },
       { text: "NIK", value: "nik" },
       { text: "Alamat", value: "address" },
-      { text: "Peran", value: "role_name" },
-      { text: "Status", value: "status" },
+      { text: "Peran", value: "role.Name" },
+      { text: "Status", value: "user_status.Status" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    fisher: [
-      {
-        username: "rahmat123",
-        name: "Rahmat",
-        nik: "32760987777",
-        address: "Indramayu",
-        role_name: "Admin TPI",
-        status: "Aktif"
-      }
-    ]
+    all_user: []
   }),
 
   watch: {
@@ -92,7 +83,7 @@ export default {
   },
 
   mounted() {
-    this.getAllFisher();
+    this.getAllUser();
   },
 
   methods: {
@@ -116,9 +107,25 @@ export default {
       }
     },
 
-    async getAllFisher() {
+    async getAllUser() {
       try {
-        this.fisher = await this.$api("fisher", "index", null);
+        this.all_user = await this.$api("user", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async updateUser() {
+      try {
+        const result = await this.$api(
+          "user",
+          "update",
+          this.inputedit
+        ).finally(response => {
+          this.getAllFish();
+          this.dialogEdit = false;
+          return response;
+        });
       } catch (e) {
         console.log(e);
       }

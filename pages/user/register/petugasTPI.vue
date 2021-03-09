@@ -37,36 +37,19 @@
             v-model="input.address"
           />
 
-          <div v-if="superadmin">
-            <h3 class="mb-3 mt-2 primary--text">
-              Pilih Lokasi TPI
-            </h3>
-            <v-combobox
-              outlined
-              single-line
-              label="Pilih Lokasi TPI"
-              :rules="required"
-              v-model="input.tpi"
-              :items="tpi"
-              clearable
-            >
-            </v-combobox>
-          </div>
-          <div v-if="district">
-            <h3 class="mb-3 mt-2 primary--text">
-              Pilih Lokasi TPI
-            </h3>
-            <v-combobox
-              outlined
-              single-line
-              label="Pilih Lokasi TPI"
-              :rules="required"
-              v-model="input.tpi"
-              :items="tpi"
-              clearable
-            >
-            </v-combobox>
-          </div>
+          <h3 class="mb-3 mt-2 primary--text">
+            Pilih Lokasi TPI
+          </h3>
+          <v-combobox
+            outlined
+            single-line
+            label="Pilih Lokasi TPI"
+            :rules="required"
+            v-model="input.tpi"
+            :items="tpi"
+            clearable
+          >
+          </v-combobox>
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -83,12 +66,11 @@
           <v-select
             outlined
             single-line
-            :items="checkRole()"
-            item-text="role"
+            :items="role"
+            item-text="role_name"
             item-value="id"
             label="Peran"
             :rules="required"
-            clearable
             v-model="input.role_id"
           ></v-select>
         </v-form>
@@ -101,7 +83,7 @@
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeFisher()">
+            <v-btn large block color="primary" @click.stop="register()">
               Simpan
             </v-btn>
           </v-col>
@@ -113,8 +95,6 @@
 <script>
 export default {
   data: () => ({
-    district: true,
-    superadmin: false,
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -126,30 +106,27 @@ export default {
       role_id: null
     },
     tpi: ["TPI Indramayu", "TPI Sukabumi"],
-    role_district: ["Admin TPI", "Petugas TPI"],
-    role_superadmin: ["Dinas"]
+    role: [
+      { role_name: "Petugas TPI", id: "4" },
+      { role_name: "Kasir", id: "5" }
+    ]
   }),
   methods: {
-    checkRole() {
-      if (this.district == true) {
-        return this.role_district;
-      } else if (this.superadmin == true) {
-        return this.role_superadmin;
-      }
-    },
     reset() {
       this.$refs.form.reset();
     },
     //res
-    async storeFisher() {
+    async register() {
       if (this.$refs.form.validate()) {
         try {
-          const result = await this.$api("fisher", "store", this.input).finally(
-            response => {
-              this.$router.push("/user/dataUser");
-              return response;
-            }
-          );
+          const result = await this.$api(
+            "user",
+            "register_tpi_officer",
+            this.input
+          ).finally(response => {
+            this.$router.push("/user/dataUser");
+            return response;
+          });
         } catch (e) {
           console.log(e);
         }
