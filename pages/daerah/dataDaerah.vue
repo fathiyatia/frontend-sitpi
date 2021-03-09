@@ -44,7 +44,19 @@
                 </v-btn></v-toolbar
               >
               <v-row no-gutters>
-                <v-img contain src="/peta.jpg"></v-img>
+                <v-img contain src="/peta.jpg">
+                  <template v-slot:placeholder>
+                    <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="primary"
+                      ></v-progress-circular>
+                    </v-row> </template
+                ></v-img>
               </v-row>
             </v-card>
           </v-dialog>
@@ -115,7 +127,7 @@ export default {
         text: "Kode Daerah Tangkapan",
         align: "start",
         sortable: false,
-        value: "code"
+        value: "name"
       },
       { text: "Bujur D", value: "east_longitude_degree" },
       { text: "Bujur M", value: "east_longitude_minute" },
@@ -125,17 +137,7 @@ export default {
       { text: "Lintang S", value: "south_latitude_second" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    area: [
-      {
-        code: "WPP-RI 711",
-        south_latitude_degree: "90",
-        south_latitude_minute: "123",
-        south_latitude_second: "123123",
-        east_longitude_degree: "12312",
-        east_longitude_minute: "1231",
-        east_longitude_second: "123"
-      }
-    ]
+    area: []
   }),
 
   watch: {
