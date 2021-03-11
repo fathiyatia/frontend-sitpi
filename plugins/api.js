@@ -17,6 +17,8 @@ export default ({ app }, inject) => {
             return User.register_tpi_admin(data, other);
           case "register_tpi_officer":
             return User.register_tpi_officer(data, other);
+          case "register_district_admin":
+            return User.register_district_admin(data, other);
           case "get_by_id":
             return User.get_by_id(data, other);
           case "update":
@@ -81,17 +83,7 @@ export default ({ app }, inject) => {
             );
             break;
         }
-      /*  
-      case "weight_unit":
-        switch (action) {
-          case "index":
-            return Weight_unit.index(data, other);
-          default:
-            console.error(
-              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
-            );
-            break;
-        } */
+
       case "caught":
         switch (action) {
           case "index":
@@ -104,6 +96,8 @@ export default ({ app }, inject) => {
             return Caught.get_by_id(data, other);
           case "update":
             return Caught.update(data, other);
+          case "inquiry":
+            return Caught.inquiry(data, other);
           //check
           case "total_production":
             return Caught.total_production(data, other);
@@ -162,8 +156,6 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Fisher.index(data, other);
-          case "inquiry":
-            return Fisher.inquiry(data, other);
           case "store":
             return Fisher.store(data, other);
           case "delete":
@@ -182,8 +174,6 @@ export default ({ app }, inject) => {
         switch (action) {
           case "index":
             return Buyer.index(data, other);
-          case "inquiry":
-            return Buyer.inquiry(data, other);
           case "store":
             return Buyer.store(data, other);
           case "delete":
@@ -232,9 +222,35 @@ export default ({ app }, inject) => {
           throw error.response;
         });
     },
+
+    register_district_admin(data) {
+      const body = {
+        role_id: parseInt(data.role_id),
+        district_id: 1,
+        nik: data.nik,
+        name: data.name,
+        address: data.address,
+        username: data.username
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/auth/create-tpi-admin",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+
     register_tpi_admin(data) {
       const body = {
-        role_id: data.role_id,
+        role_id: parseInt(data.role_id),
         tpi_id: 1,
         nik: data.nik,
         name: data.name,
@@ -259,7 +275,7 @@ export default ({ app }, inject) => {
 
     register_tpi_officer(data) {
       const body = {
-        role_id: data.role_id,
+        role_id: parseInt(data.role_id),
         tpi_id: 1,
         nik: data.nik,
         name: data.name,
@@ -376,6 +392,7 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
+        code: data.code,
         name: data.name
       };
       return app
@@ -449,6 +466,7 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
+        code: data.code,
         name: data.name
       };
       return app
@@ -567,13 +585,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url:
-            "/caught_fish?from=" +
-            "&to=" +
-            "&fish_type_id=" +
-            data.fish +
-            "&fisher_id=" +
-            data.fisherid
+          url: "/caughts"
         })
         .then(response => {
           console.log(response);
@@ -667,6 +679,30 @@ export default ({ app }, inject) => {
           throw error.response;
         });
     },
+    inquiry(data) {
+      if (data.fish == null) {
+        data.fish = "0";
+      }
+      if (data.fisherid == null) {
+        data.fisherid = "0";
+      }
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/caught/inquiry?fisher_id=" +
+            data.fisherid +
+            "&fish_type_id=" +
+            data.fish
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
     total_production(data) {
       return app
         .$axios({
@@ -740,12 +776,6 @@ export default ({ app }, inject) => {
         });
     },
 
-    inquiry() {
-      return app.$axios.get("/auction/inquiry").then(response => {
-        console.log(response);
-        return response.data.response_data;
-      });
-    },
     store(data) {
       const body = {
         caught_id: parseInt(data.id),
@@ -813,6 +843,30 @@ export default ({ app }, inject) => {
         .catch(error => {
           throw error.response;
         });
+    },
+    inquiry(data) {
+      if (data.fish == null) {
+        data.fish = "0";
+      }
+      if (data.fisherid == null) {
+        data.fisherid = "0";
+      }
+      return app
+        .$axios({
+          method: "get",
+          url:
+            "/auction/inquiry?fisher_id=" +
+            data.fisherid +
+            "&fish_type_id=" +
+            data.fish
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     }
   };
 
@@ -821,7 +875,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/transaction?from=" + "&to="
+          url: "/transactions"
         })
         .then(response => {
           console.log(response);
@@ -936,12 +990,6 @@ export default ({ app }, inject) => {
         return response.data.response_data;
       });
     },
-    inquiry() {
-      return app.$axios.get("/fisher/inquiry").then(response => {
-        console.log(response);
-        return response.data.response_data;
-      });
-    },
     store(data) {
       const body = {
         nik: data.nik,
@@ -1025,12 +1073,6 @@ export default ({ app }, inject) => {
   const Buyer = {
     index() {
       return app.$axios.get("/buyers").then(response => {
-        console.log(response);
-        return response.data.response_data;
-      });
-    },
-    inquiry() {
-      return app.$axios.get("/buyer/inquiry").then(response => {
         console.log(response);
         return response.data.response_data;
       });

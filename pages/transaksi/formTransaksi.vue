@@ -20,12 +20,12 @@
       <v-card-text>
         <v-row>
           <!-----=================== Table ========================----->
-          <!----- Dummy ----->
+
           <v-col lg="7" sm="7">
             <v-data-table
               :headers="headers"
               :items-per-page="5"
-              :items="dummy"
+              :items="auction"
               :search="search"
               sort-by="created_at"
               sort-desc
@@ -52,7 +52,7 @@
                         block
                         single-line
                         label="Nama Nelayan"
-                        v-model="input.fisherid"
+                        v-model="input_filter.fisherid"
                         :items="fisher"
                         clearable
                         item-text="name"
@@ -72,7 +72,7 @@
                         block
                         single-line
                         label="Jenis Ikan"
-                        v-model="input.fish"
+                        v-model="input_filter.fish"
                         :items="fishtype"
                         clearable
                         item-text="name"
@@ -88,7 +88,7 @@
                 </v-card>
               </template>
               <template v-slot:item.weight="{ item }">
-                {{ item.weight }} {{ item.weight_unit }}
+                {{ item.caught.weight }} {{ item.caught.weight_unit }}
               </template>
               <template v-slot:item.price="{ item }">
                 {{ item.price | currencyFormat }}
@@ -349,52 +349,6 @@ export default {
     valid: true,
     isEmpty: true,
     required: [v => !!v || "Data ini harus diisi"],
-    //dummy
-    dummy: [
-      {
-        id: "1",
-        fisher_name: "Agung",
-        fish_type: "Tenggiri",
-        weight: "100 Kg",
-        price: 100000
-      },
-      {
-        id: "2",
-        fisher_name: "Agung",
-        fish_type: "Cakalang",
-        weight: "50 Kg",
-        price: 30000
-      },
-      {
-        id: "3",
-        fisher_name: "Adi",
-        fish_type: "Kakap",
-        weight: "50 Kg",
-        price: 30000
-      },
-      {
-        id: "4",
-        fisher_name: "Adi",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: 30000
-      },
-      {
-        id: "5",
-        fisher_name: "Bagas",
-        fish_type: "Tuna",
-        weight: "50 Kg",
-        price: 40000
-      },
-      {
-        id: "6",
-        fisher_name: "Bagas",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: 50000
-      }
-    ],
-
     input: {
       el: ".orderfish",
       buyer_id: null,
@@ -410,11 +364,15 @@ export default {
         }
       ]
     },
+    input_filter: {
+      fisherid: "0",
+      fish: "0"
+    },
     search: "",
     headers: [
-      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Jenis Ikan", value: "caught.fish_type.name" },
       { text: "Berat", value: "weight" },
-      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Nama Nelayan", value: "caught.fisher.name" },
       { text: "Harga", value: "price" },
       { text: "Aksi", value: "action", sortable: false }
     ],
@@ -474,20 +432,20 @@ export default {
         //check if there is null data, then replace null data
         if (this.input.orders.length == 1) {
           this.input.orders[0].auction_id = item.id;
-          this.input.orders[0].fisher_name = item.fisher_name;
-          this.input.orders[0].fish_type = item.fish_type;
-          this.input.orders[0].weight = item.weight;
-          this.input.orders[0].weight_unit = item.weight_unit;
+          this.input.orders[0].fisher_name = item.caught.fisher.name;
+          this.input.orders[0].fish_type = item.caught.fish_type.name;
+          this.input.orders[0].weight = item.caught.weight;
+          this.input.orders[0].weight_unit = item.caught.weight_unit;
           this.input.orders[0].price = item.price;
         }
         //push data if there is no null data
         else {
           this.input.orders.push({
             auction_id: item.id,
-            fisher_name: item.fisher_name,
-            fish_type: item.fish_type,
-            weight: item.weight,
-            weight_unit: item.weight_unit,
+            fisher_name: item.caught.fisher.name,
+            fish_type: item.caught.fish_type.name,
+            weight: item.caught.weight,
+            weight_unit: item.caught.weight_unit,
             price: item.price
           });
         }
@@ -495,10 +453,10 @@ export default {
       } else {
         this.input.orders.push({
           auction_id: item.id,
-          fisher_name: item.fisher_name,
-          fish_type: item.fish_type,
-          weight: item.weight,
-          weight_unit: item.weight_unit,
+          fisher_name: item.caught.fisher.name,
+          fish_type: item.caught.fish_type.name,
+          weight: item.caught.weight,
+          weight_unit: item.caught.weight_unit,
           price: item.price
         });
       }
@@ -517,7 +475,7 @@ export default {
     //cek
     async getAllAuction() {
       try {
-        this.auction = await this.$api("auction", "inquiry", null);
+        this.auction = await this.$api("auction", "inquiry", this.input_filter);
       } catch (e) {
         console.log(e);
       }
@@ -533,7 +491,7 @@ export default {
 
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "inquiry", null);
+        this.fisher = await this.$api("fisher", "index", null);
       } catch (e) {
         console.log(e);
       }

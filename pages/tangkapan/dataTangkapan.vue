@@ -1,8 +1,7 @@
 <template>
-  <!---- Dummy ----->
   <v-data-table
     :headers="showHeaders"
-    :items="dummy"
+    :items="caught_fish"
     sort-by="created_at"
     class="elevation-1 px-3"
   >
@@ -116,7 +115,6 @@
       {{ item.weight }} {{ item.weight_unit }}
     </template>
 
-    <!---- Uncomment Dummy
     <template v-slot:item.created_at="{ item }">
       <span
         >{{
@@ -132,7 +130,7 @@
         }}
       </span>
     </template>
-    ---->
+
     <template v-slot:item.action="{ item }">
       <v-btn
         x-small
@@ -177,129 +175,23 @@ export default {
       { status: "Menunggu Pembayaran", id: "2" },
       { status: "Selesai", id: "3" }
     ],
-    //dummy
-    dummy: [
-      {
-        fisher_nik: "12345566",
-        fisher_name: "Rahmat",
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fish_type: "Tenggiri",
-        weight: "70 Kg",
-        created_at: "10:00",
-        sold_at: "",
-        status_name: "Belum terjual"
-      },
-      {
-        fisher_nik: "12345566",
-        fisher_name: "Rahmat",
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fish_type: "Tuna",
-        weight: "50 Kg",
-        created_at: "10:00",
-        sold_at: "",
-        status_name: "Belum terjual"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        created_at: "8:00",
-        fisher_name: "Bagas",
-        fish_type: "Tuna",
-        weight: "70 Kg",
-        status_name: "Selesai"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        created_at: "8:00",
-        fisher_name: "Bagus",
-        fish_type: "Tenggiri",
-        weight: "100 Kg",
-        status_name: "Selesai"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fisher_name: "Agung",
-        fish_type: "Tenggiri",
-        weight: "100 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fisher_name: "Agung",
-        fish_type: "Cakalang",
-        weight: "50 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fisher_name: "Adi",
-        fish_type: "Kakap",
-        weight: "50 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fisher_name: "Adi",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail",
-        fisher_name: "Bagas",
-        fish_type: "Tuna",
-        weight: "50 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Bagas",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        created_at: "9:00",
-        status_name: "Menunggu Pembayaran",
-        trip_day: "10",
-        fishing_area: "WPP-RI 711",
-        fishing_gear: "Kail"
-      }
-    ],
+
     all_headers: [
       { text: "ID", align: "start", value: "id" },
       ,
       { text: "Waktu", value: "created_at" },
-      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Nama Nelayan", value: "fisher.name" },
       { text: "Jumlah Hari Trip", value: "trip_day" },
-      { text: "Alat Tangkap", value: "fishing_gear" },
-      { text: "Daerah Tangkapan", value: "fishing_area" },
-      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Alat Tangkap", value: "fishing_gear.name" },
+      { text: "Daerah Tangkapan", value: "fishing_area.name" },
+      { text: "Jenis Ikan", value: "fish_type.name" },
       { text: "Berat", value: "weight" },
-      { text: "Status Lelang", value: "status_name" },
+      { text: "Status Lelang", value: "caught_status.Status" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
     fisher: [],
     fishtype: [],
-    caughtfish: []
+    caught_fish: []
   }),
 
   watch: {
@@ -397,7 +289,7 @@ export default {
 
     async getAllCaught() {
       try {
-        this.caughtfish = await this.$api("caught", "index", this.input);
+        this.caught_fish = await this.$api("caught", "index", this.input);
       } catch (e) {
         console.log(e);
       }
@@ -411,7 +303,7 @@ export default {
     },
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "inquiry", null);
+        this.fisher = await this.$api("fisher", "index", null);
       } catch (e) {
         console.log(e);
       }

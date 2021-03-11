@@ -26,7 +26,8 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ $auth.$state.user.name }} | TPI XX
+                {{ $auth.$state.user.name }}
+                | TPI XX
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
@@ -40,10 +41,8 @@
                     </v-list-item-title>
                     <v-list-item-subtitle class="pt-1 accent--text"
                       >Username :
-                      {{
-                        this.$auth.$state.user.username
-                      }}</v-list-item-subtitle
-                    >
+                      {{ this.$auth.$state.user.username }}
+                    </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -111,7 +110,7 @@ export default {
     return {
       office: true,
       clipped: false,
-      drawer: false,
+      drawer: true,
       fixed: false,
       menu: false,
 

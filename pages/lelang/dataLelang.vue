@@ -2,7 +2,7 @@
   <!----- Dummy --->
   <v-data-table
     :headers="showHeaders"
-    :items="dummy"
+    :items="auction"
     :search="search"
     sort-by="created_at"
     class="elevation-1 px-3"
@@ -183,85 +183,6 @@ export default {
       { status: "Menunggu Pembayaran", id: "2" },
       { status: "Selesai", id: "3" }
     ],
-    //dummy
-    dummy: [
-      {
-        created_at: "8:00",
-        sold_at: "9:30",
-        buyer_name: "Agung",
-        fisher_name: "Bagas",
-        fish_type: "Tuna",
-        weight: "70 Kg",
-        price: "50000",
-        distribution_area: "Indramayu",
-        status_name: "Selesai"
-      },
-      {
-        created_at: "8:00",
-        sold_at: "9:50",
-        buyer_name: "Agung",
-        fisher_name: "Bagus",
-        fish_type: "Tenggiri",
-        weight: "100 Kg",
-        price: "100000",
-        distribution_area: "Indramayu",
-        status_name: "Selesai"
-      },
-      {
-        fisher_name: "Agung",
-        fish_type: "Tenggiri",
-        weight: "100 Kg",
-        price: 100000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Agung",
-        fish_type: "Cakalang",
-        weight: "50 Kg",
-        price: 30000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Adi",
-        fish_type: "Kakap",
-        weight: "50 Kg",
-        price: 30000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Adi",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: 30000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Bagas",
-        fish_type: "Tuna",
-        weight: "50 Kg",
-        price: 40000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      },
-      {
-        fisher_name: "Bagas",
-        fish_type: "Tenggiri",
-        weight: "50 Kg",
-        price: 50000,
-        created_at: "9:00",
-        sold_at: "9:50",
-        status_name: "Menunggu Pembayaran"
-      }
-    ],
     all_headers: [
       {
         text: "ID",
@@ -365,7 +286,7 @@ export default {
 
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "inquiry", null);
+        this.fisher = await this.$api("fisher", "index", null);
       } catch (e) {
         console.log(e);
       }

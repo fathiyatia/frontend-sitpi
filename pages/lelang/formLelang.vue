@@ -14,7 +14,7 @@
         <!----- Dummy ----->
         <v-data-table
           :headers="headers"
-          :items="dummy"
+          :items="caught_fish"
           :search="search"
           :items-per-page="5"
           sort-by="created_at"
@@ -43,7 +43,7 @@
                     block
                     single-line
                     label="Nama Nelayan"
-                    v-model="input.fisherid"
+                    v-model="input_filter.fisherid"
                     :items="fisher"
                     clearable
                     item-text="name"
@@ -63,7 +63,7 @@
                     block
                     single-line
                     label="Jenis Ikan"
-                    v-model="input.fish"
+                    v-model="input_filter.fish"
                     :items="fishtype"
                     clearable
                     item-text="name"
@@ -106,6 +106,7 @@
             <v-col>
               <h3 class="accent--text mt-1 font-weight-regular">
                 Ikan : {{ this.input.fish_type }} {{ this.input.weight }}
+                {{ this.input.weight_unit }}
               </h3>
             </v-col>
             <v-col>
@@ -155,36 +156,26 @@ export default {
     dialog: false,
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
-    //dummy
-    dummy: [
-      {
-        id: "7",
-        fisher_name: "Rahmat",
-        fish_type: "Tenggiri",
-        weight: "70 Kg"
-      },
-      {
-        id: "8",
-        fisher_name: "Rahmat",
-        fish_type: "Tuna",
-        weight: "50 Kg"
-      }
-    ],
     caught_fish: [],
     fisher: [],
     fishtype: [],
+    input_filter: {
+      fisherid: "0",
+      fish: "0"
+    },
     input: {
       id: null,
       fish_type: null,
       weight: null,
+      weight_unit: null,
       fisher_name: null,
       price: null
     },
     search: "",
     headers: [
-      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Jenis Ikan", value: "fish_type.name" },
       { text: "Berat", value: "weight" },
-      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Nama Nelayan", value: "fisher.name" },
       { text: "Aksi", value: "action", sortable: false, width: 160 }
     ]
   }),
@@ -206,9 +197,10 @@ export default {
 
     getInput(item) {
       this.input.id = item.id;
-      this.input.fish_type = item.fish_type;
+      this.input.fish_type = item.fish_type.name;
       this.input.weight = item.weight;
-      this.input.fisher_name = item.fisher_name;
+      this.input.weight_unit = item.weight_unit;
+      this.input.fisher_name = item.fisher.name;
     },
 
     popupDialog() {
@@ -223,7 +215,11 @@ export default {
     //cek
     async getAllCaught() {
       try {
-        this.caught_fish = await this.$api("caught", "index", null);
+        this.caught_fish = await this.$api(
+          "caught",
+          "inquiry",
+          this.input_filter
+        );
       } catch (e) {
         console.log(e);
       }
@@ -231,7 +227,7 @@ export default {
 
     async getAllFisher() {
       try {
-        this.fisher = await this.$api("fisher", "inquiry", null);
+        this.fisher = await this.$api("fisher", "index", null);
       } catch (e) {
         console.log(e);
       }

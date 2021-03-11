@@ -34,6 +34,12 @@
                   lazy-validation
                 >
                   <v-text-field
+                    label="Kode Alat"
+                    v-model="input.code"
+                    :rules="required"
+                    required
+                  ></v-text-field>
+                  <v-text-field
                     label="Nama Alat Tangkap"
                     v-model="input.name"
                     :rules="required"
@@ -62,13 +68,24 @@
             </v-card-title>
             <v-card-text>
               <v-container>
-                <v-row>
+                <v-form
+                  class=""
+                  no-gutters
+                  ref="form"
+                  v-model="valid"
+                  lazy-validation
+                >
+                  <v-text-field
+                    label="Kode Alat"
+                    required
+                    v-model="inputedit.code"
+                  ></v-text-field>
                   <v-text-field
                     label="Nama Alat Tangkap"
                     required
                     v-model="inputedit.name"
                   ></v-text-field>
-                </v-row>
+                </v-form>
               </v-container>
             </v-card-text>
             <v-card-actions>
@@ -150,9 +167,11 @@ export default {
       { text: "Aksi", value: "id", sortable: false }
     ],
     input: {
+      code: null,
       name: null
     },
     inputedit: {
+      code: null,
       name: null
     },
     gear: []

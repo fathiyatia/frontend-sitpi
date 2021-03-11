@@ -35,25 +35,25 @@
           ></v-text-field>
         </template>
       </template>
-      <!---- Uncomment Dummy
-    <template v-slot:item.created_at="{ item }">
-      <span
-        >{{
-          new Date(item.created_at)
-            .getHours()
-            .toLocaleString()
-            .padStart(2, "0")
-        }}:{{
-          new Date(item.created_at)
-            .getMinutes()
-            .toLocaleString()
-            .padStart(2, "0")
-        }}
-      </span>
-    </template>
-    ---->
+
+      <template v-slot:item.created_at="{ item }">
+        <span
+          >{{
+            new Date(item.created_at)
+              .getHours()
+              .toLocaleString()
+              .padStart(2, "0")
+          }}:{{
+            new Date(item.created_at)
+              .getMinutes()
+              .toLocaleString()
+              .padStart(2, "0")
+          }}
+        </span>
+      </template>
+
       <template v-slot:item.action="{ item }">
-        <v-btn small block color="info" depressed @click="confirm()">
+        <v-btn small block color="info" depressed @click="confirm(item)">
           Detail
         </v-btn>
       </template>
@@ -63,7 +63,7 @@
         <v-card-title>
           <h3 class="primary--text">Transaksi</h3>
         </v-card-title>
-        <v-card-text>
+        <v-card-text v-if="dialog == true">
           <v-divider></v-divider>
           <v-row no-gutters>
             <v-col>
@@ -73,10 +73,11 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : 00001
+                : {{ this.currentItem.id }}
               </h3></v-col
             >
           </v-row>
+
           <v-row no-gutters>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
@@ -85,7 +86,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : 3276000879665
+                : {{ this.currentItem.buyer.nik }}
               </h3></v-col
             >
           </v-row>
@@ -97,7 +98,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : Agung
+                : {{ this.currentItem.buyer.name }}
               </h3></v-col
             >
           </v-row>
@@ -109,7 +110,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : Indramayu
+                : {{ this.currentItem.distribution_area }}
               </h3></v-col
             >
           </v-row>
@@ -120,62 +121,23 @@
               Daftar Pembelian
             </h3>
           </v-row>
-          <!--------
-          <div
-            class="orderfish"
-            v-for="(order, index) in input.orders"
-            :key="index"
-          >
+
+          <div v-for="(item, index) in listItem" :key="index">
             <v-row no-gutters>
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
-                  {{ index + 1 }}) {{ order.fish_type }} {{ order.weight }}
+                  {{ index + 1 }}) {{ item.auction.caught.fish_type.name }}
+                  {{ item.auction.caught.weight }}
+                  {{ item.auction.caught.weight_unit }}
                 </h3>
               </v-col>
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
-                  {{ order.price }}
+                  {{ item.auction.price }}
                 </h3></v-col
               >
             </v-row>
-          </div> ------>
-          <!--- dummy jangan lupa hapus -------->
-          <v-row no-gutters>
-            <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
-                1) Tuna 70 Kg
-              </h3>
-            </v-col>
-            <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
-                Rp50.000
-              </h3></v-col
-            >
-          </v-row>
-          <v-row no-gutters>
-            <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
-                2) Tenggiri 100 Kg
-              </h3>
-            </v-col>
-            <v-col>
-              <h3 class="accent--text mt-4 font-weight-regular">
-                Rp100.000
-              </h3></v-col
-            >
-          </v-row>
-          <v-row no-gutters>
-            <v-col>
-              <h3 class="accent--text mt-5">
-                Total
-              </h3>
-            </v-col>
-            <v-col>
-              <h3 class="accent--text mt-5">
-                Rp150.000
-              </h3>
-            </v-col>
-          </v-row>
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -201,20 +163,14 @@ export default {
         value: "id"
       },
       { text: "Waktu", value: "created_at" },
-      { text: "Nama Pembeli", value: "buyer_name" },
+      { text: "Nama Pembeli", value: "buyer.name" },
       { text: "Daerah Penjualan", value: "distribution_area" },
-      { text: "Total Harga", value: "price" },
+      { text: "Total Harga", value: "total_price" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],
-    transaction: [
-      {
-        id: "00001",
-        created_at: "10:00",
-        buyer_name: "Agung",
-        distribution_area: "Indramayu",
-        price: "Rp150.000"
-      }
-    ]
+    transaction: [],
+    currentItem: [],
+    listItem: []
   }),
 
   watch: {
@@ -224,11 +180,13 @@ export default {
   },
 
   mounted() {
-    //this.getAllFisher();
+    this.getAllTransaction();
   },
 
   methods: {
-    confirm() {
+    confirm(item) {
+      this.currentItem = item;
+      this.listItem = item.transaction_item;
       this.dialog = true;
     },
     popupDialogDelete(id) {
@@ -251,9 +209,9 @@ export default {
       }
     },
 
-    async getAllFisher() {
+    async getAllTransaction() {
       try {
-        this.fisher = await this.$api("fisher", "index", null);
+        this.transaction = await this.$api("transaction", "index", null);
       } catch (e) {
         console.log(e);
       }

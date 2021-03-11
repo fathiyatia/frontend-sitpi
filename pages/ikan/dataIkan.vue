@@ -68,7 +68,13 @@
             </v-card-title>
             <v-card-text>
               <v-container>
-                <v-row>
+                <v-form
+                  class=""
+                  no-gutters
+                  ref="form"
+                  v-model="valid"
+                  lazy-validation
+                >
                   <v-text-field
                     label="Kode Ikan"
                     required
@@ -79,7 +85,7 @@
                     required
                     v-model="inputedit.name"
                   ></v-text-field>
-                </v-row>
+                </v-form>
               </v-container>
             </v-card-text>
             <v-card-actions>
