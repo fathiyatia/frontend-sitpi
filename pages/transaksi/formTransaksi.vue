@@ -57,7 +57,7 @@
                         clearable
                         item-text="name"
                         item-value="id"
-                        @change="getAllCaught()"
+                        @change="getAllAuction()"
                       >
                         <template v-slot:selection="{ item }">{{
                           item.name
@@ -77,7 +77,7 @@
                         clearable
                         item-text="name"
                         item-value="id"
-                        @change="getAllCaught()"
+                        @change="getAllAuction()"
                       >
                         <template v-slot:selection="{ item }">{{
                           item.name
@@ -111,9 +111,10 @@
           <v-col lg="5" sm="5">
             <v-card class="px-4 pt-5 mt-6 rounded-lg" elevation="2" outlined>
               <!----- Total Summary ----->
-              <v-row class="mx-0 mb-2">
+              <v-row class="mx-1 mb-4">
                 <h2 class="primary--text">Daftar Pembelian</h2>
               </v-row>
+
               <div v-if="!isEmpty">
                 <v-divider class="mt-4"></v-divider>
                 <div v-for="(order, index) in input.orders" :key="index">
@@ -156,7 +157,7 @@
                     &nbsp; ( {{ input.orders.length }} jenis ikan )
                   </h4>
                 </v-row>
-                <!----- Input Buyer and Area ----->
+
                 <v-form ref="form" v-model="valid" lazy-validation>
                   <h3 class="my-3 primary--text">
                     Nama Pembeli
@@ -200,6 +201,7 @@
                   </v-row>
                 </v-card-actions>
               </div>
+
               <div v-else>
                 <v-row class="mx-0 pb-6">
                   <h3 class="font-weight-regular">

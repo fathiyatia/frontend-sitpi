@@ -21,6 +21,7 @@
         :rules="required"
         label="Username"
         prepend-inner-icon="mdi-account-circle"
+        @keyup.enter="login()"
       />
       <v-text-field
         v-model="input.password"
@@ -32,6 +33,7 @@
         :type="showPassword ? 'text' : 'password'"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="handleclick"
+        @keyup.enter="login()"
       />
     </v-form>
     <v-card-actions class="px-0">

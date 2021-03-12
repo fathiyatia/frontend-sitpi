@@ -13,16 +13,36 @@ export default ({ app }, inject) => {
             return User.login(data, other);
           case "logout":
             return User.logout(data, other);
+          case "register_district_admin":
+            return User.register_district_admin(data, other);
           case "register_tpi_admin":
             return User.register_tpi_admin(data, other);
           case "register_tpi_officer":
             return User.register_tpi_officer(data, other);
-          case "register_district_admin":
-            return User.register_district_admin(data, other);
+          case "register_tpi_cashier":
+            return User.register_tpi_cashier(data, other);
           case "get_by_id":
             return User.get_by_id(data, other);
           case "update":
             return User.update(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "tpi":
+        switch (action) {
+          case "index":
+            return Tpi.index(data, other);
+          case "store":
+            return Tpi.store(data, other);
+          case "delete":
+            return Tpi.delete(data, other);
+          case "get_by_id":
+            return Tpi.get_by_id(data, other);
+          case "update":
+            return Tpi.update(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -225,7 +245,6 @@ export default ({ app }, inject) => {
 
     register_district_admin(data) {
       const body = {
-        role_id: parseInt(data.role_id),
         district_id: 1,
         nik: data.nik,
         name: data.name,
@@ -236,7 +255,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "post",
-          url: "/auth/create-tpi-admin",
+          url: "/auth/create-district-admin",
           data: body
         })
         .then(response => {
@@ -275,8 +294,6 @@ export default ({ app }, inject) => {
 
     register_tpi_officer(data) {
       const body = {
-        role_id: parseInt(data.role_id),
-        tpi_id: 1,
         nik: data.nik,
         name: data.name,
         address: data.address,
@@ -287,6 +304,29 @@ export default ({ app }, inject) => {
         .$axios({
           method: "post",
           url: "/auth/create-tpi-officer",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+
+    register_tpi_cashier(data) {
+      const body = {
+        nik: data.nik,
+        name: data.name,
+        address: data.address,
+        username: data.username
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/auth/create-tpi-cashier",
           data: body
         })
         .then(response => {
@@ -332,6 +372,32 @@ export default ({ app }, inject) => {
         })
         .catch(error => {
           throw error.response;
+        });
+    }
+  };
+
+  const Tpi = {
+    index() {
+      return app.$axios.get("/tpis").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    },
+    store(data) {
+      const body = {
+        name: data.name,
+        code: data.code
+      };
+
+      return app
+        .$axios({
+          method: "post",
+          url: "/tpi",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
         });
     }
   };
@@ -585,7 +651,13 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/caughts"
+          url:
+            "/caughts?fish_type_id=" +
+            data.fish +
+            "&fisher_id=" +
+            data.fisherid +
+            "&caught_status_id=" +
+            data.status
         })
         .then(response => {
           console.log(response);
@@ -756,15 +828,11 @@ export default ({ app }, inject) => {
         .$axios({
           method: "get",
           url:
-            "/auction?from=" +
-            "&to=" +
-            "&auction_id=" +
-            data.auction +
-            "&fisher_id=" +
+            "/auctions?fisher_id=" +
             data.fisherid +
             "&fish_type_id=" +
             data.fish +
-            "&status_id=" +
+            "&caught_status_id=" +
             data.status
         })
         .then(response => {

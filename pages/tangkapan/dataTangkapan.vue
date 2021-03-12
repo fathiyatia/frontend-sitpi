@@ -23,8 +23,10 @@
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
           Data tangkapan ikan yang didaratkan di
-          <span class="primary--text font-weight-bold">TPI xxx </span> pada
-          tanggal
+          <span class="primary--text font-weight-bold">{{
+            $auth.$state.user.location
+          }}</span>
+          pada tanggal
 
           <date-format></date-format>
         </span>
@@ -177,7 +179,7 @@ export default {
     ],
 
     all_headers: [
-      { text: "ID", align: "start", value: "id" },
+      { text: "ID", align: "start", value: "code" },
       ,
       { text: "Waktu", value: "created_at" },
       { text: "Nama Nelayan", value: "fisher.name" },

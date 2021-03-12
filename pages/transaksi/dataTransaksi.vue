@@ -15,8 +15,10 @@
         <v-row class="mx-0 px-4 pt-2 pb-6"
           ><span>
             Data transaksi di
-            <span class="primary--text font-weight-bold">TPI xxx </span> pada
-            tanggal
+            <span class="primary--text font-weight-bold">{{
+              $auth.$state.user.location
+            }}</span>
+            pada tanggal
 
             <date-format></date-format>
           </span>
@@ -50,6 +52,9 @@
               .padStart(2, "0")
           }}
         </span>
+      </template>
+      <template v-slot:item.total_price="{ item }">
+        {{ item.total_price | currencyFormat }}
       </template>
 
       <template v-slot:item.action="{ item }">
@@ -133,11 +138,23 @@
               </v-col>
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
-                  {{ item.auction.price }}
+                  {{ item.auction.price | currencyFormat }}
                 </h3></v-col
               >
             </v-row>
           </div>
+          <v-row no-gutters>
+            <v-col>
+              <h3 class="accent--text mt-5">
+                Total
+              </h3>
+            </v-col>
+            <v-col>
+              <h3 class="accent--text mt-5">
+                {{ this.currentItem.total_price | currencyFormat }}
+              </h3>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -152,6 +169,31 @@
 
 <script>
 export default {
+  filters: {
+    currencyFormat(value) {
+      if (isNaN(value)) {
+        return "Rp~";
+      } else {
+        if (value != null) {
+          const minus = Number(value) < 0;
+          if (value.toString().split(".").length > 2) return "Rp~";
+          else if (value.toString().split(".").length > 1) {
+            value = value.toString().split(".");
+            value = value[0];
+          }
+          try {
+            const result = value
+              .toString()
+              .match(/\d{1,3}(?=(\d{3})*$)/g)
+              .join(".");
+            return "Rp" + (minus === true ? " -" : "") + result;
+          } catch (error) {
+            return "Rp~";
+          }
+        }
+      }
+    }
+  },
   data: () => ({
     dialog: false,
     search: "",
@@ -160,7 +202,7 @@ export default {
         text: "ID Transaksi",
         align: "start",
         sortable: false,
-        value: "id"
+        value: "code"
       },
       { text: "Waktu", value: "created_at" },
       { text: "Nama Pembeli", value: "buyer.name" },

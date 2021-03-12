@@ -14,8 +14,10 @@
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
           Data hasil lelang di
-          <span class="primary--text font-weight-bold">TPI xxx </span> pada
-          tanggal
+          <span class="primary--text font-weight-bold"
+            >{{ $auth.$state.user.location }}
+          </span>
+          pada tanggal
 
           <date-format></date-format>
         </span>
@@ -102,7 +104,23 @@
         </v-card>
       </v-dialog>
     </template>
-    <!---- Uncomment dummy
+
+    <template v-slot:item.caught.created_at="{ item }">
+      <span
+        >{{
+          new Date(item.caught.created_at)
+            .getHours()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}:{{
+          new Date(item.caught.created_at)
+            .getMinutes()
+            .toLocaleString()
+            .padStart(2, "0")
+        }}
+      </span>
+    </template>
+
     <template v-slot:item.created_at="{ item }">
       <span
         >{{
@@ -117,14 +135,14 @@
             .padStart(2, "0")
         }}
       </span>
-    </template> --->
+    </template>
 
     <template v-slot:item.price="{ item }">
       <!---- Test angka align end -->
       <span class="d-flex justify-end"> {{ item.price | currencyFormat }}</span>
     </template>
     <template v-slot:item.weight="{ item }">
-      {{ item.weight }} {{ item.weight_unit }}
+      {{ item.caught.weight }} {{ item.caught.weight_unit }}
     </template>
     <template v-slot:item.action="{ item }">
       <v-btn
@@ -188,17 +206,16 @@ export default {
         text: "ID",
         align: "start",
         sortable: false,
-        value: "id"
+        value: "code"
       },
-      { text: "Jam Masuk", value: "created_at" },
-      { text: "Jam Terjual", value: "sold_at" },
-      { text: "Nama Nelayan", value: "fisher_name" },
-      { text: "Jenis Ikan", value: "fish_type" },
+      { text: "Jam Masuk", value: "caught.created_at" },
+      { text: "Jam Terjual", value: "created_at" },
+      { text: "Nama Nelayan", value: "caught.fisher.name" },
+      { text: "Jenis Ikan", value: "caught.fish_type.name" },
       { text: "Berat", value: "weight" },
       { text: "Harga", value: "price" },
-      { text: "Status Lelang", value: "status_name" },
-      { text: "Nama Pembeli", value: "buyer_name" },
-      { text: "Daerah Distribusi", value: "distribution_area" }
+      { text: "Status Lelang", value: "caught.caught_status.Status" },
+      { text: "Nama Pembeli", value: "buyer_name" }
     ],
     fisher: [],
     fishtype: [],
