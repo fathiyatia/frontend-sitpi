@@ -5,7 +5,7 @@
       top
       right
       multi-line
-      :timeout="success ? timeout.success : timeout.error"
+      timeout="3000"
       :color="success ? color.success : color.error"
     >
       <v-icon class="pr-2" color="white">{{
@@ -31,10 +31,6 @@ export default {
   data() {
     return {
       show: this.$props.value,
-      timeout: {
-        success: 1000,
-        error: 1000
-      },
       color: {
         success: "success",
         error: "error"

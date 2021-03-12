@@ -78,7 +78,7 @@
             </v-col>
             <v-col>
               <h3 class="accent--text mt-4 font-weight-regular">
-                : {{ this.currentItem.id }}
+                : {{ this.currentItem.code }}
               </h3></v-col
             >
           </v-row>

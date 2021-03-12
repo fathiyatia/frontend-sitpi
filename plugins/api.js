@@ -560,7 +560,6 @@ export default ({ app }, inject) => {
     },
     store(data) {
       const body = {
-        district_id: 1,
         name: data.name,
         south_latitude_degree: data.south_latitude_degree,
         south_latitude_minute: data.south_latitude_minute,
@@ -694,7 +693,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -858,7 +857,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {

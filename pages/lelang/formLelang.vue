@@ -9,6 +9,14 @@
           lelang</v-card-subtitle
         >
       </v-card>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <!----- Caught Fish Table ----->
       <v-card-text class="mt-2">
         <!----- Dummy ----->
@@ -153,6 +161,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialog: false,
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
@@ -193,8 +204,6 @@ export default {
   },
 
   methods: {
-    //del soon
-
     getInput(item) {
       this.input.id = item.id;
       this.input.fish_type = item.fish_type.name;
@@ -240,7 +249,7 @@ export default {
         console.log(e);
       }
     },
-    //cek
+
     async storeAuction() {
       if (this.$refs.form.validate()) {
         try {
@@ -251,8 +260,19 @@ export default {
           ).finally(response => {
             this.dialog = false;
             this.$refs.form.reset();
+            this.getAllCaught();
             return response;
           });
+
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data lelang berhasil ditambahkan";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data lelang gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
         }

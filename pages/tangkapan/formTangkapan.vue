@@ -9,6 +9,15 @@
         >
       </v-card>
 
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
+
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <!-- Fisher Identitiy etc ---->
@@ -351,11 +360,14 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialog: false,
     dialogMap: false,
     valid: true,
     fishinggear: [],
-    fishingarea: ["WPP-RI 571", "WPP-RI 716"],
+    fishingarea: [],
     fishtype: [],
     fisher: [],
     input: {
@@ -404,9 +416,9 @@ export default {
       this.$refs.form.reset();
     },
     confirm() {
-      //if (this.$refs.form.validate()) {
-      this.dialog = true;
-      //}
+      if (this.$refs.form.validate()) {
+        this.dialog = true;
+      }
     },
     async getAllFisher() {
       try {
@@ -484,10 +496,22 @@ export default {
     async storeCaught() {
       if (this.$refs.form.validate()) {
         try {
-          await this.$api("caught", "store", this.input).finally(response => {
-            this.dialog = false;
-            return response;
-          });
+          const result = await this.$api("caught", "store", this.input).finally(
+            response => {
+              this.dialog = false;
+              return response;
+            }
+          );
+
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data tangkapan berhasil ditambahkan";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data tangkapan gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
         }
