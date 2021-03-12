@@ -1,7 +1,8 @@
 <template>
   <v-app>
-    <navbar-office v-model="drawer" v-if="office"></navbar-office>
-    <navbar-dinas v-model="drawer" v-else></navbar-dinas>
+    <navbar-office v-model="drawer" v-if="officer"></navbar-office>
+    <navbar-dinas v-model="drawer" v-if="district"></navbar-dinas>
+    <navbar-admin v-model="drawer" v-if="admin"></navbar-admin>
     <!-- Top Navbar --->
     <v-app-bar color="primary" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
@@ -26,8 +27,8 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ $auth.$state.user.name }}
-                | TPI XX
+                {{ $auth.$state.user.user.name }}
+                | {{ $auth.$state.user.location }}
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
@@ -37,11 +38,11 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold accent--text">
-                      {{ this.$auth.$state.user.name }}
+                      {{ this.$auth.$state.user.user.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="pt-1 accent--text"
                       >Username :
-                      {{ this.$auth.$state.user.username }}
+                      {{ this.$auth.$state.user.user.username }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -108,7 +109,9 @@
 export default {
   data() {
     return {
-      office: true,
+      officer: false,
+      admin: false,
+      district: false,
       clipped: false,
       drawer: true,
       fixed: false,
@@ -120,7 +123,21 @@ export default {
       title: ""
     };
   },
+
+  mounted() {
+    this.CheckRole();
+  },
+
   methods: {
+    CheckRole() {
+      if (this.$auth.$state.user.user.role.Name == "superadmin") {
+        this.admin = true;
+      } else if (this.$auth.$state.user.user.role.Name == "district-admin") {
+        this.district = true;
+      } else {
+        this.officer = true;
+      }
+    },
     async logout() {
       try {
         this.$api("user", "logout");
