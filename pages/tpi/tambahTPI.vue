@@ -7,36 +7,45 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
-            Nama Tempat Pelelangan Ikan
+            Kode TPI
           </h3>
           <v-text-field
             outlined
             single-line
-            label="Nama "
+            label="Kode TPI "
+            :rules="required"
+            v-model="input.code"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama TPI
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Nama TPI"
             :rules="required"
             v-model="input.name"
           />
           <h3 class="mb-3 mt-2 primary--text">
-            Lokasi
+            Alamat
           </h3>
           <v-text-field
             outlined
             single-line
-            label="Lokasi"
-            :rules="required"
-            v-model="input.location"
+            label="Alamat"
+            v-model="input.address"
           />
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-center px-3">
         <v-row>
           <v-col md="6">
-            <v-btn large block color="accent" :to="'/user/dataUser'">
+            <v-btn large block color="accent" :to="'tpi/dataTPI'">
               Batal
             </v-btn>
           </v-col>
           <v-col md="6">
-            <v-btn large block color="primary" @click.stop="storeFisher()">
+            <v-btn large block color="primary" @click.stop="storeTpi()">
               Simpan
             </v-btn>
           </v-col>
@@ -51,8 +60,9 @@ export default {
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
+      code: null,
       name: null,
-      location: null
+      address: null
     }
   }),
   methods: {
@@ -60,12 +70,12 @@ export default {
       this.$refs.form.reset();
     },
     //res
-    async storeFisher() {
+    async storeTpi() {
       if (this.$refs.form.validate()) {
         try {
-          const result = await this.$api("fisher", "store", this.input).finally(
+          const result = await this.$api("tpi", "store", this.input).finally(
             response => {
-              this.$router.push("/user/dataUser");
+              this.$router.push("/tpi/dataTPI");
               return response;
             }
           );

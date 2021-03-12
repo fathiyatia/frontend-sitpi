@@ -47,7 +47,7 @@
       </template>
     </template>
     <template v-slot:item.id="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/user/edit/' + item.id">
+      <v-btn x-small color="secondary" depressed>
         Edit
       </v-btn>
       <v-btn
@@ -75,7 +75,7 @@ export default {
         value: "code"
       },
       { text: "Nama", value: "name" },
-      { text: "Lokasi", value: "location" },
+      { text: "Alamat", value: "address" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     fisher: []
@@ -88,7 +88,7 @@ export default {
   },
 
   mounted() {
-    this.getAllFisher();
+    this.getAllTpi();
   },
 
   methods: {
@@ -112,9 +112,9 @@ export default {
       }
     },
 
-    async getAllFisher() {
+    async getAllTpi() {
       try {
-        this.fisher = await this.$api("fisher", "index", null);
+        this.fisher = await this.$api("tpi", "index", null);
       } catch (e) {
         console.log(e);
       }
