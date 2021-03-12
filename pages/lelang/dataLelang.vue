@@ -139,7 +139,7 @@
 
     <template v-slot:item.price="{ item }">
       <!---- Test angka align end -->
-      <span class="d-flex justify-end"> {{ item.price | currencyFormat }}</span>
+      {{ item.price | currencyFormat }}
     </template>
     <template v-slot:item.weight="{ item }">
       {{ item.caught.weight }} {{ item.caught.weight_unit }}
@@ -214,8 +214,7 @@ export default {
       { text: "Jenis Ikan", value: "caught.fish_type.name" },
       { text: "Berat", value: "weight" },
       { text: "Harga", value: "price" },
-      { text: "Status Lelang", value: "caught.caught_status.Status" },
-      { text: "Nama Pembeli", value: "buyer_name" }
+      { text: "Status Lelang", value: "caught.caught_status.Status" }
     ],
     fisher: [],
     fishtype: [],
@@ -235,27 +234,43 @@ export default {
   },
 
   computed: {
-    //adj
     showHeaders() {
-      if (this.input.fish == "0") {
-        if (this.input.buyerid == "0") {
-          return this.all_headers;
-        } else {
-          return this.all_headers.filter(
-            header => header.text !== "Nama Pembeli"
-          );
-        }
-      } else {
-        if (this.input.buyerid == "0") {
-          return this.all_headers.filter(
+      //check permission to edit and delete
+      /*
+      if (this.$auth.$state.user.user.role.Name != "tpi-admin") {
+        this.all_headers = this.all_headers.filter(
+          header => header.text !== "Aksi"
+        );
+      }
+      */
+      //check if there is filter active
+      if (
+        this.input.fish != "0" ||
+        this.input.fisherid != "0" ||
+        this.input.status != "0"
+      ) {
+        //filtering based on input
+        this.show_headers = this.all_headers;
+        if (this.input.fish != "0") {
+          this.show_headers = this.show_headers.filter(
             header => header.text !== "Jenis Ikan"
           );
-        } else {
-          return this.all_headers.filter(
-            header =>
-              header.text !== "Jenis Ikan" && header.text !== "Nama Pembeli"
+        }
+        if (this.input.fisherid != "0") {
+          this.show_headers = this.show_headers.filter(
+            header => header.text !== "Nama Nelayan"
           );
         }
+        if (this.input.status != "0") {
+          this.show_headers = this.show_headers.filter(
+            header => header.text !== "Status Lelang"
+          );
+        }
+        return this.show_headers;
+      }
+      //return all headers if there is no filter active
+      else {
+        return this.all_headers;
       }
     }
   },

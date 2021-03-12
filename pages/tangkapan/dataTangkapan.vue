@@ -8,17 +8,6 @@
     <template v-slot:top>
       <v-row class="mx-0 px-4 pt-6">
         <h2 class="accent--text">Data Tangkapan Ikan</h2>
-        <!---- Test Alert    
-        <template>
-          <v-btn dark color="orange darken-2" @click="testalert()">
-            Open Snackbar
-          </v-btn>
-          <alert
-            v-model="snackbar"
-            :success="success"
-            :messages="messages"
-          ></alert>
-        </template> --->
       </v-row>
       <v-row class="mx-0 px-4 pt-2 pb-6"
         ><span>
@@ -158,14 +147,6 @@
 <script>
 export default {
   data: () => ({
-    //test alert
-    snackbar: false,
-    success: false,
-    messages: "",
-    icon: "",
-    text: "Data Hasil Tangkapan berhasil ditambahkan",
-    timeout: 2000,
-    //
     dialogDelete: false,
     input: {
       fisherid: "0",
@@ -180,7 +161,6 @@ export default {
 
     all_headers: [
       { text: "ID", align: "start", value: "code" },
-      ,
       { text: "Waktu", value: "created_at" },
       { text: "Nama Nelayan", value: "fisher.name" },
       { text: "Jumlah Hari Trip", value: "trip_day" },
@@ -209,66 +189,48 @@ export default {
   },
 
   computed: {
-    //adj
     showHeaders() {
-      if (this.input.fish == "0") {
-        if (this.input.fisherid == "0") {
-          if (this.input.status == "0") {
-            return this.all_headers;
-          } else {
-            return this.all_headers.filter(
-              header => header.text !== "Status Lelang"
-            );
-          }
-        } else {
-          if (this.input.status == "0") {
-            return this.all_headers.filter(header => header.text !== "Nelayan");
-          } else {
-            return this.all_headers.filter(
-              header =>
-                header.text !== "Nelayan" && header.text !== "Status Lelang"
-            );
-          }
+      //check permission to edit and delete
+      /*
+      if (this.$auth.$state.user.user.role.Name != "tpi-admin") {
+        this.all_headers = this.all_headers.filter(
+          header => header.text !== "Aksi"
+        );
+      }
+      */
+      //check if there is filter active
+      if (
+        this.input.fish != "0" ||
+        this.input.fisherid != "0" ||
+        this.input.status != "0"
+      ) {
+        //filtering based on input
+        this.show_headers = this.all_headers;
+        if (this.input.fish != "0") {
+          this.show_headers = this.show_headers.filter(
+            header => header.text !== "Jenis Ikan"
+          );
         }
-      } else {
-        if (this.input.fisherid == "0") {
-          if (this.input.status == "0") {
-            return this.all_headers.filter(
-              header => header.text !== "Jenis Ikan"
-            );
-          } else {
-            return this.all_headers.filter(
-              header =>
-                header.text !== "Jenis Ikan" && header.text !== "Status Lelang"
-            );
-          }
-        } else {
-          if (this.input.status == "0") {
-            return this.all_headers.filter(
-              header =>
-                header.text !== "Jenis Ikan" && header.text !== "Nelayan"
-            );
-          } else {
-            return this.all_headers.filter(
-              header =>
-                header.text !== "Jenis Ikan" &&
-                header.text !== "Nelayan" &&
-                header.text !== "Status Lelang"
-            );
-          }
+        if (this.input.fisherid != "0") {
+          this.show_headers = this.show_headers.filter(
+            header => header.text !== "Nama Nelayan"
+          );
         }
+        if (this.input.status != "0") {
+          this.show_headers = this.show_headers.filter(
+            header => header.text !== "Status Lelang"
+          );
+        }
+        return this.show_headers;
+      }
+      //return all headers if there is no filter active
+      else {
+        return this.all_headers;
       }
     }
   },
 
   methods: {
-    //test alert
-    async testalert() {
-      (this.success = true),
-        (this.messages = "Data berhasil ditambahkan"),
-        (this.snackbar = true);
-    },
-
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
