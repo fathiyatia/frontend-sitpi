@@ -9,28 +9,55 @@
   >
     <template v-slot:top>
       <v-row class="mx-0 pt-6">
-        <v-col cols="12" lg="9" md="9">
+        <v-col>
           <h2 class="accent--text">Data User</h2>
         </v-col>
-        <v-col lg="3" md="3">
-          <v-btn small block color="success" :to="'/user/register/petugasTPI'">
-            + Tambah User
+      </v-row>
+      <v-row class="mx-0 mb-6">
+        <v-col lg="3" md="3" v-if="CheckRoleDinas()">
+          <v-btn
+            class="text-capitalize"
+            small
+            block
+            color="success"
+            :to="'/user/register/adminTPI'"
+          >
+            + Tambah Admin TPI
           </v-btn>
         </v-col>
-
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="justify-center"
-              >Anda yakin ingin menghapus data ini?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <v-col lg="3" md="3" v-if="CheckRoleTPI()">
+          <v-btn
+            class="text-capitalize"
+            small
+            block
+            color="success"
+            :to="'/user/register/petugasTPI'"
+          >
+            + Tambah Petugas TPI
+          </v-btn>
+        </v-col>
+        <v-col lg="3" md="3" v-if="CheckRoleTPI()">
+          <v-btn
+            class="text-capitalize"
+            small
+            block
+            color="success"
+            :to="'/user/register/kasir'"
+          >
+            + Tambah Kasir
+          </v-btn>
+        </v-col>
+        <v-col lg="3" md="3" v-if="CheckRoleSuperadmin()">
+          <v-btn
+            class="text-capitalize"
+            small
+            block
+            color="success"
+            :to="'/user/register/adminDinas'"
+          >
+            + Tambah Admin Dinas
+          </v-btn>
+        </v-col>
       </v-row>
 
       <template>
@@ -87,6 +114,30 @@ export default {
   },
 
   methods: {
+    /* nyoba set permission
+    CheckPermission() {
+      return this.$auth.$state.user.user.role.Permission[0].Name.includes(
+        "create-tpi-officer"
+      );
+    },
+    */
+
+    //sementara masih check dari role dulu
+    CheckRoleTPI() {
+      if (this.$auth.$state.user.user.role.Name == "tpi-admin") {
+        return true;
+      }
+    },
+    CheckRoleDinas() {
+      if (this.$auth.$state.user.user.role.Name == "district-admin") {
+        return true;
+      }
+    },
+    CheckRoleSuperadmin() {
+      if (this.$auth.$state.user.user.role.Name == "superadmin") {
+        return true;
+      }
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;

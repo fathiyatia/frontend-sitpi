@@ -2,7 +2,7 @@
   <v-container>
     <v-card tile elevation="4" class="mt-3 rounded-lg front-card">
       <v-card color="secondary" dark elevation="0">
-        <v-card-title class="mb-1">Pendaftaran Petugas TPI</v-card-title>
+        <v-card-title class="mb-1">Pendaftaran Kasir</v-card-title>
       </v-card>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -36,6 +36,7 @@
             :rules="required"
             v-model="input.address"
           />
+
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -74,13 +75,10 @@ export default {
       name: null,
       nik: null,
       address: null,
+
       username: null
     },
-    tpi: ["TPI Indramayu", "TPI Sukabumi"],
-    role: [
-      { role_name: "Petugas TPI", id: "4" },
-      { role_name: "Kasir", id: "5" }
-    ]
+    tpi: ["TPI Indramayu", "TPI Sukabumi"]
   }),
   methods: {
     reset() {
@@ -92,7 +90,7 @@ export default {
         try {
           const result = await this.$api(
             "user",
-            "register_tpi_officer",
+            "register_tpi_cashier",
             this.input
           ).finally(response => {
             this.$router.push("/user/dataUser");
