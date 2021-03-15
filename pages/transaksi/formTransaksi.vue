@@ -347,6 +347,9 @@ export default {
     }
   },
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialog: false,
     valid: true,
     isEmpty: true,
@@ -382,13 +385,7 @@ export default {
     auction: [],
     fishtype: [],
     fisher: [],
-    buyer_confirm: [],
-    //test alert
-    snackbar: false,
-    success: false,
-    messages: "",
-    icon: "",
-    timeout: 2000
+    buyer_confirm: []
   }),
 
   mounted() {
@@ -399,8 +396,6 @@ export default {
   },
 
   methods: {
-    //del soon
-
     isDisabled(id) {
       for (let index = 0; index < this.input.orders.length; index++) {
         if (id == this.input.orders[index].auction_id) {
@@ -474,7 +469,6 @@ export default {
       return sum;
     },
 
-    //cek
     async getAllAuction() {
       try {
         this.auction = await this.$api("auction", "inquiry", this.input_filter);
@@ -519,7 +513,6 @@ export default {
       }
     },
 
-    // res
     async storeTransaction() {
       //del soon
       if (this.isEmpty) {
@@ -538,8 +531,19 @@ export default {
             this.$refs.form.reset();
             this.isEmpty = true;
             this.dialog = false;
+            this.getAllAuction();
             return response;
           });
+
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data transaksi berhasil ditambahkan";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data transaksi gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
         }

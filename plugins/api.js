@@ -49,6 +49,39 @@ export default ({ app }, inject) => {
             );
             break;
         }
+      case "report":
+        switch (action) {
+          case "production":
+            return Report.production(data, other);
+          case "transaction":
+            return Report.transaction(data, other);
+
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "district":
+        switch (action) {
+          case "index":
+            return District.index(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
+      case "province":
+        switch (action) {
+          case "index":
+            return Province.index(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
       case "fish":
         switch (action) {
           case "index":
@@ -235,8 +268,7 @@ export default ({ app }, inject) => {
       return app.$auth
         .logout()
         .then(response => {
-          console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -245,7 +277,7 @@ export default ({ app }, inject) => {
 
     register_district_admin(data) {
       const body = {
-        district_id: 1,
+        district_id: parseInt(data.district),
         nik: data.nik,
         name: data.name,
         address: data.address,
@@ -270,7 +302,7 @@ export default ({ app }, inject) => {
     register_tpi_admin(data) {
       const body = {
         role_id: parseInt(data.role_id),
-        tpi_id: 1,
+        tpi_id: parseInt(data.tpi),
         nik: data.nik,
         name: data.name,
         address: data.address,
@@ -345,6 +377,7 @@ export default ({ app }, inject) => {
           url: "/user/" + data
         })
         .then(response => {
+          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -353,12 +386,13 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
-        role_id: data.role_id,
-        tpi_id: 1,
+        user_status_id: parseInt(data.user_status_id),
+        role_id: parseInt(data.role_id),
         nik: data.nik,
         name: data.name,
         address: data.address,
-        username: data.username
+        username: data.username,
+        password: 12345
       };
       return app
         .$axios({
@@ -399,9 +433,123 @@ export default ({ app }, inject) => {
           console.log(response);
           return response.data.response_data;
         });
+    },
+    delete(data) {
+      const body = {
+        id: data
+      };
+      return app
+        .$axios({
+          method: "delete",
+          url: "/tpi/" + data,
+          data: body
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    get_by_id(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/tpi/" + data
+        })
+        .then(response => {
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    update(data) {
+      const body = {
+        code: data.code,
+        name: data.name
+      };
+      return app
+        .$axios({
+          method: "put",
+          url: "/tpi/" + data.id,
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
     }
   };
 
+  const Report = {
+    production(data) {
+      if (data.period == "Laporan Harian") {
+        var link =
+          "report/production?tpi_id=" + data.tpi + "&daily=" + data.date_daily;
+      } else if (data.period == "Laporan Bulanan") {
+        var link =
+          "report/production?tpi_id=" +
+          data.tpi +
+          "&monthly=" +
+          data.date_monthly;
+      } else if (data.period == "Laporan Tahunan") {
+        var link =
+          "report/production?tpi_id=" +
+          data.tpi +
+          "&yearly=" +
+          data.date_yearly;
+      } else if (data.period == "Pilih Jangka Waktu") {
+        var link =
+          "report/production?tpi_id=" +
+          data.tpi +
+          "&period=" +
+          data.date_custom_from +
+          ":" +
+          data.date_custom_to;
+      }
+      return app
+        .$axios({
+          method: "get",
+          url: link
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    }
+  };
+
+  const District = {
+    index(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/districts?province_id=" + data
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    }
+  };
+  const Province = {
+    index() {
+      return app.$axios.get("/provinces").then(response => {
+        console.log(response);
+        return response.data.response_data;
+      });
+    }
+  };
   const Fish = {
     index() {
       return app.$axios.get("/fish-types").then(response => {
@@ -486,6 +634,7 @@ export default ({ app }, inject) => {
     },
     store(data) {
       const body = {
+        code: data.code,
         name: data.name
       };
 
@@ -703,7 +852,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "delete",
-          url: "/caught_fish/" + data,
+          url: "/caught/delete/" + data,
           data: body
         })
         .then(response => {
@@ -717,7 +866,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/caught_fish/" + data
+          url: "/caught/getbyid/" + data
         })
         .then(response => {
           return response.data.response_data;
@@ -739,7 +888,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "put",
-          url: "/caught_fish/" + data.id,
+          url: "/caught/update/" + data.id,
           data: body
         })
         .then(response => {
@@ -779,7 +928,7 @@ export default ({ app }, inject) => {
         .$axios({
           method: "get",
           url:
-            "/caught_fish/total_production?from=" +
+            "/caught/total_production?from=" +
             data.date_start +
             "&to=" +
             data.date_end
@@ -797,7 +946,7 @@ export default ({ app }, inject) => {
         .$axios({
           method: "get",
           url:
-            "/caught_fish/total_fisher?from=" +
+            "/caught/total_fisher?from=" +
             data.date_start +
             "&to=" +
             data.date_end
@@ -867,7 +1016,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "delete",
-          url: "/auction/" + data,
+          url: "/auction/delete/" + data,
           data: body
         })
         .then(response => {
@@ -881,7 +1030,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/auction/" + data
+          url: "/auction/getbyid/" + data
         })
         .then(response => {
           return response.data.response_data;
@@ -900,7 +1049,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "put",
-          url: "/auction/" + data.id,
+          url: "/auction/update" + data.id,
           data: body
         })
         .then(response => {
@@ -956,9 +1105,6 @@ export default ({ app }, inject) => {
     store(data) {
       var auction = [];
       for (let index = 0; index < data.orders.length; index++) {
-        //auction.push({
-        //  auction_id: parseInt(data.orders[index].auction_id)
-        //});
         auction[index] = parseInt(data.orders[index].auction_id);
       }
 
@@ -977,7 +1123,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -987,7 +1133,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "delete",
-          url: "/transaction/" + data,
+          url: "/transaction/delete/" + data,
           data: body
         })
         .then(response => {
@@ -1001,7 +1147,7 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: "/transaction/" + data
+          url: "/transaction/getbyid/" + data
         })
         .then(response => {
           return response.data.response_data;
@@ -1013,13 +1159,12 @@ export default ({ app }, inject) => {
     update(data) {
       const body = {
         buyer_id: parseInt(data.buyer_id),
-        distribution_area: data.distribution_area,
-        price: parseInt(data.price)
+        distribution_area: data.distribution_area
       };
       return app
         .$axios({
           method: "put",
-          url: "/transaction/" + data.id,
+          url: "/transaction/update/" + data.id,
           data: body
         })
         .then(response => {

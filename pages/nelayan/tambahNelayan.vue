@@ -132,9 +132,6 @@ export default {
     status: ["Tetap", "Pendatang"]
   }),
   methods: {
-    reset() {
-      this.$refs.form.reset();
-    },
     //res
     async storeFisher() {
       if (this.$refs.form.validate()) {

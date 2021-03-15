@@ -19,7 +19,6 @@
       </template>
       <!----- Caught Fish Table ----->
       <v-card-text class="mt-2">
-        <!----- Dummy ----->
         <v-data-table
           :headers="headers"
           :items="caught_fish"

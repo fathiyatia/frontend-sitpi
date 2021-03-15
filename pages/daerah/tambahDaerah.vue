@@ -132,9 +132,6 @@ export default {
     }
   }),
   methods: {
-    reset() {
-      this.$refs.form.reset();
-    },
     //res
     async storeArea() {
       if (this.$refs.form.validate()) {

@@ -1,7 +1,5 @@
 <template>
-  <span class="primary--text font-weight-bold">{{
-    new Date() | dateFormat
-  }}</span>
+  <span>{{ new Date() | dateFormat }}</span>
 </template>
 <script>
 export default {

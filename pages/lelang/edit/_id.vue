@@ -8,45 +8,15 @@
       <v-card-text>
         <v-form ref="form">
           <h3 class="mb-3 mt-2 primary--text">
-            Nama Pembeli
-          </h3>
-          <v-autocomplete
-            outlined
-            single-line
-            label="Nama Pembeli"
-            :rules="required"
-            v-model="input.buyer_id"
-            :items="buyer"
-            clearable
-            item-text="name"
-            item-value="id"
-          >
-            <template v-slot:selection="{ item }">{{
-              item.name + " - " + item.nik
-            }}</template></v-autocomplete
-          >
-
-          <h3 class="mb-3 mt-2 primary--text">
-            Total Harga
+            Harga
           </h3>
           <v-text-field
             outlined
             single-line
             prefix="Rp"
-            label="Total Harga"
+            label="Harga"
             :rules="required"
             v-model="input.price"
-          />
-
-          <h3 class="mb-3 mt-2 primary--text">
-            Daerah Penjualan Ikan
-          </h3>
-          <v-text-field
-            outlined
-            single-line
-            label="Daerah Penjualan Ikan"
-            :rules="required"
-            v-model="input.distribution_area"
           />
         </v-form>
       </v-card-text>
@@ -83,7 +53,6 @@ export default {
     }
   }),
   mounted() {
-    this.getAllBuyer();
     this.getAllAuction();
   },
   methods: {
@@ -97,13 +66,6 @@ export default {
           "get_by_id",
           this.$route.params.id
         );
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async getAllBuyer() {
-      try {
-        this.buyer = await this.$api("buyer", "inquiry", null);
       } catch (e) {
         console.log(e);
       }

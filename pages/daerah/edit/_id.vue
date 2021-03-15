@@ -135,9 +135,6 @@ export default {
     this.getById();
   },
   methods: {
-    reset() {
-      this.$refs.form.reset();
-    },
     async getById() {
       try {
         this.input = await this.$api(
