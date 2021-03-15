@@ -36,20 +36,6 @@
             :rules="required"
             v-model="input.address"
           />
-
-          <h3 class="mb-3 mt-2 primary--text">
-            Pilih Lokasi TPI
-          </h3>
-          <v-combobox
-            outlined
-            single-line
-            label="Pilih Lokasi TPI"
-            :rules="required"
-            v-model="input.tpi"
-            :items="tpi"
-            clearable
-          >
-          </v-combobox>
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -67,11 +53,24 @@
             outlined
             single-line
             :items="role"
-            item-text="role_name"
+            item-text="name"
             item-value="id"
             label="Peran"
             :rules="required"
             v-model="input.role_id"
+          ></v-select>
+          <h3 class="mb-3 mt-2 primary--text">
+            Status
+          </h3>
+          <v-select
+            outlined
+            single-line
+            :items="status"
+            item-text="name"
+            item-value="id"
+            label="Status"
+            :rules="required"
+            v-model="input.user_status_id"
           ></v-select>
         </v-form>
       </v-card-text>
@@ -103,12 +102,17 @@ export default {
       address: null,
       tpi: null,
       username: null,
-      role_id: null
+      role_id: null,
+      user_status_id: null
     },
     tpi: ["TPI Indramayu", "TPI Sukabumi"],
     role: [
-      { role_name: "Petugas TPI", id: "4" },
-      { role_name: "Kasir", id: "5" }
+      { name: "Petugas TPI", id: 4 },
+      { name: "Kasir", id: 5 }
+    ],
+    status: [
+      { name: "Aktif", id: 1 },
+      { name: "Tidak Aktif", id: 2 }
     ]
   }),
   mounted() {
@@ -124,7 +128,9 @@ export default {
           "user",
           "get_by_id",
           this.$route.params.id
-        );
+        ).finally(response => {
+          return response;
+        });
       } catch (e) {
         console.log(e);
       }

@@ -40,16 +40,18 @@
           <h3 class="mb-3 mt-2 primary--text">
             Pilih Lokasi TPI
           </h3>
-          <v-combobox
+          <v-autocomplete
             outlined
             single-line
             label="Pilih Lokasi TPI"
             :rules="required"
             v-model="input.tpi"
             :items="tpi"
+            item-text="name"
+            item-value="id"
             clearable
           >
-          </v-combobox>
+          </v-autocomplete>
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -91,8 +93,11 @@ export default {
       tpi: null,
       username: null
     },
-    tpi: ["TPI Indramayu", "TPI Sukabumi"]
+    tpi: []
   }),
+  mounted() {
+    this.getAllTpi();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
@@ -112,6 +117,14 @@ export default {
         } catch (e) {
           console.log(e);
         }
+      }
+    },
+
+    async getAllTpi() {
+      try {
+        this.tpi = await this.$api("tpi", "index", null);
+      } catch (e) {
+        console.log(e);
       }
     }
   }

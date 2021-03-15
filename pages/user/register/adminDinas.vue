@@ -36,11 +36,26 @@
             :rules="required"
             v-model="input.address"
           />
-
+          <h3 class="mb-3 mt-2 primary--text">
+            Pilih Provinsi
+          </h3>
+          <v-autocomplete
+            outlined
+            single-line
+            label="Pilih Provinsi"
+            :rules="required"
+            v-model="input.province"
+            :items="province"
+            clearable
+            item-text="name"
+            item-value="id"
+            @change="getAllDistrict()"
+          >
+          </v-autocomplete>
           <h3 class="mb-3 mt-2 primary--text">
             Pilih Kabupaten / Kota
           </h3>
-          <v-combobox
+          <v-autocomplete
             outlined
             single-line
             label="Pilih Kabupaten / Kota"
@@ -48,8 +63,10 @@
             v-model="input.district"
             :items="district"
             clearable
+            item-text="name"
+            item-value="id"
           >
-          </v-combobox>
+          </v-autocomplete>
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -88,14 +105,37 @@ export default {
       name: null,
       nik: null,
       address: null,
+      province: null,
       district: null,
       username: null
     },
-    district: ["Kab. Indramayu"]
+    district: [],
+    province: []
   }),
+  mounted() {
+    this.getAllProvince();
+  },
   methods: {
     reset() {
       this.$refs.form.reset();
+    },
+    async getAllProvince() {
+      try {
+        this.province = await this.$api("province", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllDistrict() {
+      try {
+        this.district = await this.$api(
+          "district",
+          "index",
+          this.input.province
+        );
+      } catch (e) {
+        console.log(e);
+      }
     },
     //res
     async register() {

@@ -14,7 +14,7 @@
         </v-col>
       </v-row>
       <v-row class="mx-0 mb-6">
-        <v-col lg="3" md="3" v-if="CheckRoleDinas()">
+        <v-col lg="3" md="3" v-if="CheckPermissionCreateAdminTPI()">
           <v-btn
             class="text-capitalize"
             small
@@ -25,7 +25,7 @@
             + Tambah Admin TPI
           </v-btn>
         </v-col>
-        <v-col lg="3" md="3" v-if="CheckRoleTPI()">
+        <v-col lg="3" md="3" v-if="CheckPermissionCreateOfficer()">
           <v-btn
             class="text-capitalize"
             small
@@ -36,7 +36,7 @@
             + Tambah Petugas TPI
           </v-btn>
         </v-col>
-        <v-col lg="3" md="3" v-if="CheckRoleTPI()">
+        <v-col lg="3" md="3" v-if="CheckPermissionCreateCashier()">
           <v-btn
             class="text-capitalize"
             small
@@ -47,7 +47,7 @@
             + Tambah Kasir
           </v-btn>
         </v-col>
-        <v-col lg="3" md="3" v-if="CheckRoleSuperadmin()">
+        <v-col lg="3" md="3" v-if="CheckPermissionCreateDistrict()">
           <v-btn
             class="text-capitalize"
             small
@@ -73,8 +73,13 @@
         ></v-text-field>
       </template>
     </template>
+    <template v-slot:item.user_status.Status="{ item }">
+      <v-chip :color="getColor(item.user_status.Status)" outlined small dark>
+        {{ item.user_status.Status }}
+      </v-chip>
+    </template>
     <template v-slot:item.id="{ item }">
-      <v-btn x-small color="secondary" depressed :to="'/user/edit/' + item.id">
+      <v-btn small color="secondary" depressed :to="'/user/edit/' + item.id">
         Edit
       </v-btn>
     </template>
@@ -96,7 +101,7 @@ export default {
       { text: "Nama", value: "name" },
       { text: "NIK", value: "nik" },
       { text: "Alamat", value: "address" },
-      { text: "Peran", value: "role.Name" },
+      { text: "Peran", value: "role.name" },
       { text: "Status", value: "user_status.Status" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
@@ -114,6 +119,11 @@ export default {
   },
 
   methods: {
+    getColor(status) {
+      if (status == "Aktif") return "blue";
+      else return "red";
+    },
+
     /* nyoba set permission
     CheckPermission() {
       return this.$auth.$state.user.user.role.Permission[0].Name.includes(
@@ -122,22 +132,29 @@ export default {
     },
     */
 
-    //sementara masih check dari role dulu
-    CheckRoleTPI() {
-      if (this.$auth.$state.user.user.role.Name == "tpi-admin") {
-        return true;
-      }
+    CheckPermissionCreateDistrict() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-district-admin"
+      );
     },
-    CheckRoleDinas() {
-      if (this.$auth.$state.user.user.role.Name == "district-admin") {
-        return true;
-      }
+
+    CheckPermissionCreateAdminTPI() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-tpi-admin"
+      );
     },
-    CheckRoleSuperadmin() {
-      if (this.$auth.$state.user.user.role.Name == "superadmin") {
-        return true;
-      }
+
+    CheckPermissionCreateOfficer() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-tpi-officer"
+      );
     },
+    CheckPermissionCreateCashier() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-tpi-cashier"
+      );
+    },
+
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
