@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="showHeaders"
     :items="gear"
     :search="search"
     sort-by="created_at"
@@ -13,7 +13,13 @@
           <h2 class="accent--text">Data Alat Tangkap</h2>
         </v-col>
         <v-col lg="3" md="3">
-          <v-btn block small color="success" @click="popupDialogTambah()">
+          <v-btn
+            v-if="CheckCreatePermission()"
+            block
+            small
+            color="success"
+            @click="popupDialogTambah()"
+          >
             + Tambah Alat Tangkap
           </v-btn>
         </v-col>
@@ -50,7 +56,11 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="accent" text @click="closeTambah">
+              <v-btn
+                color="accent"
+                text
+                @click="(dialogTambah = false), $refs.form.reset()"
+              >
                 Batal
               </v-btn>
               <v-btn color="primary" text @click="storeGear">
@@ -90,7 +100,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="accent" text @click="closeEdit">
+              <v-btn color="accent" text @click="dialogEdit = false">
                 Batal
               </v-btn>
               <v-btn color="primary" text @click="updateGear()">
@@ -107,7 +117,9 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+              <v-btn color="primary" text @click="dialogDelete = false"
+                >Batal</v-btn
+              >
               <v-btn color="error" text @click="deleteGear">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -177,23 +189,34 @@ export default {
     gear: []
   }),
 
-  watch: {
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
-    dialogTambah(val) {
-      val || this.closeTambah();
-    },
-    dialogEdit(val) {
-      val || this.closeEdit();
-    }
-  },
-
   mounted() {
     this.getAllGear();
   },
 
+  computed: {
+    showHeaders() {
+      if (
+        this.$auth.$state.user.user.permissions.includes(
+          "update-fishing-gear"
+        ) != true &&
+        this.$auth.$state.user.user.permissions.includes(
+          "delete-fishing-gear"
+        ) != true
+      ) {
+        return this.headers.filter(header => header.text !== "Aksi");
+      } else {
+        return this.headers;
+      }
+    }
+  },
+
   methods: {
+    CheckCreatePermission() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-fishing-gear"
+      );
+    },
+
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
@@ -206,18 +229,6 @@ export default {
     popupDialogEdit(id) {
       this.dialogEdit = true;
       this.currentId = id;
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-    },
-
-    closeTambah() {
-      this.dialogTambah = false;
-    },
-
-    closeEdit() {
-      this.dialogEdit = false;
     },
 
     deleteGear() {
@@ -250,7 +261,7 @@ export default {
           ).finally(response => {
             this.getAllGear();
             this.dialogTambah = false;
-            this.input.name = null;
+            this.$refs.form.reset();
             return response;
           });
         } catch (e) {

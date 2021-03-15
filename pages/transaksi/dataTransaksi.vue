@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
+      :headers="showHeaders"
       :items="transaction"
       :search="search"
       sort-by="created_at"
@@ -19,8 +19,9 @@
               $auth.$state.user.location
             }}</span>
             pada tanggal
-
-            <date-format></date-format>
+            <span class="primary--text font-weight-bold">
+              <date-format></date-format>
+            </span>
           </span>
         </v-row>
 
@@ -57,12 +58,27 @@
         {{ item.total_price | currencyFormat }}
       </template>
 
-      <template v-slot:item.action="{ item }">
-        <v-btn small block color="info" depressed @click="confirm(item)">
+      <template v-slot:item.detail="{ item }">
+        <v-btn small color="info" depressed @click="confirm(item)">
           Detail
         </v-btn>
       </template>
+
+      <template v-slot:item.action="{ item }">
+        <v-btn x-small color="secondary" depressed @click="getById(item.id)">
+          Edit
+        </v-btn>
+        <v-btn
+          x-small
+          color="error"
+          depressed
+          @click="popupDialogDelete(item.id)"
+        >
+          Hapus
+        </v-btn>
+      </template>
     </v-data-table>
+    <!----- Dialog Detail ----->
     <v-dialog v-model="dialog" width="600px">
       <v-card>
         <v-card-title>
@@ -164,6 +180,64 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!--Dialog Edit--->
+    <v-dialog v-model="dialogEdit" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Edit Transaksi </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form
+              class=""
+              no-gutters
+              ref="form"
+              v-model="valid"
+              lazy-validation
+            >
+              <v-autocomplete
+                label="Nama Pembeli"
+                required
+                v-model="inputEdit.buyer_id"
+                :items="buyer"
+                clearable
+                item-text="name"
+                item-value="id"
+              >
+              </v-autocomplete>
+              <v-text-field
+                label="Daerah Distribusi Ikan"
+                required
+                v-model="inputEdit.distribution_area"
+              ></v-text-field>
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="accent" text @click="closeEdit">
+            Batal
+          </v-btn>
+          <v-btn color="primary" text @click="updateAuction()">
+            Simpan
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!------ Dialog Delete ----->
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="justify-center"
+          >Anda yakin ingin menghapus data ini?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+          <v-btn color="error" text @click="deleteTransaction">Hapus</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -195,8 +269,16 @@ export default {
     }
   },
   data: () => ({
+    valid: true,
+    dialogDelete: false,
+    dialogEdit: false,
     dialog: false,
+    required: [v => !!v || "Data ini harus diisi"],
     search: "",
+    inputEdit: {
+      buyer_id: null,
+      distribution_area: null
+    },
     headers: [
       {
         text: "ID Transaksi",
@@ -208,11 +290,14 @@ export default {
       { text: "Nama Pembeli", value: "buyer.name" },
       { text: "Daerah Penjualan", value: "distribution_area" },
       { text: "Total Harga", value: "total_price" },
-      { text: "Aksi", value: "action", sortable: false, width: 135 }
+      { text: "", value: "detail", sortable: false },
+      { text: "Aksi", value: "action", width: 135 }
     ],
     transaction: [],
     currentItem: [],
-    listItem: []
+    listItem: [],
+    buyer: [],
+    test: []
   }),
 
   watch: {
@@ -223,6 +308,24 @@ export default {
 
   mounted() {
     this.getAllTransaction();
+    this.getAllBuyer();
+  },
+
+  computed: {
+    showHeaders() {
+      if (
+        this.$auth.$state.user.user.permissions.includes(
+          "update-transaction"
+        ) != true &&
+        this.$auth.$state.user.user.permissions.includes(
+          "delete-transaction"
+        ) != true
+      ) {
+        return this.headers.filter(header => header.text !== "Aksi");
+      } else {
+        return this.headers;
+      }
+    }
   },
 
   methods: {
@@ -235,16 +338,49 @@ export default {
       this.dialogDelete = true;
       this.currentId = id;
     },
+    popupDialogEdit(id) {
+      this.dialogEdit = true;
+      this.currentId = id;
+    },
 
+    closeEdit() {
+      this.dialogEdit = false;
+    },
     closeDelete() {
       this.dialogDelete = false;
     },
 
-    deleteBuyer() {
+    async getById(id) {
       try {
-        this.$api("fisher", "delete", this.currentId).finally(() => {
-          this.getAllFisher();
+        this.inputEdit = await this.$api("transaction", "get_by_id", id);
+        console.log("Masuk");
+        this.dialogEdit = true;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    deleteTransaction() {
+      try {
+        this.$api("transaction", "delete", this.currentId).finally(() => {
+          this.getAllTransaction();
           this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async updateAuction() {
+      try {
+        const result = await this.$api(
+          "transaction",
+          "update",
+          this.inputEdit
+        ).finally(response => {
+          this.getAllTransaction();
+          this.dialogEdit = false;
+          return response;
         });
       } catch (e) {
         console.log(e);
@@ -254,6 +390,14 @@ export default {
     async getAllTransaction() {
       try {
         this.transaction = await this.$api("transaction", "index", null);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllBuyer() {
+      try {
+        this.buyer = await this.$api("buyer", "index", null);
       } catch (e) {
         console.log(e);
       }

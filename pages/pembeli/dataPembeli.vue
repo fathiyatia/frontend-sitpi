@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="showHeaders"
     :items="buyer"
     :search="search"
     sort-by="created_at"
@@ -13,7 +13,13 @@
           <h2 class="accent--text">Data Pembeli</h2>
         </v-col>
         <v-col lg="3" md="3">
-          <v-btn small block color="success" :to="'/pembeli/tambahPembeli'">
+          <v-btn
+            v-if="CheckCreatePermission()"
+            small
+            block
+            color="success"
+            :to="'/pembeli/tambahPembeli'"
+          >
             + Tambah Pembeli
           </v-btn>
         </v-col>
@@ -25,7 +31,9 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+              <v-btn color="primary" text @click="dialogDelete = false"
+                >Batal</v-btn
+              >
               <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -87,24 +95,31 @@ export default {
     buyer: []
   }),
 
-  watch: {
-    dialogDelete(val) {
-      val || this.closeDelete();
-    }
-  },
-
   mounted() {
     this.getAllBuyer();
   },
 
+  computed: {
+    showHeaders() {
+      if (
+        this.$auth.$state.user.user.permissions.includes("update-buyer") !=
+          true &&
+        this.$auth.$state.user.user.permissions.includes("delete-buyer") != true
+      ) {
+        return this.headers.filter(header => header.text !== "Aksi");
+      } else {
+        return this.headers;
+      }
+    }
+  },
+
   methods: {
+    CheckCreatePermission() {
+      return this.$auth.$state.user.user.permissions.includes("create-buyer");
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
     },
 
     deleteBuyer() {

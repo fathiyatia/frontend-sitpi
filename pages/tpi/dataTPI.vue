@@ -1,7 +1,7 @@
 <template>
   <v-data-table
-    :headers="headers"
-    :items="fisher"
+    :headers="showHeaders"
+    :items="tpi"
     :search="search"
     sort-by="created_at"
     sort-desc
@@ -13,7 +13,13 @@
           <h2 class="accent--text">Data TPI</h2>
         </v-col>
         <v-col lg="3" md="3">
-          <v-btn small block color="success" :to="'/tpi/tambahTPI'">
+          <v-btn
+            v-if="CheckCreatePermission()"
+            small
+            block
+            color="success"
+            :to="'/tpi/tambahTPI'"
+          >
             + Tambah TPI
           </v-btn>
         </v-col>
@@ -25,8 +31,10 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-              <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
+              <v-btn color="primary" text @click="dialogDelete = false"
+                >Batal</v-btn
+              >
+              <v-btn color="error" text @click="deleteTpi">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -47,7 +55,7 @@
       </template>
     </template>
     <template v-slot:item.id="{ item }">
-      <v-btn x-small color="secondary" depressed>
+      <v-btn x-small color="secondary" depressed :to="'/tpi/edit/' + item.id">
         Edit
       </v-btn>
       <v-btn
@@ -78,33 +86,40 @@ export default {
       { text: "Alamat", value: "address" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
-    fisher: []
+    tpi: []
   }),
-
-  watch: {
-    dialogDelete(val) {
-      val || this.closeDelete();
-    }
-  },
 
   mounted() {
     this.getAllTpi();
   },
 
+  computed: {
+    showHeaders() {
+      if (
+        this.$auth.$state.user.user.permissions.includes("update-tpi") !=
+          true &&
+        this.$auth.$state.user.user.permissions.includes("delete-tpi") != true
+      ) {
+        return this.headers.filter(header => header.text !== "Aksi");
+      } else {
+        return this.headers;
+      }
+    }
+  },
+
   methods: {
+    CheckCreatePermission() {
+      return this.$auth.$state.user.user.permissions.includes("create-tpi");
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
     },
 
-    closeDelete() {
-      this.dialogDelete = false;
-    },
-
-    deleteBuyer() {
+    deleteTpi() {
       try {
-        this.$api("fisher", "delete", this.currentId).finally(() => {
-          this.getAllFisher();
+        this.$api("tpi", "delete", this.currentId).finally(() => {
+          this.getAllTpi();
           this.dialogDelete = false;
         });
       } catch (e) {
@@ -114,7 +129,7 @@ export default {
 
     async getAllTpi() {
       try {
-        this.fisher = await this.$api("tpi", "index", null);
+        this.tpi = await this.$api("tpi", "index", null);
       } catch (e) {
         console.log(e);
       }

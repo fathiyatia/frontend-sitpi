@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
+      :headers="showHeaders"
       :items="area"
       :search="search"
       sort-by="created_at"
@@ -14,7 +14,13 @@
             <h2 class="accent--text">Data Daerah Tangkapan</h2>
           </v-col>
           <v-col lg="3" md="3">
-            <v-btn block small color="success" :to="'/daerah/tambahDaerah'">
+            <v-btn
+              v-if="CheckCreatePermission()"
+              block
+              small
+              color="success"
+              :to="'/daerah/tambahDaerah'"
+            >
               + Tambah Daerah
             </v-btn>
           </v-col>
@@ -26,7 +32,9 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+                <v-btn color="primary" text @click="dialogDelete = false"
+                  >Batal</v-btn
+                >
                 <v-btn color="error" text @click="deleteArea">Hapus</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -140,24 +148,36 @@ export default {
     area: []
   }),
 
-  watch: {
-    dialogDelete(val) {
-      val || this.closeDelete();
-    }
-  },
-
   mounted() {
     this.getAllArea();
   },
 
+  computed: {
+    showHeaders() {
+      if (
+        this.$auth.$state.user.user.permissions.includes(
+          "update-fishing-area"
+        ) != true &&
+        this.$auth.$state.user.user.permissions.includes(
+          "delete-fishing-area"
+        ) != true
+      ) {
+        return this.headers.filter(header => header.text !== "Aksi");
+      } else {
+        return this.headers;
+      }
+    }
+  },
+
   methods: {
+    CheckCreatePermission() {
+      return this.$auth.$state.user.user.permissions.includes(
+        "create-fishing-area"
+      );
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
     },
 
     deleteArea() {

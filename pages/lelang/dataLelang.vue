@@ -18,8 +18,9 @@
             >{{ $auth.$state.user.location }}
           </span>
           pada tanggal
-
-          <date-format></date-format>
+          <span class="primary--text font-weight-bold">
+            <date-format></date-format>
+          </span>
         </span>
       </v-row>
 
@@ -90,6 +91,43 @@
           </v-col>
         </v-row>
       </v-card>
+
+      <!--Dialog Edit--->
+      <v-dialog v-model="dialogEdit" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Edit Hasil Lelang </span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form
+                class=""
+                no-gutters
+                ref="form"
+                v-model="valid"
+                lazy-validation
+              >
+                <v-text-field
+                  label="Harga"
+                  prefix="Rp"
+                  required
+                  v-model="total_price"
+                ></v-text-field>
+              </v-form>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="accent" text @click="closeEdit">
+              Batal
+            </v-btn>
+            <v-btn color="primary" text @click="updateAuction()">
+              Simpan
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!------ Dialog Delete ----->
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
           <v-card-title class="justify-center"
@@ -138,22 +176,29 @@
     </template>
 
     <template v-slot:item.price="{ item }">
-      <!---- Test angka align end -->
       {{ item.price | currencyFormat }}
     </template>
     <template v-slot:item.weight="{ item }">
       {{ item.caught.weight }} {{ item.caught.weight_unit }}
     </template>
-    <template v-slot:item.action="{ item }">
-      <v-btn
-        x-small
-        color="secondary"
-        depressed
-        :to="'/lelang/edit/' + item.id"
+
+    <template v-slot:item.caught.caught_status.Status="{ item }">
+      <v-chip
+        :color="getColor(item.caught.caught_status.Status)"
+        outlined
+        small
+        dark
       >
+        {{ item.caught.caught_status.Status }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.action="{ item }">
+      <!----
+      <v-btn x-small color="secondary" depressed @click="getById(item.id)">
         Edit
       </v-btn>
-
+      ----->
       <v-btn
         x-small
         color="error"
@@ -190,8 +235,12 @@ export default {
     }
   },
   data: () => ({
+    valid: true,
     dialogDelete: false,
+    dialogEdit: false,
+    required: [v => !!v || "Data ini harus diisi"],
     search: "",
+    total_price: "",
     input: {
       fisherid: "0",
       fish: "0",
@@ -214,7 +263,8 @@ export default {
       { text: "Jenis Ikan", value: "caught.fish_type.name" },
       { text: "Berat", value: "weight" },
       { text: "Harga", value: "price" },
-      { text: "Status Lelang", value: "caught.caught_status.Status" }
+      { text: "Status Lelang", value: "caught.caught_status.Status" },
+      { text: "Aksi", value: "action", width: 135 }
     ],
     fisher: [],
     fishtype: [],
@@ -224,6 +274,9 @@ export default {
   watch: {
     dialogDelete(val) {
       val || this.closeDelete();
+    },
+    dialogEdit(val) {
+      val || this.closeEdit();
     }
   },
 
@@ -235,14 +288,17 @@ export default {
 
   computed: {
     showHeaders() {
-      //check permission to edit and delete
-      /*
-      if (this.$auth.$state.user.user.role.Name != "tpi-admin") {
+      if (
+        this.$auth.$state.user.user.permissions.includes("update-auction") !=
+          true &&
+        this.$auth.$state.user.user.permissions.includes("delete-auction") !=
+          true
+      ) {
         this.all_headers = this.all_headers.filter(
           header => header.text !== "Aksi"
         );
       }
-      */
+
       //check if there is filter active
       if (
         this.input.fish != "0" ||
@@ -276,17 +332,34 @@ export default {
   },
 
   methods: {
+    getColor(status) {
+      if (status == "Menunggu Pembayaran") return "blue darken-3";
+      else return "green darken-2";
+    },
     popupDialogDelete(id) {
       this.dialogDelete = true;
+      this.currentId = id;
+    },
+    popupDialogEdit(id) {
+      this.dialogEdit = true;
       this.currentId = id;
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    },
+
+    closeEdit() {
+      this.dialogEdit = false;
+    },
+
+    async getById(id) {
+      try {
+        this.total_price = await this.$api("auction", "get_by_id", id);
+        this.dialogEdit = true;
+      } catch (e) {
+        console.log(e);
+      }
     },
 
     deleteAuction() {
@@ -294,6 +367,22 @@ export default {
         this.$api("auction", "delete", this.currentId).finally(() => {
           this.getAllAuction();
           this.dialogDelete = false;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async updateAuction() {
+      try {
+        const result = await this.$api(
+          "auction",
+          "update",
+          this.total_price
+        ).finally(response => {
+          this.getAllAuction();
+          this.dialogEdit = false;
+          return response;
         });
       } catch (e) {
         console.log(e);

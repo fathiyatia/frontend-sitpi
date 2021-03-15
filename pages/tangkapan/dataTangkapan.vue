@@ -16,8 +16,9 @@
             $auth.$state.user.location
           }}</span>
           pada tanggal
-
-          <date-format></date-format>
+          <span class="primary--text font-weight-bold">
+            <date-format></date-format
+          ></span>
         </span>
       </v-row>
       <!---- Filter ----->
@@ -122,6 +123,12 @@
       </span>
     </template>
 
+    <template v-slot:item.caught_status.Status="{ item }">
+      <v-chip :color="getColor(item.caught_status.Status)" outlined small dark>
+        {{ item.caught_status.Status }}
+      </v-chip>
+    </template>
+
     <template v-slot:item.action="{ item }">
       <v-btn
         x-small
@@ -190,14 +197,17 @@ export default {
 
   computed: {
     showHeaders() {
-      //check permission to edit and delete
-      /*
-      if (this.$auth.$state.user.user.role.Name != "tpi-admin") {
+      if (
+        this.$auth.$state.user.user.permissions.includes("update-caught") !=
+          true &&
+        this.$auth.$state.user.user.permissions.includes("delete-caught") !=
+          true
+      ) {
         this.all_headers = this.all_headers.filter(
           header => header.text !== "Aksi"
         );
       }
-      */
+
       //check if there is filter active
       if (
         this.input.fish != "0" ||
@@ -231,6 +241,12 @@ export default {
   },
 
   methods: {
+    getColor(status) {
+      if (status == "Belum Terjual") return "red";
+      else if (status == "Menunggu Pembayaran") return "blue darken-3";
+      else return "green darken-2";
+    },
+
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
