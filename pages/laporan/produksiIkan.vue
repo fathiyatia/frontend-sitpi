@@ -45,7 +45,7 @@
                 dense
                 block
                 v-model="input.period"
-                @change="checkPeriod()"
+                @change="checkPeriod(), getAllProduction()"
               ></v-select>
             </v-col>
             <!--- Pilih Tanggal ---->
@@ -90,7 +90,10 @@
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.dialog_daily.save(input.date_daily)"
+                      @click="
+                        $refs.dialog_daily.save(input.date_daily),
+                          getAllProduction()
+                      "
                     >
                       OK
                     </v-btn>
@@ -154,7 +157,10 @@
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.dialog_monthly.save(input.date_monthly)"
+                      @click="
+                        $refs.dialog_monthly.save(input.date_monthly),
+                          getAllProduction()
+                      "
                     >
                       OK
                     </v-btn>
@@ -175,6 +181,7 @@
                   label="Pilih Tahun"
                   v-model="input.date_yearly"
                   :items="year_list"
+                  @change="getAllProduction()"
                 >
                 </v-select>
               </div>
@@ -229,7 +236,8 @@
                           @click="
                             $refs.dialog_custom_from.save(
                               input.date_custom_from
-                            )
+                            ),
+                              getAllProduction()
                           "
                         >
                           OK
@@ -283,7 +291,8 @@
                           text
                           color="primary"
                           @click="
-                            $refs.dialog_custom_to.save(input.date_custom_to)
+                            $refs.dialog_custom_to.save(input.date_custom_to),
+                              getAllProduction()
                           "
                         >
                           OK
@@ -293,6 +302,27 @@
                   </v-col>
                 </v-row>
               </div>
+            </v-col>
+
+            <!--- Pilih TPI ----->
+            <v-col cols="12" lg="6" md="6" class="px-2">
+              <span class="primary--text font-weight-bold">
+                Pilih TPI
+              </span>
+              <v-autocomplete
+                class="mt-3"
+                solo
+                dense
+                block
+                single-line
+                label="TPI"
+                v-model="input.tpi"
+                :items="tpi"
+                item-text="name"
+                item-value="id"
+                @change="getAllProduction()"
+              >
+              </v-autocomplete>
             </v-col>
           </v-row>
         </v-card>
@@ -403,16 +433,20 @@ export default {
     ],
 
     input: {
+      tpi: 0,
       period: "Laporan Harian",
       date_daily: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
+
       date_monthly: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
       )
         .toISOString()
         .substr(0, 10),
+
       date_yearly: new Date().getFullYear(),
+
       date_custom_from: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
       )
@@ -431,6 +465,7 @@ export default {
       "Laporan Tahunan",
       "Pilih Jangka Waktu"
     ],
+    tpi: [],
     last_period: "Laporan Harian",
     daily: true,
     weekly: false,
@@ -448,6 +483,11 @@ export default {
     modal_custom_to: false,
     year_list: [new Date().getFullYear(), new Date().getFullYear() - 1]
   }),
+
+  mounted() {
+    this.getAllTpi();
+    this.getAllProduction();
+  },
 
   computed: {
     date_daily_formatted: function() {
@@ -519,6 +559,23 @@ export default {
         this.custom = false;
       }
       this.last_period = this.input.period;
+    },
+
+    async getAllTpi() {
+      try {
+        this.tpi = await this.$api("tpi", "index", null);
+        this.tpi.push({ id: 0, name: "Semua TPI" });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async getAllProduction() {
+      try {
+        this.input = await this.$api("report", "production", this.input);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };
