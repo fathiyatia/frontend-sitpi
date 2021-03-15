@@ -1,8 +1,12 @@
 <template>
   <v-app>
+    <!----
     <navbar-office v-model="drawer" v-if="officer"></navbar-office>
     <navbar-dinas v-model="drawer" v-if="district"></navbar-dinas>
     <navbar-admin v-model="drawer" v-if="admin"></navbar-admin>
+    ---->
+    <navbar v-if="isLogin" v-model="drawer"> </navbar>
+
     <!-- Top Navbar --->
     <v-app-bar color="primary" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
@@ -10,7 +14,7 @@
       <v-spacer></v-spacer>
       <!-- Toggle Button for User --->
       <template>
-        <div class="text-center">
+        <div v-if="isLogin" class="text-center">
           <v-menu
             v-model="menu"
             :close-on-content-click="true"
@@ -28,7 +32,12 @@
                 v-on="on"
               >
                 {{ $auth.$state.user.user.name }}
-                | {{ $auth.$state.user.location }}
+                <span
+                  v-if="$auth.$state.user.user.role.name != 'superadmin'"
+                  class="ml-1"
+                >
+                  | {{ $auth.$state.user.location }}
+                </span>
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
@@ -41,44 +50,50 @@
                       {{ this.$auth.$state.user.user.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="pt-1 accent--text"
-                      >Username :
-                      {{ this.$auth.$state.user.user.username }}
+                      ><v-row class="mt-1" no-gutters>
+                        <v-col>
+                          Username
+                        </v-col>
+                        <v-col>
+                          : {{ this.$auth.$state.user.user.username }}
+                        </v-col>
+                      </v-row>
+                      <v-row class="mt-2" no-gutters>
+                        <v-col>
+                          Peran
+                        </v-col>
+                        <v-col>
+                          :
+                          {{
+                            this.$auth.$state.user.user.role.name | roleFormat
+                          }}
+                        </v-col>
+                      </v-row>
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
-              <v-divider></v-divider>
-
-              <v-list dense>
-                <v-list-item>
-                  <v-list-item-title>
-                    <v-card
-                      elevation="0"
-                      class="py-3"
-                      :to="'/tangkapan/formTangkapan'"
-                    >
-                      <h3 class="primary--text font-weight-medium">
-                        <v-icon color="primary" class="px-2">
-                          mdi-lock-reset
-                        </v-icon>
-                        Ubah Kata Sandi
-                      </h3>
-                    </v-card>
-
-                    <!----
-                    <v-btn
-                      block
-                      color="primary"
-                      text
-                      class="text-capitalize"
-                      :to="'/user/ubahPassword'"
-                    >
-                      Ubah Kata Sandi
-                    </v-btn>
-                    --->
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
+              <div v-if="this.$auth.$state.user.user.role.name != 'superadmin'">
+                <v-divider></v-divider>
+                <v-list dense>
+                  <v-list-item>
+                    <v-list-item-title>
+                      <v-card
+                        elevation="0"
+                        class="py-2"
+                        :to="'/user/ubahPassword'"
+                      >
+                        <h3 class="primary--text font-weight-medium">
+                          <v-icon color="primary" class="px-2">
+                            mdi-lock-reset
+                          </v-icon>
+                          Ubah Kata Sandi
+                        </h3>
+                      </v-card>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </div>
               <v-divider></v-divider>
               <v-list>
                 <v-list-item>
@@ -107,11 +122,24 @@
 </template>
 <script>
 export default {
+  filters: {
+    roleFormat(value) {
+      if (value == "tpi officer") {
+        return "Petugas TPI";
+      } else if (value == "tpi-cashier") {
+        return "Kasir TPI";
+      } else if (value == "tpi-admin") {
+        return "Admin TPI";
+      } else if (value == "district-admin") {
+        return "Admin Dinas";
+      } else if (value == "superadmin") {
+        return "Superadmin";
+      }
+    }
+  },
   data() {
     return {
-      officer: false,
-      admin: false,
-      district: false,
+      isLogin: true,
       clipped: false,
       drawer: true,
       fixed: false,
@@ -124,24 +152,14 @@ export default {
     };
   },
 
-  mounted() {
-    this.CheckRole();
-  },
-
   methods: {
-    CheckRole() {
-      if (this.$auth.$state.user.user.role.Name == "superadmin") {
-        this.admin = true;
-      } else if (this.$auth.$state.user.user.role.Name == "district-admin") {
-        this.district = true;
-      } else {
-        this.officer = true;
-      }
-    },
-    async logout() {
+    logout() {
       try {
-        this.$api("user", "logout");
-        console.log(response);
+        this.$router.push("/login");
+        this.isLogin = false;
+        this.$api("user", "logout").finally(() => {
+          this.$router.push("/login");
+        });
       } catch (e) {
         console.log(e);
       }

@@ -12,27 +12,7 @@
     </v-container>
 
     <v-list>
-      <!--- Dashboard --->
-      <v-list-item-group color="white">
-        <v-list-item
-          v-for="(item, i) in dashboard"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon color="white">{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title class="white--text" v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-
-      <!--- Pendataan --->
       <v-divider class="mx-3 mb-2" color="white"></v-divider>
-      <span class="ml-3 caption white--text">Pendataan</span>
       <v-list-item-group color="white">
         <v-list-item
           v-for="(item, i) in data"
@@ -101,7 +81,12 @@ export default {
         {
           icon: "mdi-home-city",
           title: "Dinas",
-          to: "/tpi/dataTPI"
+          to: "/dinas/dataDinas"
+        },
+        {
+          icon: "mdi-cog",
+          title: "Role Management",
+          to: ""
         }
       ],
       report: [
