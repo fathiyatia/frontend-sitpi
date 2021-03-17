@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="area"
+      :items="showTable()"
       :search="search"
       sort-by="created_at"
       sort-desc
@@ -45,7 +45,7 @@
                 dense
                 block
                 v-model="input.period"
-                @change="checkPeriod()"
+                @change="checkPeriod(), getAllTransaction()"
               ></v-select>
             </v-col>
             <!--- Pilih Tanggal ---->
@@ -90,7 +90,10 @@
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.dialog_daily.save(input.date_daily)"
+                      @click="
+                        $refs.dialog_daily.save(input.date_daily),
+                          getAllTransaction()
+                      "
                     >
                       OK
                     </v-btn>
@@ -154,7 +157,10 @@
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.dialog_monthly.save(input.date_monthly)"
+                      @click="
+                        $refs.dialog_monthly.save(input.date_monthly),
+                          getAllTransaction()
+                      "
                     >
                       OK
                     </v-btn>
@@ -175,6 +181,7 @@
                   label="Pilih Tahun"
                   v-model="input.date_yearly"
                   :items="year_list"
+                  @change="getAllTransaction()"
                 >
                 </v-select>
               </div>
@@ -229,7 +236,8 @@
                           @click="
                             $refs.dialog_custom_from.save(
                               input.date_custom_from
-                            )
+                            ),
+                              getAllTransaction()
                           "
                         >
                           OK
@@ -283,7 +291,8 @@
                           text
                           color="primary"
                           @click="
-                            $refs.dialog_custom_to.save(input.date_custom_to)
+                            $refs.dialog_custom_to.save(input.date_custom_to),
+                              getAllTransaction()
                           "
                         >
                           OK
@@ -294,20 +303,56 @@
                 </v-row>
               </div>
             </v-col>
+
+            <!--- Pilih TPI ----->
+            <v-col v-if="checkRole()" cols="12" lg="6" md="6" class="px-2">
+              <span class="primary--text font-weight-bold">
+                Pilih TPI
+              </span>
+              <v-autocomplete
+                class="mt-3"
+                solo
+                dense
+                block
+                single-line
+                label="TPI"
+                v-model="input.tpi"
+                :items="tpi"
+                item-text="name"
+                item-value="id"
+                @change="getAllTransaction(), getByIdTpi()"
+              >
+              </v-autocomplete>
+            </v-col>
           </v-row>
         </v-card>
         <!--- Summary ---->
         <v-card elevation="0" rounded class="px-4 pt-3 mb-2 mt-4 rounded-lg">
           <v-row no-gutters class="">
             <v-col>
-              <h4 class="accent--text">Nama TPI : TPI Indramayu</h4>
+              <h4 v-if="input.tpi != 0" class="accent--text">
+                {{ current_tpi.name }}
+              </h4>
+              <h4 v-else class="accent--text">
+                {{ $auth.$state.user.location }}
+              </h4>
             </v-col>
           </v-row>
 
           <v-row no-gutters class="">
             <v-col>
-              <h4 class="accent--text">
-                Tanggal : 14 Februari 2021
+              <h4 v-if="daily" class="accent--text">
+                Tanggal : {{ date_daily_formatted }}
+              </h4>
+              <h4 v-if="monthly" class="accent--text">
+                Bulan : {{ date_monthly_formatted }}
+              </h4>
+              <h4 v-if="yearly" class="accent--text">
+                Tahun : {{ input.date_yearly }}
+              </h4>
+              <h4 v-if="custom" class="accent--text">
+                Tanggal : {{ date_custom_from_formatted }} -
+                {{ date_custom_to_formatted }}
               </h4>
             </v-col>
           </v-row>
@@ -319,7 +364,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : 289 transaksi
+                : {{ report.transaction_total }} transaksi
               </h4>
             </v-col>
           </v-row>
@@ -331,7 +376,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : 1000 Kg
+                : {{ report.production_total }} Kg
               </h4>
             </v-col>
           </v-row>
@@ -343,7 +388,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : Rp200.000
+                : {{ report.production_value | currencyFormat }}
               </h4>
             </v-col>
           </v-row>
@@ -356,7 +401,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : 3.3 Jam
+                : {{ report.transaction_speed }} Jam
               </h4>
             </v-col>
           </v-row>
@@ -379,7 +424,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : 30 orang
+                    : {{ report.permanent_fisher }} orang
                   </h4>
                 </v-col>
               </v-row>
@@ -391,7 +436,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : 15 orang
+                    : {{ report.temporary_fisher }} orang
                   </h4>
                 </v-col>
               </v-row>
@@ -413,7 +458,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : 30 orang
+                    : {{ report.permanent_buyer }} orang
                   </h4>
                 </v-col>
               </v-row>
@@ -425,7 +470,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : 15 orang
+                    : {{ report.temporary_buyer }} orang
                   </h4>
                 </v-col>
               </v-row>
@@ -442,7 +487,7 @@
         </v-card>
       </template>
       <template v-slot:item.id="{ item }">
-        {{ area.indexOf(item) + 1 }}
+        {{ report.transaction_data.indexOf(item) + 1 }}
       </template>
     </v-data-table>
     <br />
@@ -451,6 +496,27 @@
 
 <script>
 export default {
+  filters: {
+    currencyFormat(value) {
+      if (value != null) {
+        const minus = Number(value) < 0;
+        if (value.toString().split(".").length > 2) return "Rp ~";
+        else if (value.toString().split(".").length > 1) {
+          value = value.toString().split(".");
+          value = value[0];
+        }
+        try {
+          const result = value
+            .toString()
+            .match(/\d{1,3}(?=(\d{3})*$)/g)
+            .join(".");
+          return "Rp" + (minus === true ? " -" : "") + result;
+        } catch (error) {
+          return "Rp ~";
+        }
+      }
+    }
+  },
   data: () => ({
     dialogDelete: false,
     search: "",
@@ -459,38 +525,32 @@ export default {
         text: "No.",
         align: "start",
         sortable: false,
-        value: "index"
+        value: "id"
       },
       { text: "ID ", value: "code" },
-      { text: "Nama Nelayan", value: "fisher" },
-      { text: "Nama Pembeli", value: "buyer" },
-      { text: "Kode Ikan", value: "" },
-      { text: "Nama Ikan", value: "fish_type" },
+      { text: "Nama Nelayan", value: "fisher_name" },
+      { text: "Nama Pembeli", value: "buyer_name" },
+      { text: "Kode Ikan", value: "fish_code" },
+      { text: "Nama Ikan", value: "fish_name" },
       { text: "Berat (Kg)", value: "weight" },
       { text: "Nilai Lelang (Rp)", value: "price" }
     ],
-    area: [
-      {
-        index: "1",
-        fisher: "Bambang",
-        buyer: "Yudit",
-        fish_type: "Tenggiri",
-        weight: "1200 Kg",
-        price: "Rp250.000"
-      }
-    ],
-    //date
+    report: [],
+    show: true,
+
     input: {
+      tpi: 0,
       period: "Laporan Harian",
       date_daily: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
-      date_monthly: new Date(
-        Date.now() - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
+
+      date_monthly:
+        new Date(Date.now()).getFullYear() +
+        "-" +
+        (new Date(Date.now()).getMonth() + 1).toLocaleString().padStart(2, "0"),
       date_yearly: new Date().getFullYear(),
+
       date_custom_from: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
       )
@@ -509,6 +569,8 @@ export default {
       "Laporan Tahunan",
       "Pilih Jangka Waktu"
     ],
+    tpi: [],
+    current_tpi: [],
     last_period: "Laporan Harian",
     daily: true,
     weekly: false,
@@ -526,6 +588,13 @@ export default {
     modal_custom_to: false,
     year_list: [new Date().getFullYear(), new Date().getFullYear() - 1]
   }),
+
+  mounted() {
+    this.getAllTpi();
+    this.getAllTransaction();
+    this.getByIdTpi();
+  },
+
   computed: {
     date_daily_formatted: function() {
       return new Date(this.input.date_daily).toLocaleDateString();
@@ -568,9 +637,27 @@ export default {
   },
 
   methods: {
-    getIndex() {
-      for (let index = 0; index < this.items.length; index++) {
-        this.items.count[index] = index;
+    async getByIdTpi() {
+      if (this.tpi != 0) {
+        try {
+          this.current_tpi = await this.$api(
+            "tpi",
+            "get_by_id",
+            this.input.tpi
+          ).finally(response => {
+            return response;
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    checkRole() {
+      if (this.$auth.$state.user.user.role.name == "district-admin") {
+        return true;
+      } else if (this.$auth.$state.user.user.role.name == "tpi-admin") {
+        this.input.tpi = this.$auth.$state.user.location.id;
+        return false;
       }
     },
     checkPeriod() {
@@ -601,6 +688,38 @@ export default {
         this.custom = false;
       }
       this.last_period = this.input.period;
+    },
+
+    showTable() {
+      if (this.report.transaction_data != null) {
+        return this.report.transaction_data;
+      }
+    },
+    async getAllTpi() {
+      if (this.$auth.$state.user.user.role.name == "district-admin") {
+        try {
+          this.tpi = await this.$api("tpi", "index", null);
+          this.tpi.push({ id: 0, name: "Semua TPI" });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+
+    async getAllTransaction() {
+      try {
+        this.report = await this.$api(
+          "report",
+          "transaction",
+          this.input
+        ).finally(() => {
+          if (this.report.transaction_data != null) {
+            this.show = true;
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 };

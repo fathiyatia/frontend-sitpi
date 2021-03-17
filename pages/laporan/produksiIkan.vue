@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="area"
+      :items="report.production_table"
       :search="search"
       sort-by="created_at"
       sort-desc
@@ -305,7 +305,7 @@
             </v-col>
 
             <!--- Pilih TPI ----->
-            <v-col cols="12" lg="6" md="6" class="px-2">
+            <v-col v-if="checkRole()" cols="12" lg="6" md="6" class="px-2">
               <span class="primary--text font-weight-bold">
                 Pilih TPI
               </span>
@@ -320,7 +320,7 @@
                 :items="tpi"
                 item-text="name"
                 item-value="id"
-                @change="getAllProduction()"
+                @change="getAllProduction(), getByIdTpi()"
               >
               </v-autocomplete>
             </v-col>
@@ -330,15 +330,30 @@
         <v-card elevation="0" rounded class="px-4 pt-3 mb-2 mt-4 rounded-lg">
           <v-row no-gutters class="">
             <v-col>
-              <h4 class="accent--text">
-                Nama TPI : TPI Indramayu
+              <h4 v-if="input.tpi != 0" class="accent--text">
+                {{ current_tpi.name }}
+              </h4>
+              <h4 v-else class="accent--text">
+                {{ $auth.$state.user.location }}
               </h4>
             </v-col>
           </v-row>
 
           <v-row no-gutters class="">
             <v-col>
-              <h4 class="accent--text">Tanggal : 23 Februari 2020</h4>
+              <h4 v-if="daily" class="accent--text">
+                Tanggal : {{ date_daily_formatted }}
+              </h4>
+              <h4 v-if="monthly" class="accent--text">
+                Bulan : {{ date_monthly_formatted }}
+              </h4>
+              <h4 v-if="yearly" class="accent--text">
+                Tahun : {{ input.date_yearly }}
+              </h4>
+              <h4 v-if="custom" class="accent--text">
+                Tanggal : {{ date_custom_from_formatted }} -
+                {{ date_custom_to_formatted }}
+              </h4>
             </v-col>
           </v-row>
 
@@ -350,7 +365,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : 1000 Kg
+                : {{ report.production_total }} Kg
               </h4>
             </v-col>
           </v-row>
@@ -362,7 +377,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : Rp200.000
+                : {{ report.production_value | currencyFormat }}
               </h4>
             </v-col>
           </v-row>
@@ -375,7 +390,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : 3.3 Jam
+                : {{ report.transaction_speed }} Jam
               </h4>
             </v-col>
           </v-row>
@@ -389,8 +404,14 @@
           </v-row>
         </v-card>
       </template>
+      <template v-slot:item.production_total="{ item }">
+        {{ item.production_total }}
+      </template>
       <template v-slot:item.id="{ item }">
-        {{ area.indexOf(item) + 1 }}
+        {{ report.production_table.indexOf(item) + 1 }}
+      </template>
+      <template v-slot:item.production_value="{ item }">
+        {{ item.production_value | currencyFormat }}
       </template>
     </v-data-table>
     <br />
@@ -399,6 +420,27 @@
 
 <script>
 export default {
+  filters: {
+    currencyFormat(value) {
+      if (value != null) {
+        const minus = Number(value) < 0;
+        if (value.toString().split(".").length > 2) return "Rp ~";
+        else if (value.toString().split(".").length > 1) {
+          value = value.toString().split(".");
+          value = value[0];
+        }
+        try {
+          const result = value
+            .toString()
+            .match(/\d{1,3}(?=(\d{3})*$)/g)
+            .join(".");
+          return "Rp" + (minus === true ? " -" : "") + result;
+        } catch (error) {
+          return "Rp ~";
+        }
+      }
+    }
+  },
   data: () => ({
     dialogDelete: false,
     search: "",
@@ -411,26 +453,20 @@ export default {
       },
       { text: "Kode Ikan", value: "code" },
       { text: "Nama Ikan", value: "name" },
-      { text: "Jumlah Produksi (Kg)", value: "total_production" },
-      { text: "Nilai Produksi (Rp)", value: "value_production" },
-      { text: "Rata-rata Kecepatan Penjualan (Jam)", value: "sales_speed" }
-    ],
-    area: [
       {
-        code: "",
-        name: "Tenggiri",
-        total_production: "12000 Kg",
-        value_production: "Rp500.0000",
-        sales_speed: "3 jam"
+        text: "Jumlah Produksi (Kg)",
+        value: "production_total"
       },
       {
-        code: "",
-        name: "Tuna",
-        total_production: "12000 Kg",
-        value_production: "Rp500.0000",
-        sales_speed: "3 jam"
+        text: "Nilai Produksi (Rp)",
+        value: "production_value"
+      },
+      {
+        text: "Rata-rata Kecepatan Lelang (Jam)",
+        value: "transaction_speed"
       }
     ],
+    report: [],
 
     input: {
       tpi: 0,
@@ -439,12 +475,10 @@ export default {
         .toISOString()
         .substr(0, 10),
 
-      date_monthly: new Date(
-        Date.now() - new Date().getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .substr(0, 10),
-
+      date_monthly:
+        new Date(Date.now()).getFullYear() +
+        "-" +
+        (new Date(Date.now()).getMonth() + 1).toLocaleString().padStart(2, "0"),
       date_yearly: new Date().getFullYear(),
 
       date_custom_from: new Date(
@@ -466,6 +500,7 @@ export default {
       "Pilih Jangka Waktu"
     ],
     tpi: [],
+    current_tpi: [],
     last_period: "Laporan Harian",
     daily: true,
     weekly: false,
@@ -487,6 +522,7 @@ export default {
   mounted() {
     this.getAllTpi();
     this.getAllProduction();
+    this.getByIdTpi();
   },
 
   computed: {
@@ -531,6 +567,29 @@ export default {
   },
 
   methods: {
+    async getByIdTpi() {
+      if (this.tpi != 0) {
+        try {
+          this.current_tpi = await this.$api(
+            "tpi",
+            "get_by_id",
+            this.input.tpi
+          ).finally(response => {
+            return response;
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    checkRole() {
+      if (this.$auth.$state.user.user.role.name == "district-admin") {
+        return true;
+      } else if (this.$auth.$state.user.user.role.name == "tpi-admin") {
+        this.input.tpi = this.$auth.$state.user.location.id;
+        return false;
+      }
+    },
     checkPeriod() {
       this.checkLastPeriod();
       if (this.input.period == "Laporan Harian") {
@@ -562,17 +621,19 @@ export default {
     },
 
     async getAllTpi() {
-      try {
-        this.tpi = await this.$api("tpi", "index", null);
-        this.tpi.push({ id: 0, name: "Semua TPI" });
-      } catch (e) {
-        console.log(e);
+      if (this.$auth.$state.user.user.role.name == "district-admin") {
+        try {
+          this.tpi = await this.$api("tpi", "index", null);
+          this.tpi.push({ id: 0, name: "Semua TPI" });
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
 
     async getAllProduction() {
       try {
-        this.input = await this.$api("report", "production", this.input);
+        this.report = await this.$api("report", "production", this.input);
       } catch (e) {
         console.log(e);
       }
