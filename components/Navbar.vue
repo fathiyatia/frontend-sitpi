@@ -32,42 +32,61 @@
         </v-list-item-group>
       </div>
       <!--- Form --->
-      <div v-if="CheckRoleTPI()">
-        <v-divider class="mx-3 mb-2" color="white"></v-divider>
-        <v-card
-          color="info"
-          elevation="0"
-          class="ma-3 pa-3"
-          :to="'/tangkapan/formTangkapan'"
-        >
-          <h4 class="white--text font-weight-regular">
-            <v-icon class="pr-2" color="white"> mdi-clipboard-edit </v-icon>
-            Catat Tangkapan Ikan
-          </h4>
-        </v-card>
-        <v-card
-          color="info"
-          elevation="0"
-          class="ma-3 pa-3"
-          :to="'/lelang/formLelang'"
-        >
-          <h4 class="white--text font-weight-regular">
-            <v-icon class="pr-2" color="white"> mdi-handshake </v-icon>
-            Lelang
-          </h4>
-        </v-card>
-        <v-card
-          color="info"
-          elevation="0"
-          class="ma-3 pa-3"
-          :to="'/transaksi/formTransaksi'"
-        >
-          <h4 class="white--text font-weight-regular">
-            <v-icon class="pr-2" color="white"> mdi-account-cash </v-icon>
-            Pembayaran
-          </h4>
-        </v-card>
-      </div>
+
+      <v-divider
+        v-if="
+          this.$auth.$state.user.user.permissions.includes('create-caught') ||
+            this.$auth.$state.user.user.permissions.includes(
+              'create-auction'
+            ) ||
+            this.$auth.$state.user.user.permissions.includes(
+              'create-transaction'
+            )
+        "
+        class="mx-3 mb-2"
+        color="white"
+      ></v-divider>
+      <v-card
+        v-if="this.$auth.$state.user.user.permissions.includes('create-caught')"
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/tangkapan/formTangkapan'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-clipboard-edit </v-icon>
+          Catat Tangkapan Ikan
+        </h4>
+      </v-card>
+      <v-card
+        v-if="
+          this.$auth.$state.user.user.permissions.includes('create-auction')
+        "
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/lelang/formLelang'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-handshake </v-icon>
+          Lelang
+        </h4>
+      </v-card>
+      <v-card
+        v-if="
+          this.$auth.$state.user.user.permissions.includes('create-transaction')
+        "
+        color="info"
+        elevation="0"
+        class="ma-3 pa-3"
+        :to="'/transaksi/formTransaksi'"
+      >
+        <h4 class="white--text font-weight-regular">
+          <v-icon class="pr-2" color="white"> mdi-account-cash </v-icon>
+          Pembayaran
+        </h4>
+      </v-card>
+
       <!--- Rekap --->
       <div v-if="CheckRoleTPI()">
         <v-divider class="mx-3 mb-2" color="white"></v-divider>
@@ -196,7 +215,6 @@ export default {
   },
 
   methods: {
-    // sementara dari role dulu
     CheckRoleTPI() {
       if (
         this.$auth.$state.user.user.role.name == "tpi-admin" ||
@@ -214,124 +232,78 @@ export default {
         return true;
       }
     },
+
     ShowData() {
-      if (this.$auth.$state.user.user.role.name == "superadmin") {
-        this.data.push(
-          {
-            icon: "mdi-fish",
-            title: "Ikan",
-            to: "/ikan/dataIkan"
-          },
-          {
-            icon: "mdi-badge-account",
-            title: "User",
-            to: "/user/dataUser"
-          },
-          {
-            icon: "mdi-cog",
-            title: "Role Management",
-            to: ""
-          }
-        );
-      } else if (this.$auth.$state.user.user.role.name == "district-admin") {
-        this.data.push(
-          {
-            icon: "mdi-sail-boat",
-            title: "Nelayan",
-            to: "/nelayan/dataNelayan"
-          },
-          {
-            icon: "mdi-account",
-            title: "Pembeli",
-            to: "/pembeli/dataPembeli"
-          },
-          {
-            icon: "mdi-hook",
-            title: "Alat Tangkap",
-            to: "/alat/dataAlat"
-          },
-          {
-            icon: "mdi-map-marker",
-            title: "Daerah Tangkapan",
-            to: "/daerah/dataDaerah"
-          },
-          {
-            icon: "mdi-fish",
-            title: "Ikan",
-            to: "/ikan/dataIkan"
-          },
-          {
-            icon: "mdi-badge-account",
-            title: "User",
-            to: "/user/dataUser"
-          },
-          {
-            icon: "mdi-home-map-marker",
-            title: "TPI",
-            to: "/tpi/dataTPI"
-          }
-        );
-      } else if (this.$auth.$state.user.user.role.name == "tpi-admin") {
-        this.data.push(
-          {
-            icon: "mdi-sail-boat",
-            title: "Nelayan",
-            to: "/nelayan/dataNelayan"
-          },
-          {
-            icon: "mdi-account",
-            title: "Pembeli",
-            to: "/pembeli/dataPembeli"
-          },
-          {
-            icon: "mdi-hook",
-            title: "Alat Tangkap",
-            to: "/alat/dataAlat"
-          },
-          {
-            icon: "mdi-map-marker",
-            title: "Daerah Tangkapan",
-            to: "/daerah/dataDaerah"
-          },
-          {
-            icon: "mdi-fish",
-            title: "Ikan",
-            to: "/ikan/dataIkan"
-          },
-          {
-            icon: "mdi-badge-account",
-            title: "User",
-            to: "/user/dataUser"
-          }
-        );
-      } else {
-        this.data.push(
-          {
-            icon: "mdi-sail-boat",
-            title: "Nelayan",
-            to: "/nelayan/dataNelayan"
-          },
-          {
-            icon: "mdi-account",
-            title: "Pembeli",
-            to: "/pembeli/dataPembeli"
-          },
-          {
-            icon: "mdi-hook",
-            title: "Alat Tangkap",
-            to: "/alat/dataAlat"
-          },
-          {
-            icon: "mdi-map-marker",
-            title: "Daerah Tangkapan",
-            to: "/daerah/dataDaerah"
-          },
-          {
-            icon: "mdi-fish",
-            title: "Ikan",
-            to: "/ikan/dataIkan"
-          }
-        );
+      //nelayan
+      if (this.$auth.$state.user.user.permissions.includes("create-fisher")) {
+        this.data.push({
+          icon: "mdi-sail-boat",
+          title: "Nelayan",
+          to: "/nelayan/dataNelayan"
+        });
+      }
+      //pembeli
+      if (this.$auth.$state.user.user.permissions.includes("create-buyer")) {
+        this.data.push({
+          icon: "mdi-account",
+          title: "Pembeli",
+          to: "/pembeli/dataPembeli"
+        });
+      }
+      //alat tangkap
+      if (
+        this.$auth.$state.user.user.permissions.includes("create-fishing-gear")
+      ) {
+        this.data.push({
+          icon: "mdi-hook",
+          title: "Alat Tangkap",
+          to: "/alat/dataAlat"
+        });
+      }
+      //daerah tangkapan
+      if (
+        this.$auth.$state.user.user.permissions.includes("create-fishing-area")
+      ) {
+        this.data.push({
+          icon: "mdi-map-marker",
+          title: "Daerah Tangkapan",
+          to: "/daerah/dataDaerah"
+        });
+      }
+      // ikan
+      if (
+        this.$auth.$state.user.user.permissions.includes("create-fish-type")
+      ) {
+        this.data.push({
+          icon: "mdi-fish",
+          title: "Ikan",
+          to: "/ikan/dataIkan"
+        });
+      }
+      //tpi
+      if (this.$auth.$state.user.user.permissions.includes("create-tpi")) {
+        this.data.push({
+          icon: "mdi-home-map-marker",
+          title: "TPI",
+          to: "/tpi/dataTPI"
+        });
+      }
+      //user
+      if (
+        this.$auth.$state.user.user.permissions.includes(
+          "create-district-admin"
+        ) ||
+        this.$auth.$state.user.user.permissions.includes("create-tpi-admin") ||
+        this.$auth.$state.user.user.permissions.includes(
+          "create-tpi-officer"
+        ) ||
+        this.$auth.$state.user.user.permissions.includes("create-tpi-officer")
+      ) {
+        this.data.push({
+          icon: "mdi-badge-account",
+          title: "User",
+          to: "/user/dataUser"
+        });
       }
     }
   }
