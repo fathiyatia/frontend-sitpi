@@ -73,6 +73,9 @@
         ></v-text-field>
       </template>
     </template>
+    <template v-slot:item.role="{ item }">
+      {{ item.role.name | roleFormat }}
+    </template>
     <template v-slot:item.user_status.Status="{ item }">
       <v-chip :color="getColor(item.user_status.Status)" outlined small dark>
         {{ item.user_status.Status }}
@@ -88,6 +91,21 @@
 
 <script>
 export default {
+  filters: {
+    roleFormat(value) {
+      if (value == "tpi-officer") {
+        return "Petugas TPI";
+      } else if (value == "tpi-cashier") {
+        return "Kasir TPI";
+      } else if (value == "tpi-admin") {
+        return "Admin TPI";
+      } else if (value == "district-admin") {
+        return "Admin Dinas";
+      } else if (value == "superadmin") {
+        return "Superadmin";
+      }
+    }
+  },
   data: () => ({
     dialogDelete: false,
     search: "",
@@ -101,7 +119,7 @@ export default {
       { text: "Nama", value: "name" },
       { text: "NIK", value: "nik" },
       { text: "Alamat", value: "address" },
-      { text: "Peran", value: "role.name" },
+      { text: "Peran", value: "role" },
       { text: "Status", value: "user_status.Status" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
@@ -123,14 +141,6 @@ export default {
       if (status == "Aktif") return "blue";
       else return "red";
     },
-
-    /* nyoba set permission
-    CheckPermission() {
-      return this.$auth.$state.user.user.role.Permission[0].Name.includes(
-        "create-tpi-officer"
-      );
-    },
-    */
 
     CheckPermissionCreateDistrict() {
       return this.$auth.$state.user.user.permissions.includes(

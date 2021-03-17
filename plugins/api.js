@@ -392,7 +392,7 @@ export default ({ app }, inject) => {
         name: data.name,
         address: data.address,
         username: data.username,
-        password: 12345
+        password: "mysecret"
       };
       return app
         .$axios({
@@ -458,6 +458,7 @@ export default ({ app }, inject) => {
           url: "/tpi/" + data
         })
         .then(response => {
+          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -509,8 +510,48 @@ export default ({ app }, inject) => {
           "&period=" +
           data.date_custom_from +
           ":" +
-          data.date_custom_to;
+          data.date_custom_from;
       }
+
+      return app
+        .$axios({
+          method: "get",
+          url: link
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    transaction(data) {
+      if (data.period == "Laporan Harian") {
+        var link =
+          "report/transaction?tpi_id=" + data.tpi + "&daily=" + data.date_daily;
+      } else if (data.period == "Laporan Bulanan") {
+        var link =
+          "report/transaction?tpi_id=" +
+          data.tpi +
+          "&monthly=" +
+          data.date_monthly;
+      } else if (data.period == "Laporan Tahunan") {
+        var link =
+          "report/transaction?tpi_id=" +
+          data.tpi +
+          "&yearly=" +
+          data.date_yearly;
+      } else if (data.period == "Pilih Jangka Waktu") {
+        var link =
+          "report/transaction?tpi_id=" +
+          data.tpi +
+          "&period=" +
+          data.date_custom_from +
+          ":" +
+          data.date_custom_from;
+      }
+
       return app
         .$axios({
           method: "get",

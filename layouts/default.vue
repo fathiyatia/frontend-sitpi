@@ -124,7 +124,7 @@
 export default {
   filters: {
     roleFormat(value) {
-      if (value == "tpi officer") {
+      if (value == "tpi-officer") {
         return "Petugas TPI";
       } else if (value == "tpi-cashier") {
         return "Kasir TPI";
