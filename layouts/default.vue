@@ -36,7 +36,7 @@
                   v-if="$auth.$state.user.user.role.name != 'superadmin'"
                   class="ml-1"
                 >
-                  | {{ $auth.$state.user.location }}
+                  | {{ $auth.$state.user.location_data.location_name }}
                 </span>
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
