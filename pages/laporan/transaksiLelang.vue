@@ -10,16 +10,18 @@
     >
       <template v-slot:top>
         <v-row class="mx-0  pt-6">
-          <v-col cols="12" lg="8" md="8">
+          <v-col cols="12" lg="10" md="10">
             <h2 class="accent--text">Laporan Transaksi Lelang</h2>
           </v-col>
+          <!---
           <v-col lg="2" md="2">
             <v-btn block small color="error">
               Export Pdf
             </v-btn>
           </v-col>
+          --->
           <v-col lg="2" md="2">
-            <v-btn block small color="success">
+            <v-btn block small color="success" @click="exportExcel()">
               Export Excel
             </v-btn>
           </v-col>
@@ -656,7 +658,7 @@ export default {
       if (this.$auth.$state.user.user.role.name == "district-admin") {
         return true;
       } else if (this.$auth.$state.user.user.role.name == "tpi-admin") {
-        this.input.tpi = this.$auth.$state.user.location.id;
+        this.input.tpi = this.$auth.$state.user.location_data.location_id;
         return false;
       }
     },
@@ -717,6 +719,14 @@ export default {
             this.show = true;
           }
         });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async exportExcel() {
+      try {
+        await this.$api("report", "excel_transaction", this.input);
       } catch (e) {
         console.log(e);
       }
