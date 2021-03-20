@@ -22,11 +22,11 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Total Produksi (Kg)</v-list-item-subtitle
-              >
+                >Total Produksi
+              </v-list-item-subtitle>
               <br />
               <v-list-item-title class="font-weight-black"
-                >7.988 Kg</v-list-item-title
+                >{{ this.all_dashboard.production_total }} Kg</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
@@ -47,12 +47,12 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Nilai Produksi (Rp)</v-list-item-subtitle
-              >
+                >Nilai Produksi
+              </v-list-item-subtitle>
               <br />
-              <v-list-item-title class="font-weight-black"
-                >Rp5.0000.000</v-list-item-title
-              >
+              <v-list-item-title class="font-weight-black">{{
+                this.all_dashboard.transaction_total | currencyFormat
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -72,7 +72,10 @@
               >
               <br />
               <v-list-item-title class="font-weight-black"
-                >3.3 Jam</v-list-item-title
+                >{{
+                  this.all_dashboard.transaction_speed
+                }}
+                Jam</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
@@ -92,7 +95,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              7.988 Kg
+              {{ this.all_dashboard.production_total }} Kg
             </v-card-subtitle>
           </v-card>
           <bar-chart
@@ -112,7 +115,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              Rp500.000
+              {{ this.all_dashboard.transaction_total | currencyFormat }}
             </v-card-subtitle>
           </v-card>
           <bar-chart
@@ -135,7 +138,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              3.3 Jam
+              {{ this.all_dashboard.transaction_speed }} Jam
             </v-card-subtitle>
           </v-card>
           <bar-chart
@@ -160,57 +163,19 @@ export default {
   },
   data() {
     return {
+      all_dashboard: [],
       // data and option for total production
       production_data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agus",
-          "Sept",
-          "Okt",
-          "Nov",
-          "Des"
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          5000,
-          4000,
-          1000,
-          50000,
-          4000,
-          10000,
-          5000,
-          4000,
-          10000,
-          5000,
-          10000,
-          5000
-        ],
+        name: [],
         datasets: [
           {
             //control width bar
             barPercentage: 0.8,
             backgroundColor: "#5D8CCA",
             borderColor: [],
-            data: [
-              5000,
-              4000,
-              1000,
-              5000,
-              4000,
-              10000,
-              5000,
-              4000,
-              10000,
-              5000,
-              10000,
-              5000
-            ]
+            data: []
           }
         ]
       },
@@ -256,55 +221,16 @@ export default {
 
       // data and option for value production
       production_value_data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agus",
-          "Sept",
-          "Okt",
-          "Nov",
-          "Des"
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          5000,
-          4000,
-          1000,
-          50000,
-          4000,
-          10000,
-          5000,
-          4000,
-          10000,
-          5000,
-          10000,
-          5000
-        ],
+        name: [],
         datasets: [
           {
             //control width bar
             barPercentage: 0.8,
             backgroundColor: "#267488",
             borderColor: [],
-            data: [
-              5000,
-              4000,
-              1000,
-              5000,
-              4000,
-              10000,
-              5000,
-              4000,
-              10000,
-              5000,
-              10000,
-              5000
-            ]
+            data: []
           }
         ]
       },
@@ -350,55 +276,16 @@ export default {
 
       // data and option for transaction speed
       speed_data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agus",
-          "Sept",
-          "Okt",
-          "Nov",
-          "Des"
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          5000,
-          4000,
-          1000,
-          50000,
-          4000,
-          10000,
-          5000,
-          4000,
-          10000,
-          5000,
-          10000,
-          5000
-        ],
+        name: [],
         datasets: [
           {
             //control width bar
             barPercentage: 0.8,
             backgroundColor: "#6BA39D",
             borderColor: [],
-            data: [
-              5000,
-              4000,
-              1000,
-              5000,
-              4000,
-              10000,
-              5000,
-              4000,
-              10000,
-              5000,
-              10000,
-              5000
-            ]
+            data: []
           }
         ]
       },
@@ -442,6 +329,96 @@ export default {
         }
       }
     };
+  },
+  mounted() {
+    this.getAllDashboardDay();
+  },
+
+  methods: {
+    formatMonth(data) {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agus",
+        "Sept",
+        "Okt",
+        "Nov",
+        "Des"
+      ];
+      return monthNames[data - 1];
+    },
+    async getAllDashboardDay() {
+      try {
+        this.all_dashboard = await this.$api("dashboard", "detail", "yearly");
+        //production_total
+        for (
+          let i = 0;
+          i < this.all_dashboard.production_total_graph.length;
+          i++
+        ) {
+          const production_month = this.formatMonth(
+            this.all_dashboard.production_total_graph[i].month
+          );
+          this.production_data.labels.push(production_month);
+
+          this.production_data.name.push(
+            this.all_dashboard.production_total_graph[i].total
+          );
+
+          this.production_data.datasets[0].data.push(
+            this.all_dashboard.production_total_graph[i].total
+          );
+        }
+        this.$refs.production_chart.update();
+        //production_value_total
+        for (
+          let i = 0;
+          i < this.all_dashboard.transaction_total_graph.length;
+          i++
+        ) {
+          const production_value_month = this.formatMonth(
+            this.all_dashboard.transaction_total_graph[i].month
+          );
+          this.production_value_data.labels.push(production_value_month);
+
+          this.production_value_data.name.push(
+            this.all_dashboard.transaction_total_graph[i].total
+          );
+
+          this.production_value_data.datasets[0].data.push(
+            this.all_dashboard.transaction_total_graph[i].total
+          );
+        }
+        this.$refs.production_value_chart.update();
+        //transaction speed
+        for (
+          let i = 0;
+          i < this.all_dashboard.transaction_speed_graph.length;
+          i++
+        ) {
+          const speed_month = this.formatMonth(
+            this.all_dashboard.transaction_speed_graph[i].month
+          );
+          this.speed_data.labels.push(speed_month);
+
+          this.speed_data.name.push(
+            this.all_dashboard.transaction_speed_graph[i].speed
+          );
+
+          this.speed_data.datasets[0].data.push(
+            this.all_dashboard.transaction_speed_graph[i].speed
+          );
+        }
+        this.$refs.speed_chart.update();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 };
 </script>

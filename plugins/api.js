@@ -49,6 +49,18 @@ export default ({ app }, inject) => {
             );
             break;
         }
+      case "dashboard":
+        switch (action) {
+          case "header":
+            return Dashboard.header(data, other);
+          case "detail":
+            return Dashboard.detail(data, other);
+          default:
+            console.error(
+              `Unknown ${target} action : ${action} in '~/plugins/api.js'`
+            );
+            break;
+        }
       case "report":
         switch (action) {
           case "production":
@@ -478,6 +490,37 @@ export default ({ app }, inject) => {
           method: "put",
           url: "/tpi/" + data.id,
           data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    }
+  };
+
+  const Dashboard = {
+    header() {
+      return app
+        .$axios({
+          method: "get",
+          url: "/dashboard/header"
+        })
+        .then(response => {
+          console.log(response);
+          return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    detail(data) {
+      return app
+        .$axios({
+          method: "get",
+          url: "/dashboard/detail?query=" + data
         })
         .then(response => {
           console.log(response);

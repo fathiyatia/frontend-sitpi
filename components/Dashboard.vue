@@ -10,7 +10,7 @@
           </v-card-title>
           <doughnut-chart
             style="position: relative; height:40vh;"
-            ref="dchart"
+            ref="fisher_chart"
             :chartdata="fisher_data"
             :options="chartoptions_fisher"
           ></doughnut-chart>
@@ -25,7 +25,7 @@
           </v-card-title>
           <doughnut-chart
             style="position: relative; height:40vh;"
-            ref="dchart"
+            ref="buyer_chart"
             :chartdata="buyer_data"
             :options="chartoptions_buyer"
           ></doughnut-chart>
@@ -42,16 +42,17 @@ export default {
   },
   data() {
     return {
+      all_dashboard: [],
       //dougnut chart
       fisher_data: {
-        labels: ["Tetap", "Pendatang"],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [120, 80],
+        name: [],
         datasets: [
           {
             backgroundColor: ["#FB8C00", "#267488"],
             borderColor: [],
-            data: [120, 80]
+            data: []
           }
         ]
       },
@@ -88,14 +89,14 @@ export default {
       },
 
       buyer_data: {
-        labels: ["Tetap", "Pendatang"],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [120, 80],
+        name: [],
         datasets: [
           {
             backgroundColor: ["#FB8C00", "#267488"],
             borderColor: [],
-            data: [120, 80]
+            data: []
           }
         ]
       },
@@ -131,6 +132,45 @@ export default {
         }
       }
     };
+  },
+
+  mounted() {
+    this.getAllDashboard();
+  },
+
+  methods: {
+    async getAllDashboard() {
+      try {
+        this.all_dashboard = await this.$api("dashboard", "header", null);
+        for (let i = 0; i < this.all_dashboard.buyer_total.length; i++) {
+          //labelnya
+          this.buyer_data.labels.push(this.all_dashboard.buyer_total[i].status);
+          //namanya
+          this.buyer_data.name.push(this.all_dashboard.buyer_total[i].total);
+          //datasetnya
+          this.buyer_data.datasets[0].data.push(
+            this.all_dashboard.buyer_total[i].total
+          );
+        }
+        this.$refs.buyer_chart.update();
+
+        for (let i = 0; i < this.all_dashboard.fisher_total.length; i++) {
+          //labelnya
+          this.fisher_data.labels.push(
+            this.all_dashboard.fisher_total[i].status
+          );
+          //namanya
+          this.fisher_data.name.push(this.all_dashboard.fisher_total[i].total);
+          //datasetnya
+          this.fisher_data.datasets[0].data.push(
+            this.all_dashboard.fisher_total[i].total
+          );
+        }
+        this.$refs.fisher_chart.update();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 };
 </script>

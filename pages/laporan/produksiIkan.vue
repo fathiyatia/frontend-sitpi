@@ -336,7 +336,7 @@
                 {{ current_tpi.name }}
               </h4>
               <h4 v-else class="accent--text">
-                {{ $auth.$state.user.location }}
+                {{ $auth.$state.user.location_data.location_name }}
               </h4>
             </v-col>
           </v-row>

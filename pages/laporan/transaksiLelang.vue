@@ -336,7 +336,7 @@
                 {{ current_tpi.name }}
               </h4>
               <h4 v-else class="accent--text">
-                {{ $auth.$state.user.location }}
+                {{ $auth.$state.user.location_data.location_name }}
               </h4>
             </v-col>
           </v-row>
@@ -366,7 +366,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.transaction_total }} transaksi
+                : {{ report.transaction_total }} Transaksi
               </h4>
             </v-col>
           </v-row>
@@ -489,7 +489,7 @@
         </v-card>
       </template>
       <template v-slot:item.id="{ item }">
-        {{ report.transaction_data.indexOf(item) + 1 }}
+        {{ report.transaction_table.indexOf(item) + 1 }}
       </template>
     </v-data-table>
     <br />
@@ -672,8 +672,8 @@ export default {
     },
 
     showTable() {
-      if (this.report.transaction_data != null) {
-        return this.report.transaction_data;
+      if (this.report.transaction_table != null) {
+        return this.report.transaction_table;
       }
     },
     async getAllTpi() {
@@ -694,7 +694,7 @@ export default {
           "transaction",
           this.input
         ).finally(() => {
-          if (this.report.transaction_data != null) {
+          if (this.report.transaction_table != null) {
             this.show = true;
           }
         });

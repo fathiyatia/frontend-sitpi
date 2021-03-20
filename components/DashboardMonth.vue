@@ -22,11 +22,11 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Total Produksi (Kg)</v-list-item-subtitle
-              >
+                >Total Produksi
+              </v-list-item-subtitle>
               <br />
               <v-list-item-title class="font-weight-black"
-                >7.988 Kg</v-list-item-title
+                >{{ this.all_dashboard.production_total }} Kg</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
@@ -47,12 +47,12 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Nilai Produksi (Rp)</v-list-item-subtitle
-              >
+                >Nilai Produksi
+              </v-list-item-subtitle>
               <br />
-              <v-list-item-title class="font-weight-black"
-                >Rp5.0000.000</v-list-item-title
-              >
+              <v-list-item-title class="font-weight-black">{{
+                this.all_dashboard.transaction_total | currencyFormat
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -72,7 +72,10 @@
               >
               <br />
               <v-list-item-title class="font-weight-black"
-                >3.3 Jam</v-list-item-title
+                >{{
+                  this.all_dashboard.transaction_speed
+                }}
+                Jam</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>
@@ -92,7 +95,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              7.988 Kg
+              {{ this.all_dashboard.production_total }} Kg
             </v-card-subtitle>
           </v-card>
           <line-chart
@@ -112,7 +115,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              Rp500.000
+              {{ this.all_dashboard.transaction_total | currencyFormat }}
             </v-card-subtitle>
           </v-card>
           <line-chart
@@ -135,7 +138,7 @@
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
             >
-              3.3 Jam
+              {{ this.all_dashboard.transaction_speed }} Jam
             </v-card-subtitle>
           </v-card>
           <line-chart
@@ -180,114 +183,17 @@ export default {
   },
   data() {
     return {
+      all_dashboard: [],
       // data and option for total production
       production_data: {
-        labels: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          3000,
-          3000,
-          5000,
-          2000,
-          5000,
-          4000,
-          7000,
-          1900,
-          2500,
-          2800,
-          2900,
-          3000,
-          3100,
-          2500,
-          5400,
-          5000,
-          3400,
-          3300,
-          3300,
-          3200,
-          3300,
-          3000,
-          3500,
-          2000,
-          3000,
-          4000,
-          3000,
-          4000,
-          3000,
-          3000,
-          3000,
-          3000
-        ],
+        name: [],
         datasets: [
           {
             pointBackgroundColor: "#FF5252",
             borderColor: "#5D8CCA",
-            data: [
-              3000,
-              3000,
-              5000,
-              2000,
-              5000,
-              4000,
-              7000,
-              1900,
-              2500,
-              2800,
-              2900,
-              3000,
-              3100,
-              2500,
-              5400,
-              5000,
-              3400,
-              3300,
-              3300,
-              3200,
-              3300,
-              3000,
-              3500,
-              2000,
-              3000,
-              4000,
-              3000,
-              4000,
-              3000,
-              3000,
-              3000,
-              3000
-            ]
+            data: []
           }
         ]
       },
@@ -336,112 +242,14 @@ export default {
       },
       // data and option for value production
       production_value_data: {
-        labels: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          3000,
-          3000,
-          5000,
-          2000,
-          5000,
-          4000,
-          7000,
-          1900,
-          2500,
-          2800,
-          2900,
-          3000,
-          3100,
-          2500,
-          5400,
-          5000,
-          3400,
-          3300,
-          3300,
-          3200,
-          3300,
-          3000,
-          3500,
-          2000,
-          3000,
-          4000,
-          3000,
-          4000,
-          3000,
-          3000,
-          3000,
-          3000
-        ],
+        name: [],
         datasets: [
           {
             pointBackgroundColor: "#FF5252",
             borderColor: "#267488",
-            data: [
-              3000,
-              3000,
-              5000,
-              2000,
-              5000,
-              4000,
-              7000,
-              1900,
-              2500,
-              2800,
-              2900,
-              3000,
-              3100,
-              2500,
-              5400,
-              5000,
-              3400,
-              3300,
-              3300,
-              3200,
-              3300,
-              3000,
-              3500,
-              2000,
-              3000,
-              4000,
-              3000,
-              4000,
-              3000,
-              3000,
-              3000,
-              3000
-            ]
+            data: []
           }
         ]
       },
@@ -490,112 +298,14 @@ export default {
       },
       // data and option for total production
       speed_data: {
-        labels: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31
-        ],
+        labels: [],
         //name buat kayak tambahan di tooltip
-        name: [
-          3000,
-          3000,
-          5000,
-          2000,
-          5000,
-          4000,
-          7000,
-          1900,
-          2500,
-          2800,
-          2900,
-          3000,
-          3100,
-          2500,
-          5400,
-          5000,
-          3400,
-          3300,
-          3300,
-          3200,
-          3300,
-          3000,
-          3500,
-          2000,
-          3000,
-          4000,
-          3000,
-          4000,
-          3000,
-          3000,
-          3000,
-          3000
-        ],
+        name: [],
         datasets: [
           {
             pointBackgroundColor: "#FF5252",
             borderColor: "#6BA39D",
-            data: [
-              3000,
-              3000,
-              5000,
-              2000,
-              5000,
-              4000,
-              7000,
-              1900,
-              2500,
-              2800,
-              2900,
-              3000,
-              3100,
-              2500,
-              5400,
-              5000,
-              3400,
-              3300,
-              3300,
-              3200,
-              3300,
-              3000,
-              3500,
-              2000,
-              3000,
-              4000,
-              3000,
-              4000,
-              3000,
-              3000,
-              3000,
-              3000
-            ]
+            data: []
           }
         ]
       },
@@ -643,6 +353,77 @@ export default {
         }
       }
     };
+  },
+
+  mounted() {
+    this.getAllDashboardDay();
+  },
+
+  methods: {
+    async getAllDashboardDay() {
+      try {
+        this.all_dashboard = await this.$api("dashboard", "detail", "monthly");
+        //production_total
+        for (
+          let i = 0;
+          i < this.all_dashboard.production_total_graph.length;
+          i++
+        ) {
+          this.production_data.labels.push(
+            this.all_dashboard.production_total_graph[i].date
+          );
+
+          this.production_data.name.push(
+            this.all_dashboard.production_total_graph[i].total
+          );
+
+          this.production_data.datasets[0].data.push(
+            this.all_dashboard.production_total_graph[i].total
+          );
+        }
+        this.$refs.production_chart.update();
+        //production_value_total
+        for (
+          let i = 0;
+          i < this.all_dashboard.transaction_total_graph.length;
+          i++
+        ) {
+          this.production_value_data.labels.push(
+            this.all_dashboard.transaction_total_graph[i].date
+          );
+
+          this.production_value_data.name.push(
+            this.all_dashboard.transaction_total_graph[i].total
+          );
+
+          this.production_value_data.datasets[0].data.push(
+            this.all_dashboard.transaction_total_graph[i].total
+          );
+        }
+        this.$refs.production_value_chart.update();
+        //transaction speed
+        for (
+          let i = 0;
+          i < this.all_dashboard.transaction_speed_graph.length;
+          i++
+        ) {
+          this.speed_data.labels.push(
+            this.all_dashboard.transaction_speed_graph[i].date
+          );
+
+          this.speed_data.name.push(
+            this.all_dashboard.transaction_speed_graph[i].speed
+          );
+
+          this.speed_data.datasets[0].data.push(
+            this.all_dashboard.transaction_speed_graph[i].speed
+          );
+        }
+        this.$refs.speed_chart.update();
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
 };
 </script>
