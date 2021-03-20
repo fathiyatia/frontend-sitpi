@@ -83,7 +83,6 @@ export default {
       {
         text: "NIK Pembeli",
         align: "start",
-        sortable: false,
         value: "nik"
       },
       { text: "Nama", value: "name" },

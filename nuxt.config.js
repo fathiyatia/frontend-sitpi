@@ -1,6 +1,11 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
+  /*
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL
+  },
+  */
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     titleTemplate: "SITPI",
@@ -18,7 +23,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ["~/plugins/api.js"],
+  plugins: ["~/plugins/api.js", "~/plugins/filters.js"],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,

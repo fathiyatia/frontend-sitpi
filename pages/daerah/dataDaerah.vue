@@ -134,7 +134,6 @@ export default {
       {
         text: "Kode Daerah Tangkapan",
         align: "start",
-        sortable: false,
         value: "name"
       },
       { text: "Bujur D", value: "east_longitude_degree" },

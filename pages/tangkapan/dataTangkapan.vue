@@ -3,6 +3,7 @@
     :headers="showHeaders"
     :items="caught_fish"
     sort-by="created_at"
+    sort-desc
     class="elevation-1 px-3"
   >
     <template v-slot:top>
@@ -13,7 +14,7 @@
         ><span>
           Data tangkapan ikan yang didaratkan di
           <span class="primary--text font-weight-bold">{{
-            $auth.$state.user.location
+            $auth.$state.user.location_data.location_name
           }}</span>
           pada tanggal
           <span class="primary--text font-weight-bold">
@@ -167,7 +168,7 @@ export default {
     ],
 
     all_headers: [
-      { text: "ID", align: "start", value: "code" },
+      { text: "ID", align: "start", value: "code", sortable: false },
       { text: "Waktu", value: "created_at" },
       { text: "Nama Nelayan", value: "fisher.name" },
       { text: "Jumlah Hari Trip", value: "trip_day" },

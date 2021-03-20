@@ -5,6 +5,7 @@
     :items="auction"
     :search="search"
     sort-by="created_at"
+    sort-desc
     class="elevation-1 px-3"
   >
     <template v-slot:top>
@@ -15,7 +16,7 @@
         ><span>
           Data hasil lelang di
           <span class="primary--text font-weight-bold"
-            >{{ $auth.$state.user.location }}
+            >{{ $auth.$state.user.location_data.location_name }}
           </span>
           pada tanggal
           <span class="primary--text font-weight-bold">
@@ -213,27 +214,6 @@
 
 <script>
 export default {
-  filters: {
-    currencyFormat(value) {
-      if (value != null) {
-        const minus = Number(value) < 0;
-        if (value.toString().split(".").length > 2) return "Rp ~";
-        else if (value.toString().split(".").length > 1) {
-          value = value.toString().split(".");
-          value = value[0];
-        }
-        try {
-          const result = value
-            .toString()
-            .match(/\d{1,3}(?=(\d{3})*$)/g)
-            .join(".");
-          return "Rp" + (minus === true ? " -" : "") + result;
-        } catch (error) {
-          return "Rp ~";
-        }
-      }
-    }
-  },
   data: () => ({
     valid: true,
     dialogDelete: false,
@@ -264,7 +244,7 @@ export default {
       { text: "Berat", value: "weight" },
       { text: "Harga", value: "price" },
       { text: "Status Lelang", value: "caught.caught_status.Status" },
-      { text: "Aksi", value: "action", width: 135 }
+      { text: "Aksi", value: "action", width: 135, sortable: false }
     ],
     fisher: [],
     fishtype: [],

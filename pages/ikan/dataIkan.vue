@@ -174,7 +174,7 @@ export default {
         value: "code"
       },
       { text: "Nama Ikan", value: "name" },
-      { text: "Aksi", value: "id" }
+      { text: "Aksi", value: "id", sortable: false }
     ],
     input: {
       name: null,

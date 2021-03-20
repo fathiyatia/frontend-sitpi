@@ -113,7 +113,6 @@ export default {
       {
         text: "Username",
         align: "start",
-        sortable: false,
         value: "username"
       },
       { text: "Nama", value: "name" },

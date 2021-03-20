@@ -1,7 +1,7 @@
 <template>
   <v-data-table
-    :headers="showHeaders"
-    :items="gear"
+    :headers="headers"
+    :items="dinas"
     :search="search"
     sort-by="created_at"
     sort-desc
@@ -10,25 +10,19 @@
     <template v-slot:top>
       <v-row class="mx-0  pt-6">
         <v-col cols="12" lg="9" md="9">
-          <h2 class="accent--text">Data Alat Tangkap</h2>
+          <h2 class="accent--text">Data Dinas</h2>
         </v-col>
         <v-col lg="3" md="3">
-          <v-btn
-            v-if="CheckCreatePermission()"
-            block
-            small
-            color="success"
-            @click="popupDialogTambah()"
-          >
-            + Tambah Alat Tangkap
+          <v-btn block small color="success" @click="popupDialogTambah()">
+            + Tambah Dinas
           </v-btn>
         </v-col>
 
-        <!--Dialog Tambah Alat Tangkap--->
+        <!--Dialog Tambah Dinas--->
         <v-dialog v-model="dialogTambah" persistent max-width="600px">
           <v-card>
             <v-card-title>
-              <span class="headline">Tambah Alat Tangkap</span>
+              <span class="headline">Tambah Dinas</span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -40,13 +34,13 @@
                   lazy-validation
                 >
                   <v-text-field
-                    label="Kode Alat"
+                    label="Kode Dinas"
                     v-model="input.code"
                     :rules="required"
                     required
                   ></v-text-field>
                   <v-text-field
-                    label="Nama Alat Tangkap"
+                    label="Nama Dinas"
                     v-model="input.name"
                     :rules="required"
                     required
@@ -56,14 +50,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="accent"
-                text
-                @click="(dialogTambah = false), $refs.form.reset()"
-              >
+              <v-btn color="accent" text @click="closeTambah">
                 Batal
               </v-btn>
-              <v-btn color="primary" text @click="storeGear">
+              <v-btn color="primary" text @click="storeDinas">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -74,7 +64,7 @@
         <v-dialog v-model="dialogEdit" persistent max-width="600px">
           <v-card>
             <v-card-title>
-              <span class="headline">Edit Alat Tangkap </span>
+              <span class="headline">Edit Dinas </span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -91,7 +81,7 @@
                     v-model="inputedit.code"
                   ></v-text-field>
                   <v-text-field
-                    label="Nama Alat Tangkap"
+                    label="Nama Dinas"
                     required
                     v-model="inputedit.name"
                   ></v-text-field>
@@ -100,10 +90,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="accent" text @click="dialogEdit = false">
+              <v-btn color="accent" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn color="primary" text @click="updateGear()">
+              <v-btn color="primary" text @click="updateDinas()">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -117,10 +107,8 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialogDelete = false"
-                >Batal</v-btn
-              >
-              <v-btn color="error" text @click="deleteGear">Hapus</v-btn>
+              <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+              <v-btn color="error" text @click="deleteDinas">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -167,12 +155,13 @@ export default {
     search: "",
     headers: [
       {
-        text: "Kode Alat",
+        text: "Kode Dinas",
         align: "start",
+        sortable: false,
         value: "code"
       },
       {
-        text: "Jenis Alat Tangkap",
+        text: "Nama Kabupaten / Kota",
         value: "name"
       },
       { text: "Aksi", value: "id", sortable: false }
@@ -185,37 +174,26 @@ export default {
       code: null,
       name: null
     },
-    gear: []
+    dinas: []
   }),
 
-  mounted() {
-    this.getAllGear();
-  },
-
-  computed: {
-    showHeaders() {
-      if (
-        this.$auth.$state.user.user.permissions.includes(
-          "update-fishing-gear"
-        ) != true &&
-        this.$auth.$state.user.user.permissions.includes(
-          "delete-fishing-gear"
-        ) != true
-      ) {
-        return this.headers.filter(header => header.text !== "Aksi");
-      } else {
-        return this.headers;
-      }
+  watch: {
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+    dialogTambah(val) {
+      val || this.closeTambah();
+    },
+    dialogEdit(val) {
+      val || this.closeEdit();
     }
   },
 
-  methods: {
-    CheckCreatePermission() {
-      return this.$auth.$state.user.user.permissions.includes(
-        "create-fishing-gear"
-      );
-    },
+  mounted() {
+    this.getAllDinas();
+  },
 
+  methods: {
     popupDialogDelete(id) {
       this.dialogDelete = true;
       this.currentId = id;
@@ -230,10 +208,22 @@ export default {
       this.currentId = id;
     },
 
-    deleteGear() {
+    closeDelete() {
+      this.dialogDelete = false;
+    },
+
+    closeTambah() {
+      this.dialogTambah = false;
+    },
+
+    closeEdit() {
+      this.dialogEdit = false;
+    },
+
+    deleteDinas() {
       try {
         this.$api("fishing_gear", "delete", this.currentId).finally(() => {
-          this.getAllGear();
+          this.getAllDinas();
           this.dialogDelete = false;
         });
       } catch (e) {
@@ -241,16 +231,16 @@ export default {
       }
     },
 
-    async getAllGear() {
+    async getAllDinas() {
       try {
-        this.gear = await this.$api("fishing_gear", "index", null);
+        this.dinas = await this.$api("fishing_gear", "index", null);
       } catch (e) {
         console.log(e);
       }
     },
 
     //res
-    async storeGear() {
+    async storeDinas() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api(
@@ -258,9 +248,9 @@ export default {
             "store",
             this.input
           ).finally(response => {
-            this.getAllGear();
+            this.getAllDinas();
             this.dialogTambah = false;
-            this.$refs.form.reset();
+            this.input.name = null;
             return response;
           });
         } catch (e) {
@@ -279,14 +269,14 @@ export default {
     },
 
     //res
-    async updateGear() {
+    async updateDinas() {
       try {
         const result = await this.$api(
           "fishing_gear",
           "update",
           this.inputedit
         ).finally(response => {
-          this.getAllGear();
+          this.getAllDinas();
           this.dialogEdit = false;
           return response;
         });
