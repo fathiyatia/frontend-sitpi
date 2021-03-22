@@ -46,19 +46,21 @@
             :rules="required"
             v-model="input.username"
           />
-          <h3 class="mb-3 mt-2 primary--text">
-            Peran
-          </h3>
-          <v-select
-            outlined
-            single-line
-            :items="role"
-            item-text="name"
-            item-value="id"
-            label="Peran"
-            :rules="required"
-            v-model="input.role_id"
-          ></v-select>
+          <div v-if="this.$auth.$state.user.user.role.name == 'tpi-admin'">
+            <h3 class="mb-3 mt-2 primary--text">
+              Peran
+            </h3>
+            <v-select
+              outlined
+              single-line
+              :items="role"
+              item-text="name"
+              item-value="id"
+              label="Peran"
+              :rules="required"
+              v-model="input.role_id"
+            ></v-select>
+          </div>
           <h3 class="mb-3 mt-2 primary--text">
             Status
           </h3>

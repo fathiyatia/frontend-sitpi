@@ -1,42 +1,59 @@
 <template>
   <v-container>
-    <v-card max-width="400px" tile elevation="4" class="mt-3 rounded-lg">
-      <v-toolbar color="secondary" dark elevation="0">
-        <v-toolbar-title>Ubah Kata Sandi</v-toolbar-title>
-      </v-toolbar>
-      <v-spacer></v-spacer>
+    <v-card
+      max-width="400px"
+      tile
+      elevation="4"
+      class="mt-3 rounded-lg front-card"
+    >
+      <v-card color="secondary" dark elevation="0">
+        <v-card-title class="mb-1">Ubah Password</v-card-title>
+      </v-card>
+
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
+
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
-            Masukkan kata sandi saat ini
+            Password saat ini
           </h3>
           <v-text-field
             outlined
+            dense
             single-line
-            label="Masukkan kata sandi saat ini"
+            label="Masukkan password saat ini"
             :rules="required"
             v-model="input.old_password"
             type="password"
           />
 
           <h3 class="mb-3 primary--text">
-            Masukkan kata sandi baru
+            Password baru
           </h3>
           <v-text-field
             outlined
+            dense
             single-line
-            label="Masukkan kata sandi baru"
+            label="Masukkan password baru"
             :rules="rules"
             v-model="input.new_password"
             type="password"
           />
           <h3 class="mb-3 primary--text">
-            Masukkan kembali kata sandi baru
+            Konfirmasi password baru
           </h3>
           <v-text-field
+            dense
             outlined
             single-line
-            label="Masukkan kembali kata sandi baru"
+            label="Masukkan kembali password baru"
             :rules="rules"
             v-model="input.new_password_confirm"
             type="password"
@@ -50,8 +67,8 @@
               </v-btn>
             </v-col>
             <v-col md="6" class="py-0 px-2">
-              <v-btn large block color="primary" @click.stop="storeBuyer()">
-                Simpan
+              <v-btn large block color="primary" @click.stop="changePassword()">
+                Ubah Password
               </v-btn>
             </v-col>
           </v-row>
@@ -63,6 +80,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -77,7 +97,7 @@ export default {
       const rules = [];
       if (this.input.new_password) {
         const rule = v =>
-          (!!v && v) === this.input.new_password || "Values do not match";
+          (!!v && v) === this.input.new_password || "Password tidak sama";
 
         rules.push(rule);
       } else {
@@ -92,10 +112,41 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-    async storeBuyer() {
+
+    logout() {
+      try {
+        this.$router.push("/login");
+        this.isLogin = false;
+        this.$api("user", "logout").finally(() => {
+          this.$router.push("/login");
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async changePassword() {
       if (this.$refs.form.validate()) {
-        this.$router.push("/pembeli/dataPembeli");
-        return response;
+        try {
+          const result = await this.$api(
+            "user",
+            "change_password",
+            this.input
+          ).finally(response => {
+            return response;
+          });
+          if (result.status === 200) {
+            this.logout();
+          } else {
+            this.success = false;
+            this.messages = "Password gagal diubah";
+            this.snackbar = true;
+          }
+        } catch (e) {
+          console.log(e);
+          this.success = false;
+          this.messages = "Password gagal diubah";
+          this.snackbar = true;
+        }
       }
     }
   }

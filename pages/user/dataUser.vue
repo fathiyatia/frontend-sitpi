@@ -1,92 +1,122 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="all_user"
-    :search="search"
-    sort-by="created_at"
-    sort-desc
-    class="elevation-1 px-3"
-  >
-    <template v-slot:top>
-      <v-row class="mx-0 pt-6">
-        <v-col>
-          <h2 class="accent--text">Data User</h2>
-        </v-col>
-      </v-row>
-      <v-row class="mx-0 mb-6">
-        <v-col lg="3" md="3" v-if="CheckPermissionCreateAdminTPI()">
-          <v-btn
-            class="text-capitalize"
-            small
-            block
-            color="success"
-            :to="'/user/register/adminTPI'"
-          >
-            + Tambah Admin TPI
-          </v-btn>
-        </v-col>
-        <v-col lg="3" md="3" v-if="CheckPermissionCreateOfficer()">
-          <v-btn
-            class="text-capitalize"
-            small
-            block
-            color="success"
-            :to="'/user/register/petugasTPI'"
-          >
-            + Tambah Petugas TPI
-          </v-btn>
-        </v-col>
-        <v-col lg="3" md="3" v-if="CheckPermissionCreateCashier()">
-          <v-btn
-            class="text-capitalize"
-            small
-            block
-            color="success"
-            :to="'/user/register/kasir'"
-          >
-            + Tambah Kasir
-          </v-btn>
-        </v-col>
-        <v-col lg="3" md="3" v-if="CheckPermissionCreateDistrict()">
-          <v-btn
-            class="text-capitalize"
-            small
-            block
-            color="success"
-            :to="'/user/register/adminDinas'"
-          >
-            + Tambah Admin Dinas
-          </v-btn>
-        </v-col>
-      </v-row>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="all_user"
+      :search="search"
+      sort-by="created_at"
+      sort-desc
+      class="elevation-1 px-3"
+    >
+      <template v-slot:top>
+        <v-row class="mx-0 pt-6">
+          <v-col>
+            <h2 class="accent--text">Data User</h2>
+          </v-col>
+        </v-row>
+        <v-row class="mx-0 mb-6">
+          <v-col lg="3" md="3" v-if="CheckPermissionCreateAdminTPI()">
+            <v-btn
+              class="text-capitalize"
+              small
+              block
+              color="success"
+              :to="'/user/register/adminTPI'"
+            >
+              + Tambah Admin TPI
+            </v-btn>
+          </v-col>
+          <v-col lg="3" md="3" v-if="CheckPermissionCreateOfficer()">
+            <v-btn
+              class="text-capitalize"
+              small
+              block
+              color="success"
+              :to="'/user/register/petugasTPI'"
+            >
+              + Tambah Petugas TPI
+            </v-btn>
+          </v-col>
+          <v-col lg="3" md="3" v-if="CheckPermissionCreateCashier()">
+            <v-btn
+              class="text-capitalize"
+              small
+              block
+              color="success"
+              :to="'/user/register/kasir'"
+            >
+              + Tambah Kasir
+            </v-btn>
+          </v-col>
+          <v-col lg="3" md="3" v-if="CheckPermissionCreateDistrict()">
+            <v-btn
+              class="text-capitalize"
+              small
+              block
+              color="success"
+              :to="'/user/register/adminDinas'"
+            >
+              + Tambah Admin Dinas
+            </v-btn>
+          </v-col>
+        </v-row>
 
-      <template>
-        <v-text-field
-          outlined
-          dense
-          class="mt-2 px-2 mb-5 rounded-xl"
-          v-model="search"
-          prepend-inner-icon="mdi-magnify"
-          label="Cari"
-          single-line
-          hide-details
-        ></v-text-field>
+        <template>
+          <v-text-field
+            outlined
+            dense
+            class="mt-2 px-2 mb-5 rounded-xl"
+            v-model="search"
+            prepend-inner-icon="mdi-magnify"
+            label="Cari"
+            single-line
+            hide-details
+          ></v-text-field>
+        </template>
       </template>
-    </template>
-    <template v-slot:item.role="{ item }">
-      {{ item.role.name | roleFormat }}
-    </template>
-    <template v-slot:item.user_status.Status="{ item }">
-      <v-chip :color="getColor(item.user_status.Status)" outlined small dark>
-        {{ item.user_status.Status }}
-      </v-chip>
-    </template>
-    <template v-slot:item.id="{ item }">
-      <v-btn small color="secondary" depressed :to="'/user/edit/' + item.id">
-        Edit
-      </v-btn>
-    </template>
-  </v-data-table>
+      <template v-slot:item.role="{ item }">
+        {{ item.role.name | roleFormat }}
+      </template>
+      <template v-slot:item.user_status.Status="{ item }">
+        <v-chip :color="getColor(item.user_status.Status)" outlined small dark>
+          {{ item.user_status.Status }}
+        </v-chip>
+      </template>
+      <template v-slot:item.id="{ item }">
+        <v-btn
+          x-small
+          color="secondary"
+          depressed
+          :to="'/user/edit/' + item.id"
+        >
+          Edit
+        </v-btn>
+        <v-btn
+          class="ml-2"
+          x-small
+          color="error"
+          depressed
+          @click="popupDialogDelete(item)"
+        >
+          Reset Password
+        </v-btn>
+      </template>
+    </v-data-table>
+    <!------ Dialog Delete ----->
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="justify-center"
+          >Reset password pada akun {{ this.currentUsername }}?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
+          <v-btn color="error" text>Reset</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -108,6 +138,7 @@ export default {
   },
   data: () => ({
     dialogDelete: false,
+    currentUsername: null,
     search: "",
     headers: [
       {
@@ -120,7 +151,7 @@ export default {
       { text: "Alamat", value: "address" },
       { text: "Peran", value: "role" },
       { text: "Status", value: "user_status.Status" },
-      { text: "Aksi", value: "id", sortable: false, width: 135 }
+      { text: "Aksi", value: "id", sortable: false, width: 210 }
     ],
     all_user: []
   }),
@@ -164,9 +195,10 @@ export default {
       );
     },
 
-    popupDialogDelete(id) {
+    popupDialogDelete(item) {
       this.dialogDelete = true;
-      this.currentId = id;
+      this.currentUsername = item.username;
+      this.currentId = item.id;
     },
 
     closeDelete() {
