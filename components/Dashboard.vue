@@ -6,43 +6,59 @@
         <v-card class="px-md-5" elevation="4">
           <v-card-title class="font-weight-regular">
             <v-icon class="mr-2" color="success">mdi-sail-boat </v-icon> Jumlah
-            Nelayan
+            Nelayan : {{ this.all_dashboard.fisher_total }} orang
           </v-card-title>
           <doughnut-chart
+            v-if="loaded"
             style="position: relative; height:40vh;"
             ref="fisher_chart"
             :chartdata="fisher_data"
             :options="chartoptions_fisher"
           ></doughnut-chart>
+          <v-row v-else class="py-6" align="center" justify="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </v-row>
         </v-card>
       </v-col>
-      <!--------------------- Chart Two ------------------------------>
+      <!--------------------- Buyer ------------------------------>
       <v-col lg="6">
         <v-card class="px-md-5" elevation="4">
           <v-card-title class="font-weight-regular">
             <v-icon class="mr-2" color="warning"> mdi-account </v-icon> Jumlah
-            Pembeli
+            Pembeli : {{ this.all_dashboard.buyer_total }} orang
           </v-card-title>
           <doughnut-chart
+            v-if="loaded"
             style="position: relative; height:40vh;"
             ref="buyer_chart"
             :chartdata="buyer_data"
             :options="chartoptions_buyer"
           ></doughnut-chart>
+          <v-row v-else class="py-6" align="center" justify="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
   </div>
 </template>
 <script>
-import HorizontalbarChart from "~/components/HorizontalbarChart.vue";
 export default {
-  components: {
-    HorizontalbarChart
-  },
   data() {
     return {
-      all_dashboard: [],
+      loaded: false,
+      all_dashboard: [
+        {
+          buyer_total: null,
+          fisher_total: null
+        }
+      ],
       //dougnut chart
       fisher_data: {
         labels: [],
@@ -141,32 +157,48 @@ export default {
   methods: {
     async getAllDashboard() {
       try {
-        this.all_dashboard = await this.$api("dashboard", "header", null);
-        for (let i = 0; i < this.all_dashboard.buyer_total.length; i++) {
-          //labelnya
-          this.buyer_data.labels.push(this.all_dashboard.buyer_total[i].status);
-          //namanya
-          this.buyer_data.name.push(this.all_dashboard.buyer_total[i].total);
-          //datasetnya
+        this.all_dashboard = await this.$api(
+          "dashboard",
+          "header",
+          null
+        ).finally(() => {
+          this.loaded = true;
+        });
+        for (let i = 0; i < this.all_dashboard.buyer_total_status.length; i++) {
+          this.buyer_data.labels.push(
+            this.all_dashboard.buyer_total_status[i].status
+          );
+
+          this.buyer_data.name.push(
+            this.all_dashboard.buyer_total_status[i].total
+          );
+
           this.buyer_data.datasets[0].data.push(
-            this.all_dashboard.buyer_total[i].total
+            this.all_dashboard.buyer_total_status[i].total
           );
         }
         this.$refs.buyer_chart.update();
+        this.loaded_buyer = true;
 
-        for (let i = 0; i < this.all_dashboard.fisher_total.length; i++) {
-          //labelnya
+        for (
+          let i = 0;
+          i < this.all_dashboard.fisher_total_status.length;
+          i++
+        ) {
           this.fisher_data.labels.push(
-            this.all_dashboard.fisher_total[i].status
+            this.all_dashboard.fisher_total_status[i].status
           );
-          //namanya
-          this.fisher_data.name.push(this.all_dashboard.fisher_total[i].total);
-          //datasetnya
+
+          this.fisher_data.name.push(
+            this.all_dashboard.fisher_total_status[i].total
+          );
+
           this.fisher_data.datasets[0].data.push(
-            this.all_dashboard.fisher_total[i].total
+            this.all_dashboard.fisher_total_status[i].total
           );
         }
         this.$refs.fisher_chart.update();
+        this.loaded_fisher = true;
       } catch (e) {
         console.log(e);
       }

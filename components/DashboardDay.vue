@@ -98,13 +98,20 @@
             </v-card-subtitle>
           </v-card>
           <bar-chart
+            v-if="loaded"
             ref="production_chart"
             :chartdata="production_data"
             :options="chartoptions_production"
           ></bar-chart>
+          <v-row v-else class="py-6" align="center" justify="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </v-row>
         </v-card>
       </v-col>
-      <!--------------------- Chart Two ------------------------------>
+      <!--------------------- Production Value ------------------------------>
       <v-col lg="6">
         <v-card class="px-md-5" elevation="4">
           <v-card color="success" dark class="mx-3">
@@ -118,16 +125,23 @@
             </v-card-subtitle>
           </v-card>
           <bar-chart
+            v-if="loaded"
             ref="production_value_chart"
             :chartdata="production_value_data"
             :options="chartoptions_production_value"
           ></bar-chart>
+          <v-row v-else class="py-6" align="center" justify="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
 
     <v-row class="mt-2">
-      <!--------------------- Chart Three ------------------------------>
+      <!--------------------- Speed ------------------------------>
       <v-col>
         <v-card class="px-md-5" elevation="4">
           <v-card color="info" dark class="mx-3">
@@ -141,10 +155,17 @@
             </v-card-subtitle>
           </v-card>
           <bar-chart
+            v-if="loaded"
             ref="speed_chart"
             :chartdata="speed_data"
             :options="chartoptions_speed"
           ></bar-chart>
+          <v-row v-else class="py-6" align="center" justify="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -162,16 +183,14 @@ export default {
   },
   data() {
     return {
+      loaded: false,
       all_dashboard: [],
       input: "daily",
-      // data and option for total production
       production_data: {
         labels: [],
-        //name buat kayak tambahan di tooltip
         name: [],
         datasets: [
           {
-            //control width bar
             barPercentage: 0.8,
             backgroundColor: "#5D8CCA",
             borderColor: [],
@@ -208,7 +227,6 @@ export default {
           }
         },
         tooltips: {
-          //cukup enabled aja kalo mau gampang otomatis nama : data
           enabled: true,
           bodyFontSize: 17,
           callbacks: {
@@ -219,14 +237,11 @@ export default {
         }
       },
 
-      // data and option for value production
       production_value_data: {
         labels: [],
-        //name buat kayak tambahan di tooltip
         name: [],
         datasets: [
           {
-            //control width bar
             barPercentage: 0.8,
             backgroundColor: "#267488",
             borderColor: [],
@@ -263,7 +278,6 @@ export default {
           }
         },
         tooltips: {
-          //cukup enabled aja kalo mau gampang otomatis nama : data
           enabled: true,
           bodyFontSize: 17,
           callbacks: {
@@ -274,14 +288,11 @@ export default {
         }
       },
 
-      // data and option for transaction speed
       speed_data: {
         labels: [],
-        //name buat kayak tambahan di tooltip
         name: [],
         datasets: [
           {
-            //control width bar
             barPercentage: 0.8,
             backgroundColor: "#6BA39D",
             borderColor: [],
@@ -318,7 +329,6 @@ export default {
           }
         },
         tooltips: {
-          //cukup enabled aja kalo mau gampang otomatis nama : data
           enabled: true,
           bodyFontSize: 17,
           callbacks: {
@@ -337,7 +347,13 @@ export default {
   methods: {
     async getAllDashboardDay() {
       try {
-        this.all_dashboard = await this.$api("dashboard", "detail", "daily");
+        this.all_dashboard = await this.$api(
+          "dashboard",
+          "detail",
+          "daily"
+        ).finally(() => {
+          this.loaded = true;
+        });
         //production_total
         for (
           let i = 0;
