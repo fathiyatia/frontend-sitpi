@@ -96,22 +96,26 @@
           x-small
           color="error"
           depressed
-          @click="popupDialogDelete(item)"
+          @click="popupDialogReset(item)"
         >
           Reset Password
         </v-btn>
       </template>
     </v-data-table>
-    <!------ Dialog Delete ----->
-    <v-dialog v-model="dialogDelete" max-width="500px">
+    <!---- Alert ----->
+    <template>
+      <alert v-model="snackbar" :success="success" :messages="messages"></alert>
+    </template>
+    <!------ Dialog Reset ----->
+    <v-dialog v-model="dialogReset" max-width="500px">
       <v-card>
         <v-card-title class="justify-center"
           >Reset password pada akun {{ this.currentUsername }}?</v-card-title
         >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeDelete">Batal</v-btn>
-          <v-btn color="error" text>Reset</v-btn>
+          <v-btn color="primary" text @click="closeReset">Batal</v-btn>
+          <v-btn color="error" text @click="resetPassword">Reset</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -137,7 +141,10 @@ export default {
     }
   },
   data: () => ({
-    dialogDelete: false,
+    snackbar: false,
+    success: false,
+    messages: "",
+    dialogReset: false,
     currentUsername: null,
     search: "",
     headers: [
@@ -155,12 +162,6 @@ export default {
     ],
     all_user: []
   }),
-
-  watch: {
-    dialogDelete(val) {
-      val || this.closeDelete();
-    }
-  },
 
   mounted() {
     this.getAllUser();
@@ -195,22 +196,35 @@ export default {
       );
     },
 
-    popupDialogDelete(item) {
-      this.dialogDelete = true;
+    popupDialogReset(item) {
+      this.dialogReset = true;
       this.currentUsername = item.username;
       this.currentId = item.id;
     },
 
-    closeDelete() {
-      this.dialogDelete = false;
+    closeReset() {
+      this.dialogReset = false;
     },
 
-    deleteBuyer() {
+    async resetPassword() {
       try {
-        this.$api("fisher", "delete", this.currentId).finally(() => {
-          this.getAllFisher();
-          this.dialogDelete = false;
+        const result = await this.$api(
+          "user",
+          "reset_password",
+          this.currentId
+        ).finally(() => {
+          this.getAllUser();
+          this.dialogReset = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Berhasil melakukan reset password";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Gagal melakukan reset password";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
       }

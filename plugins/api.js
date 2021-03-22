@@ -27,6 +27,8 @@ export default ({ app }, inject) => {
             return User.update(data, other);
           case "change_password":
             return User.change_password(data, other);
+          case "reset_password":
+            return User.reset_password(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -430,6 +432,22 @@ export default ({ app }, inject) => {
         .$axios({
           method: "post",
           url: "/auth/change-password",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    reset_password(data) {
+      const body = parseInt(data);
+      return app
+        .$axios({
+          method: "post",
+          url: "/user/reset-password/" + data,
           data: body
         })
         .then(response => {
