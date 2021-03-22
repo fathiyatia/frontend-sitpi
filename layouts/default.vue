@@ -87,7 +87,7 @@
                           <v-icon color="primary" class="px-2">
                             mdi-lock-reset
                           </v-icon>
-                          Ubah Kata Sandi
+                          Ubah Password
                         </h3>
                       </v-card>
                     </v-list-item-title>

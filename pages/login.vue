@@ -8,7 +8,7 @@
       Aplikasi Pelelangan Ikan Terintegrasi
     </v-card-title>
     <v-card-subtitle class="pt-2 d-flex justify-center">
-      Isi username dan kata sandi untuk masuk ke dalam sistem
+      Isi username dan password untuk masuk ke dalam sistem
     </v-card-subtitle>
     <span v-if="showError" class="pt-2 d-flex justify-center red--text"
       >Username atau password yang Anda masukkan salah</span
@@ -28,7 +28,7 @@
         outlined
         single-line
         :rules="required"
-        label="Kata Sandi"
+        label="Password"
         prepend-inner-icon="mdi-lock"
         :type="showPassword ? 'text' : 'password'"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"

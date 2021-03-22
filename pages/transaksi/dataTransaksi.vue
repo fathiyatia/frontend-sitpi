@@ -78,6 +78,10 @@
         </v-btn>
       </template>
     </v-data-table>
+    <!---- Alert ----->
+    <template>
+      <alert v-model="snackbar" :success="success" :messages="messages"></alert>
+    </template>
     <!----- Dialog Detail ----->
     <v-dialog v-model="dialog" width="600px">
       <v-card>
@@ -218,7 +222,7 @@
           <v-btn color="accent" text @click="closeEdit">
             Batal
           </v-btn>
-          <v-btn color="primary" text @click="updateAuction()">
+          <v-btn color="primary" text @click="updateTransaction()">
             Simpan
           </v-btn>
         </v-card-actions>
@@ -244,6 +248,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     dialogDelete: false,
     dialogEdit: false,
@@ -335,18 +342,34 @@ export default {
       }
     },
 
-    deleteTransaction() {
+    async deleteTransaction() {
       try {
-        this.$api("transaction", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "transaction",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllTransaction();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 
-    async updateAuction() {
+    async updateTransaction() {
       try {
         const result = await this.$api(
           "transaction",
@@ -357,8 +380,20 @@ export default {
           this.dialogEdit = false;
           return response;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil diubah";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal diubah";
+        this.snackbar = true;
       }
     },
 

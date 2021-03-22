@@ -25,6 +25,8 @@ export default ({ app }, inject) => {
             return User.get_by_id(data, other);
           case "update":
             return User.update(data, other);
+          case "change_password":
+            return User.change_password(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -402,12 +404,10 @@ export default ({ app }, inject) => {
     update(data) {
       const body = {
         user_status_id: parseInt(data.user_status_id),
-        role_id: parseInt(data.role_id),
+        user_role_id: parseInt(data.role_id),
         nik: data.nik,
         name: data.name,
-        address: data.address,
-        username: data.username,
-        password: "mysecret"
+        address: data.address
       };
       return app
         .$axios({
@@ -418,6 +418,23 @@ export default ({ app }, inject) => {
         .then(response => {
           console.log(response);
           return response.data.response_data;
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+
+    change_password(data) {
+      const body = data;
+      return app
+        .$axios({
+          method: "post",
+          url: "/auth/change-password",
+          data: body
+        })
+        .then(response => {
+          console.log(response);
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1027,7 +1044,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1064,7 +1081,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1191,7 +1208,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1308,7 +1325,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1340,7 +1357,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;

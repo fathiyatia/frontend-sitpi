@@ -507,6 +507,7 @@ export default {
             this.success = true;
             this.messages = "Data tangkapan berhasil ditambahkan";
             this.snackbar = true;
+            document.documentElement.scrollTop = 0;
           } else {
             this.success = false;
             this.messages = "Data tangkapan gagal ditambahkan";
@@ -514,6 +515,9 @@ export default {
           }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data tangkapan gagal ditambahkan";
+          this.snackbar = true;
         }
       }
       this.$refs.form.reset();

@@ -92,7 +92,14 @@
           </v-col>
         </v-row>
       </v-card>
-
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <!--Dialog Edit--->
       <v-dialog v-model="dialogEdit" persistent max-width="600px">
         <v-card>
@@ -215,6 +222,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     dialogDelete: false,
     dialogEdit: false,
@@ -342,14 +352,30 @@ export default {
       }
     },
 
-    deleteAuction() {
+    async deleteAuction() {
       try {
-        this.$api("auction", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "auction",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllAuction();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 

@@ -43,7 +43,7 @@
                 <v-icon medium color="primary">mdi-magnify</v-icon> Cari
               </span>
               <v-row no-gutters class="pt-3">
-                <v-col cols="12" lg="6" md="6" class="px-2">
+                <v-col cols="12" lg="6" md="6" sm="6" class="px-2">
                   <v-autocomplete
                     solo
                     dense
@@ -63,7 +63,7 @@
                   >
                 </v-col>
 
-                <v-col lg="6" md="6" class="px-2">
+                <v-col lg="6" md="6" sm="6" class="px-2">
                   <v-autocomplete
                     solo
                     dense
@@ -267,6 +267,9 @@ export default {
             this.success = true;
             this.messages = "Data lelang berhasil ditambahkan";
             this.snackbar = true;
+            document.documentElement.scrollTop = 0;
+            this.input_filter.fisherid = "0";
+            this.input_filter.fish = "0";
           } else {
             this.success = false;
             this.messages = "Data lelang gagal ditambahkan";
@@ -274,6 +277,9 @@ export default {
           }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data lelang gagal ditambahkan";
+          this.snackbar = true;
         }
       }
       this.$refs.form.reset();

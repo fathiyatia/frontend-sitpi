@@ -5,7 +5,7 @@
       top
       right
       multi-line
-      timeout="3000"
+      timeout="4000"
       :color="success ? color.success : color.error"
     >
       <v-icon class="pr-2" color="white">{{

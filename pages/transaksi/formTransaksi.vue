@@ -21,7 +21,7 @@
         <v-row>
           <!-----=================== Table ========================----->
 
-          <v-col lg="7" sm="7">
+          <v-col lg="7" md="7" sm="7" cols="12">
             <v-data-table
               :headers="headers"
               :items-per-page="5"
@@ -29,7 +29,7 @@
               :search="search"
               sort-by="created_at"
               sort-desc
-              class="elevation-0 px-2"
+              class="elevation-0 px-1"
             >
               <template v-slot:top>
                 <v-row class="mx-1">
@@ -108,7 +108,7 @@
             </v-data-table>
           </v-col>
           <!-----==================== Cart ========================----->
-          <v-col lg="5" sm="5">
+          <v-col lg="5" md="5" sm="5">
             <v-card class="px-4 pt-5 mt-6 rounded-lg" elevation="2" outlined>
               <!----- Total Summary ----->
               <v-row class="mx-1 mb-4">
@@ -514,6 +514,9 @@ export default {
             this.success = true;
             this.messages = "Data transaksi berhasil ditambahkan";
             this.snackbar = true;
+            document.documentElement.scrollTop = 0;
+            this.input_filter.fisherid = "0";
+            this.input_filter.fish = "0";
           } else {
             this.success = false;
             this.messages = "Data transaksi gagal ditambahkan";
@@ -521,6 +524,9 @@ export default {
           }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data transaksi gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     }

@@ -78,13 +78,6 @@ export default {
             await this.getById();
           }
         );
-        /*this.auction.push({
-          id: this.input.auction_id,
-          fish_type: this.input.fish_type,
-          weight: this.input.weight,
-          weight_unit: this.input.weight_unit
-        });
-        */
       } catch (e) {
         console.log(e);
       }

@@ -89,7 +89,14 @@
           </v-col>
         </v-row>
       </v-card>
-
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
           <v-card-title class="justify-center"
@@ -155,6 +162,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialogDelete: false,
     input: {
       fisherid: "0",
@@ -257,14 +267,30 @@ export default {
       this.dialogDelete = false;
     },
 
-    deleteCaught() {
+    async deleteCaught() {
       try {
-        this.$api("caught", "delete", this.currentId).finally(() => {
-          this.getAllCaught();
+        const result = await this.$api(
+          "caught",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.dialogDelete = false;
+          this.getAllCaught();
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 
