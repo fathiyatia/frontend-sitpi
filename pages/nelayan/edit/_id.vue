@@ -79,6 +79,7 @@
           <v-text-field
             outlined
             single-line
+            suffix="orang"
             label="Jumlah Anak Buah Kapal (ABK)"
             :rules="required"
             type="number"

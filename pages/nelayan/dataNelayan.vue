@@ -54,6 +54,9 @@
         ></v-text-field>
       </template>
     </template>
+    <template v-slot:item.abk_total="{ item }">
+      {{ item.abk_total }} orang
+    </template>
     <template v-slot:item.id="{ item }">
       <v-btn
         x-small

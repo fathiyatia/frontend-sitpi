@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="all_user"
+      :items="showTable()"
       :search="search"
       sort-by="created_at"
       sort-desc
@@ -125,6 +125,7 @@
 
 <script>
 export default {
+  //middleware: "permission",
   filters: {
     roleFormat(value) {
       if (value == "tpi-officer") {
@@ -168,6 +169,11 @@ export default {
   },
 
   methods: {
+    showTable() {
+      if (this.all_user != null) {
+        return this.all_user;
+      }
+    },
     getColor(status) {
       if (status == "Aktif") return "blue";
       else return "red";

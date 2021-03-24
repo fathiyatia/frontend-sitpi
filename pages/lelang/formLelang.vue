@@ -259,6 +259,8 @@ export default {
           ).finally(response => {
             this.dialog = false;
             this.$refs.form.reset();
+            this.input_filter.fisherid = "0";
+            this.input_filter.fish = "0";
             this.getAllCaught();
             return response;
           });
@@ -268,8 +270,6 @@ export default {
             this.messages = "Data lelang berhasil ditambahkan";
             this.snackbar = true;
             document.documentElement.scrollTop = 0;
-            this.input_filter.fisherid = "0";
-            this.input_filter.fish = "0";
           } else {
             this.success = false;
             this.messages = "Data lelang gagal ditambahkan";

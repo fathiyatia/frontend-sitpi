@@ -504,6 +504,8 @@ export default {
             this.input.orders.splice(0, this.input.orders.length);
             this.input.total = 0;
             this.$refs.form.reset();
+            this.input_filter.fisherid = "0";
+            this.input_filter.fish = "0";
             this.isEmpty = true;
             this.dialog = false;
             this.getAllAuction();
@@ -515,8 +517,6 @@ export default {
             this.messages = "Data transaksi berhasil ditambahkan";
             this.snackbar = true;
             document.documentElement.scrollTop = 0;
-            this.input_filter.fisherid = "0";
-            this.input_filter.fish = "0";
           } else {
             this.success = false;
             this.messages = "Data transaksi gagal ditambahkan";

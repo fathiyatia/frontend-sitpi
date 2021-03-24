@@ -4,7 +4,7 @@
       :headers="headers"
       :items="report.production_table"
       :search="search"
-      sort-by="production_total"
+      sort-by="created_at"
       sort-desc
       class="elevation-1 px-3"
     >

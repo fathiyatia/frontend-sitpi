@@ -491,6 +491,9 @@
       <template v-slot:item.id="{ item }">
         {{ report.transaction_table.indexOf(item) + 1 }}
       </template>
+      <template v-slot:item.price="{ item }">
+        {{ item.price | currencyFormat }}
+      </template>
     </v-data-table>
     <br />
   </div>

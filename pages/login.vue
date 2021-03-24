@@ -4,16 +4,16 @@
     <template>
       <alert v-model="snackbar" :success="success" :messages="messages"></alert>
     </template>
-    <v-card-title class="d-flex justify-center">
+    <h2 class="px-1 primary--text d-flex justify-center font-weight-medium">
       Aplikasi Pelelangan Ikan Terintegrasi
-    </v-card-title>
-    <v-card-subtitle class="pt-2 d-flex justify-center">
+    </h2>
+    <h4 class="px-1 pt-1 d-flex justify-center font-weight-regular">
       Isi username dan password untuk masuk ke dalam sistem
-    </v-card-subtitle>
+    </h4>
     <span v-if="showError" class="pt-2 d-flex justify-center red--text"
       >Username atau password yang Anda masukkan salah</span
     >
-    <v-form class="pt-5" ref="form" v-model="valid" lazy-validation>
+    <v-form class="pt-7" ref="form" v-model="valid" lazy-validation>
       <v-text-field
         v-model="input.username"
         outlined

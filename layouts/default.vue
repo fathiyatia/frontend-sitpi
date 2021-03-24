@@ -153,11 +153,11 @@ export default {
   },
 
   methods: {
-    logout() {
+    async logout() {
       try {
         this.$router.push("/login");
         this.isLogin = false;
-        this.$api("user", "logout").finally(() => {
+        await this.$api("user", "logout").finally(() => {
           this.$router.push("/login");
         });
       } catch (e) {
