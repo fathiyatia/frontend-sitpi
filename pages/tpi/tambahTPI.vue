@@ -7,16 +7,6 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
-            Kode TPI
-          </h3>
-          <v-text-field
-            outlined
-            single-line
-            label="Kode TPI"
-            :rules="required"
-            v-model="input.code"
-          />
-          <h3 class="mb-3 mt-2 primary--text">
             Nama TPI
           </h3>
           <v-text-field
@@ -27,13 +17,31 @@
             v-model="input.name"
           />
           <h3 class="mb-3 mt-2 primary--text">
-            Alamat
+            Alamat TPI
           </h3>
           <v-text-field
             outlined
             single-line
-            label="Alamat"
+            label="Alamat TPI"
             v-model="input.address"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            No. Telepon
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="No. Telepon"
+            v-model="input.phone_number"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Kepala TPI
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Kepala TPI"
+            v-model="input.pic"
           />
         </v-form>
       </v-card-text>
@@ -60,9 +68,10 @@ export default {
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
-      code: null,
       name: null,
-      address: null
+      address: null,
+      phone_number: null,
+      pic: null
     }
   }),
   methods: {

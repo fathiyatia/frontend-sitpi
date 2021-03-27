@@ -84,6 +84,8 @@ export default {
       },
       { text: "Nama", value: "name" },
       { text: "Alamat", value: "address" },
+      { text: "No. Telepon", value: "phone_number" },
+      { text: "Kepala TPI", value: "pic" },
       { text: "Aksi", value: "id", sortable: false, width: 135 }
     ],
     tpi: []

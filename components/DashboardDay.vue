@@ -231,7 +231,7 @@ export default {
           bodyFontSize: 17,
           callbacks: {
             label: ({ index }, data) => {
-              return " " + data.name[index] + " Kg";
+              return " : " + data.name[index] + " Kg";
             }
           }
         }
@@ -282,7 +282,7 @@ export default {
           bodyFontSize: 17,
           callbacks: {
             label: ({ index }, data) => {
-              return " Rp " + data.name[index];
+              return " : Rp " + data.name[index];
             }
           }
         }
@@ -333,7 +333,7 @@ export default {
           bodyFontSize: 17,
           callbacks: {
             label: ({ index }, data) => {
-              return " " + data.name[index] + " Jam";
+              return " : " + data.name[index] + " Jam";
             }
           }
         }

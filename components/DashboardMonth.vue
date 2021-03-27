@@ -98,12 +98,12 @@
               {{ this.all_dashboard.production_total }} Kg
             </v-card-subtitle>
           </v-card>
-          <line-chart
+          <bar-chart
             v-if="loaded"
             ref="production_chart"
             :chartdata="production_data"
             :options="chartoptions_production"
-          ></line-chart>
+          ></bar-chart>
           <v-row v-else class="py-6" align="center" justify="center">
             <v-progress-circular
               indeterminate
@@ -125,12 +125,12 @@
               {{ this.all_dashboard.transaction_total | currencyFormat }}
             </v-card-subtitle>
           </v-card>
-          <line-chart
+          <bar-chart
             v-if="loaded"
             ref="production_value_chart"
             :chartdata="production_value_data"
             :options="chartoptions_production_value"
-          ></line-chart>
+          ></bar-chart>
           <v-row v-else class="py-6" align="center" justify="center">
             <v-progress-circular
               indeterminate
@@ -155,12 +155,12 @@
               {{ this.all_dashboard.transaction_speed }} Jam
             </v-card-subtitle>
           </v-card>
-          <line-chart
+          <bar-chart
             v-if="loaded"
             ref="speed_chart"
             :chartdata="speed_data"
             :options="chartoptions_speed"
-          ></line-chart>
+          ></bar-chart>
           <v-row v-else class="py-6" align="center" justify="center">
             <v-progress-circular
               indeterminate
@@ -211,8 +211,9 @@ export default {
         name: [],
         datasets: [
           {
-            pointBackgroundColor: "#FF5252",
-            borderColor: "#5D8CCA",
+            barPercentage: 0.8,
+            backgroundColor: "#5D8CCA",
+            borderColor: [],
             data: []
           }
         ]
@@ -222,11 +223,7 @@ export default {
         scales: {
           xAxes: [
             {
-              stacked: true,
-              scaleLabel: {
-                display: true,
-                labelString: "Tanggal"
-              }
+              stacked: true
             }
           ],
           yAxes: [
@@ -245,7 +242,7 @@ export default {
           padding: {
             top: 30,
             bottom: 30,
-            right: 3,
+            right: 20,
             left: 3
           }
         },
@@ -265,8 +262,9 @@ export default {
         name: [],
         datasets: [
           {
-            pointBackgroundColor: "#FF5252",
-            borderColor: "#267488",
+            barPercentage: 0.8,
+            backgroundColor: "#267488",
+            borderColor: [],
             data: []
           }
         ]
@@ -276,11 +274,7 @@ export default {
         scales: {
           xAxes: [
             {
-              stacked: true,
-              scaleLabel: {
-                display: true,
-                labelString: "Tanggal"
-              }
+              stacked: true
             }
           ],
           yAxes: [
@@ -299,7 +293,7 @@ export default {
           padding: {
             top: 30,
             bottom: 30,
-            right: 3,
+            right: 20,
             left: 3
           }
         },
@@ -320,8 +314,9 @@ export default {
         name: [],
         datasets: [
           {
-            pointBackgroundColor: "#FF5252",
-            borderColor: "#6BA39D",
+            barPercentage: 0.8,
+            backgroundColor: "#6BA39D",
+            borderColor: [],
             data: []
           }
         ]
@@ -331,11 +326,7 @@ export default {
         scales: {
           xAxes: [
             {
-              stacked: true,
-              scaleLabel: {
-                display: true,
-                labelString: "Tanggal"
-              }
+              stacked: true
             }
           ],
           yAxes: [

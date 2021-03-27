@@ -10,7 +10,7 @@
           </v-card-title>
           <doughnut-chart
             v-if="loaded"
-            style="position: relative; height:40vh;"
+            style="position: relative; height:30vh;"
             ref="fisher_chart"
             :chartdata="fisher_data"
             :options="chartoptions_fisher"
@@ -32,7 +32,7 @@
           </v-card-title>
           <doughnut-chart
             v-if="loaded"
-            style="position: relative; height:40vh;"
+            style="position: relative; height:30vh;"
             ref="buyer_chart"
             :chartdata="buyer_data"
             :options="chartoptions_buyer"
@@ -98,7 +98,9 @@ export default {
           bodyFontSize: 17,
           callbacks: {
             label: ({ index }, data) => {
-              return " " + data.labels[index] + " : " + data.name[index];
+              return (
+                " " + data.labels[index] + " : " + data.name[index] + " orang"
+              );
             }
           }
         }
@@ -142,7 +144,9 @@ export default {
           bodyFontSize: 17,
           callbacks: {
             label: ({ index }, data) => {
-              return " " + data.labels[index] + " : " + data.name[index];
+              return (
+                " " + data.labels[index] + " : " + data.name[index] + " orang"
+              );
             }
           }
         }

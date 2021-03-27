@@ -377,10 +377,9 @@ export default {
           i < this.all_dashboard.production_total_graph.length;
           i++
         ) {
-          const production_month = this.formatMonth(
+          this.production_data.labels.push(
             this.all_dashboard.production_total_graph[i].month
           );
-          this.production_data.labels.push(production_month);
 
           this.production_data.name.push(
             this.all_dashboard.production_total_graph[i].total
@@ -397,10 +396,9 @@ export default {
           i < this.all_dashboard.transaction_total_graph.length;
           i++
         ) {
-          const production_value_month = this.formatMonth(
+          this.production_value_data.labels.push(
             this.all_dashboard.transaction_total_graph[i].month
           );
-          this.production_value_data.labels.push(production_value_month);
 
           this.production_value_data.name.push(
             this.all_dashboard.transaction_total_graph[i].total
@@ -417,10 +415,9 @@ export default {
           i < this.all_dashboard.transaction_speed_graph.length;
           i++
         ) {
-          const speed_month = this.formatMonth(
+          this.speed_data.labels.push(
             this.all_dashboard.transaction_speed_graph[i].month
           );
-          this.speed_data.labels.push(speed_month);
 
           this.speed_data.name.push(
             this.all_dashboard.transaction_speed_graph[i].speed

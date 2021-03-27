@@ -36,7 +36,23 @@
             :rules="required"
             v-model="input.address"
           />
-
+          <div v-if="checkRole()">
+            <h3 class="mb-3 mt-2 primary--text">
+              Pilih Lokasi TPI
+            </h3>
+            <v-autocomplete
+              outlined
+              single-line
+              label="Pilih Lokasi TPI"
+              :rules="required"
+              v-model="input.tpi"
+              :items="tpi"
+              item-text="name"
+              item-value="id"
+              clearable
+            >
+            </v-autocomplete>
+          </div>
           <h3 class="mb-3 mt-2 primary--text">
             Username
           </h3>
@@ -78,11 +94,31 @@ export default {
 
       username: null
     },
-    tpi: ["TPI Indramayu", "TPI Sukabumi"]
+    tpi: []
   }),
+  mounted() {
+    this.getAllTpi();
+  },
+
   methods: {
     reset() {
       this.$refs.form.reset();
+    },
+    checkRole() {
+      if (this.$auth.$state.user.user.role.name == "tpi-admin") {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    async getAllTpi() {
+      if (this.$auth.$state.user.user.role.name == "district-admin") {
+        try {
+          this.tpi = await this.$api("tpi", "index", null);
+        } catch (e) {
+          console.log(e);
+        }
+      }
     },
     //res
     async register() {

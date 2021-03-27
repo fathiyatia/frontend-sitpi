@@ -36,6 +36,24 @@
             label="Alamat"
             v-model="input.address"
           />
+          <h3 class="mb-3 mt-2 primary--text">
+            No. Telepon
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="No. Telepon"
+            v-model="input.phone_number"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Kepala TPI
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Kepala TPI"
+            v-model="input.pic"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-center px-3">
@@ -63,7 +81,9 @@ export default {
     input: {
       code: null,
       name: null,
-      address: null
+      address: null,
+      phone_number: null,
+      pic: null
     }
   }),
   mounted() {

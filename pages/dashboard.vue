@@ -7,7 +7,7 @@
     <dashboard></dashboard>
 
     <template>
-      <v-card color="#CCEAF8" tile elevation="0" class="mt-8">
+      <v-card color="#CCEAF8" tile elevation="0" class="mt-6">
         <v-tabs fixed-tabs background-color="transparent" show-arrows>
           <v-tabs-slider color="primary"></v-tabs-slider>
           <!----- Day------>
