@@ -479,7 +479,7 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters class="mt-7">
+          <v-row no-gutters class="mt-7 mb-4">
             <v-col>
               <h4 class="accent--text">
                 Tabel Transaksi Lelang
@@ -491,6 +491,7 @@
       <template v-slot:item.id="{ item }">
         {{ report.transaction_table.indexOf(item) + 1 }}
       </template>
+      <template v-slot:item.weight="{ item }"> {{ item.weight }} Kg </template>
       <template v-slot:item.price="{ item }">
         {{ item.price | currencyFormat }}
       </template>
@@ -516,8 +517,8 @@ export default {
       { text: "Nama Pembeli", value: "buyer_name" },
       { text: "Kode Ikan", value: "fish_code" },
       { text: "Nama Ikan", value: "fish_name" },
-      { text: "Berat (Kg)", value: "weight" },
-      { text: "Nilai Lelang (Rp)", value: "price" }
+      { text: "Berat", value: "weight", align: "right" },
+      { text: "Nilai Lelang", value: "price", align: "right" }
     ],
     report: [],
     show: true,

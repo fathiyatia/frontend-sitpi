@@ -185,7 +185,7 @@ export default {
       { text: "Alat Tangkap", value: "fishing_gear.name" },
       { text: "Daerah Tangkapan", value: "fishing_area.name" },
       { text: "Jenis Ikan", value: "fish_type.name" },
-      { text: "Berat", value: "weight" },
+      { text: "Berat", value: "weight", align: "right" },
       { text: "Status Lelang", value: "caught_status.Status" },
       { text: "Aksi", value: "action", sortable: false, width: 135 }
     ],

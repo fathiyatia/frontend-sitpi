@@ -271,8 +271,8 @@ export default {
       { text: "Waktu", value: "created_at" },
       { text: "Nama Pembeli", value: "buyer.name" },
       { text: "Daerah Penjualan", value: "distribution_area" },
-      { text: "Total Harga", value: "total_price" },
-      { text: "", value: "detail", sortable: false },
+      { text: "Total Harga", value: "total_price", align: "right" },
+      { text: "", value: "detail", sortable: false, align: "center" },
       { text: "Aksi", value: "action", width: 135, sortable: false }
     ],
     transaction: [],

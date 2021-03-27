@@ -87,6 +87,21 @@
                   </v-row>
                 </v-card>
               </template>
+              <template v-slot:item.created_at="{ item }">
+                <span
+                  >{{
+                    new Date(item.created_at)
+                      .getHours()
+                      .toLocaleString()
+                      .padStart(2, "0")
+                  }}:{{
+                    new Date(item.created_at)
+                      .getMinutes()
+                      .toLocaleString()
+                      .padStart(2, "0")
+                  }}
+                </span>
+              </template>
               <template v-slot:item.weight="{ item }">
                 {{ item.caught.weight }} {{ item.caught.weight_unit }}
               </template>
@@ -274,6 +289,7 @@
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
                   {{ index + 1 }}) {{ order.fish_type }} {{ order.weight }}
+                  {{ order.weight_unit }}
                 </h3>
               </v-col>
               <v-col class="">
@@ -350,10 +366,11 @@ export default {
     },
     search: "",
     headers: [
+      { text: "Jam Lelang", value: "created_at" },
       { text: "Jenis Ikan", value: "caught.fish_type.name" },
       { text: "Berat", value: "weight" },
       { text: "Nama Nelayan", value: "caught.fisher.name" },
-      { text: "Harga", value: "price" },
+      { text: "Harga", value: "price", align: "right" },
       { text: "Aksi", value: "action", sortable: false }
     ],
     buyer: [],

@@ -397,7 +397,7 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters class="mt-7">
+          <v-row no-gutters class="mt-7 mb-4">
             <v-col>
               <h4 class="accent--text">
                 Tabel Produksi Ikan
@@ -406,14 +406,18 @@
           </v-row>
         </v-card>
       </template>
-      <template v-slot:item.production_total="{ item }">
-        {{ item.production_total }}
-      </template>
+
       <template v-slot:item.id="{ item }">
         {{ report.production_table.indexOf(item) + 1 }}
       </template>
+      <template v-slot:item.production_total="{ item }">
+        {{ item.production_total }} Kg
+      </template>
       <template v-slot:item.production_value="{ item }">
         {{ item.production_value | currencyFormat }}
+      </template>
+      <template v-slot:item.transaction_speed="{ item }">
+        {{ item.transaction_speed }} Jam
       </template>
     </v-data-table>
     <br />
@@ -435,15 +439,18 @@ export default {
       { text: "Kode Ikan", value: "code" },
       { text: "Nama Ikan", value: "name" },
       {
-        text: "Jumlah Produksi (Kg)",
+        text: "Jumlah Produksi",
+        align: "right",
         value: "production_total"
       },
       {
-        text: "Nilai Produksi (Rp)",
+        text: "Nilai Produksi",
+        align: "right",
         value: "production_value"
       },
       {
-        text: "Rata-rata Kecepatan Lelang (Jam)",
+        text: "Kecepatan Lelang",
+        align: "right",
         value: "transaction_speed"
       }
     ],

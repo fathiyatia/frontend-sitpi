@@ -251,8 +251,8 @@ export default {
       { text: "Jam Terjual", value: "created_at" },
       { text: "Nama Nelayan", value: "caught.fisher.name" },
       { text: "Jenis Ikan", value: "caught.fish_type.name" },
-      { text: "Berat", value: "weight" },
-      { text: "Harga", value: "price" },
+      { text: "Berat", value: "weight", align: "right" },
+      { text: "Harga", value: "price", align: "right" },
       { text: "Status Lelang", value: "caught.caught_status.Status" },
       { text: "Aksi", value: "action", width: 135, sortable: false }
     ],
