@@ -55,12 +55,12 @@
                         v-model="input_filter.fisherid"
                         :items="fisher"
                         clearable
-                        item-text="name"
+                        item-text="nick_name"
                         item-value="id"
                         @change="getAllAuction()"
                       >
                         <template v-slot:selection="{ item }">{{
-                          item.name
+                          item.nick_name
                         }}</template></v-autocomplete
                       >
                     </v-col>
@@ -102,8 +102,8 @@
                   }}
                 </span>
               </template>
-              <template v-slot:item.weight="{ item }">
-                {{ item.caught.weight }} {{ item.caught.weight_unit }}
+              <template v-slot:item.caught_item.weight="{ item }">
+                {{ item.caught_item.weight }} {{ item.caught_item.weight_unit }}
               </template>
               <template v-slot:item.price="{ item }">
                 {{ item.price | currencyFormat }}
@@ -367,9 +367,9 @@ export default {
     search: "",
     headers: [
       { text: "Jam Lelang", value: "created_at" },
-      { text: "Jenis Ikan", value: "caught.fish_type.name" },
-      { text: "Berat", value: "weight" },
-      { text: "Nama Nelayan", value: "caught.fisher.name" },
+      { text: "Jenis Ikan", value: "caught_item.fish_type.name" },
+      { text: "Berat", value: "caught_item.weight" },
+      { text: "Nelayan", value: "caught_item.caught.fisher.nick_name" },
       { text: "Harga", value: "price", align: "right" },
       { text: "Aksi", value: "action", sortable: false }
     ],
@@ -421,20 +421,21 @@ export default {
         //check if there is null data, then replace null data
         if (this.input.orders.length == 1) {
           this.input.orders[0].auction_id = item.id;
-          this.input.orders[0].fisher_name = item.caught.fisher.name;
-          this.input.orders[0].fish_type = item.caught.fish_type.name;
-          this.input.orders[0].weight = item.caught.weight;
-          this.input.orders[0].weight_unit = item.caught.weight_unit;
+          this.input.orders[0].fisher_name =
+            item.caught_item.caught.fisher.nick_name;
+          this.input.orders[0].fish_type = item.caught_item.fish_type.name;
+          this.input.orders[0].weight = item.caught_item.weight;
+          this.input.orders[0].weight_unit = item.caught_item.weight_unit;
           this.input.orders[0].price = item.price;
         }
         //push data if there is no null data
         else {
           this.input.orders.push({
             auction_id: item.id,
-            fisher_name: item.caught.fisher.name,
-            fish_type: item.caught.fish_type.name,
-            weight: item.caught.weight,
-            weight_unit: item.caught.weight_unit,
+            fisher_name: item.caught_item.caught.fisher.nick_name,
+            fish_type: item.caught_item.fish_type.name,
+            weight: item.caught_item.weight,
+            weight_unit: item.caught_item.weight_unit,
             price: item.price
           });
         }
@@ -442,10 +443,10 @@ export default {
       } else {
         this.input.orders.push({
           auction_id: item.id,
-          fisher_name: item.caught.fisher.name,
-          fish_type: item.caught.fish_type.name,
-          weight: item.caught.weight,
-          weight_unit: item.caught.weight_unit,
+          fisher_name: item.caught_item.caught.fisher.nick_name,
+          fish_type: item.caught_item.fish_type.name,
+          weight: item.caught_item.weight,
+          weight_unit: item.caught_item.weight_unit,
           price: item.price
         });
       }

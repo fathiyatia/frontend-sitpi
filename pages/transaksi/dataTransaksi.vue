@@ -151,9 +151,10 @@
             <v-row no-gutters>
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
-                  {{ index + 1 }}) {{ item.auction.caught.fish_type.name }}
-                  {{ item.auction.caught.weight }}
-                  {{ item.auction.caught.weight_unit }}
+                  {{ index + 1 }})
+                  {{ item.auction.caught_item.fish_type.name }}
+                  {{ item.auction.caught_item.weight }}
+                  {{ item.auction.caught_item.weight_unit }}
                 </h3>
               </v-col>
               <v-col>

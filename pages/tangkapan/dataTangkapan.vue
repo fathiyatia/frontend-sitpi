@@ -43,12 +43,12 @@
               v-model="input.fisherid"
               :items="fisher"
               clearable
-              item-text="name"
+              item-text="nick_name"
               item-value="id"
               @change="getAllCaught()"
             >
               <template v-slot:selection="{ item }">{{
-                item.name
+                item.nick_name
               }}</template></v-autocomplete
             >
           </v-col>
@@ -115,15 +115,15 @@
       {{ item.weight }} {{ item.weight_unit }}
     </template>
 
-    <template v-slot:item.created_at="{ item }">
+    <template v-slot:item.caught.created_at="{ item }">
       <span
         >{{
-          new Date(item.created_at)
+          new Date(item.caught.created_at)
             .getHours()
             .toLocaleString()
             .padStart(2, "0")
         }}:{{
-          new Date(item.created_at)
+          new Date(item.caught.created_at)
             .getMinutes()
             .toLocaleString()
             .padStart(2, "0")
@@ -132,8 +132,8 @@
     </template>
 
     <template v-slot:item.caught_status.Status="{ item }">
-      <v-chip :color="getColor(item.caught_status.Status)" outlined small dark>
-        {{ item.caught_status.Status }}
+      <v-chip :color="getColor(item.caught_status.status)" outlined small dark>
+        {{ item.caught_status.status }}
       </v-chip>
     </template>
 
@@ -179,11 +179,11 @@ export default {
 
     all_headers: [
       { text: "ID", align: "start", value: "code", sortable: false },
-      { text: "Waktu", value: "created_at" },
-      { text: "Nama Nelayan", value: "fisher.name" },
-      { text: "Jumlah Hari Trip", value: "trip_day" },
-      { text: "Alat Tangkap", value: "fishing_gear.name" },
-      { text: "Daerah Tangkapan", value: "fishing_area.name" },
+      { text: "Waktu", value: "caught.created_at" },
+      { text: "Nama Nelayan", value: "caught.fisher.nick_name" },
+      { text: "Jumlah Hari Trip", value: "caught.trip_day" },
+      { text: "Alat Tangkap", value: "caught.fishing_gear.name" },
+      { text: "Daerah Tangkapan", value: "caught.fishing_area.name" },
       { text: "Jenis Ikan", value: "fish_type.name" },
       { text: "Berat", value: "weight", align: "right" },
       { text: "Status Lelang", value: "caught_status.Status" },

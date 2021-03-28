@@ -311,7 +311,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -336,7 +336,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -348,7 +348,8 @@ export default ({ app }, inject) => {
         nik: data.nik,
         name: data.name,
         address: data.address,
-        username: data.username
+        username: data.username,
+        tpi_id: parseInt(data.tpi)
       };
 
       return app
@@ -359,7 +360,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -371,7 +372,8 @@ export default ({ app }, inject) => {
         nik: data.nik,
         name: data.name,
         address: data.address,
-        username: data.username
+        username: data.username,
+        tpi_id: parseInt(data.tpi)
       };
 
       return app
@@ -382,7 +384,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1037,7 +1039,7 @@ export default ({ app }, inject) => {
         trip_day: parseInt(data.trip_day),
         fishing_gear_id: parseInt(data.gear),
         fishing_area_id: parseInt(data.area),
-        caught_fish_data: caught
+        caught_items: caught
       };
 
       return app
@@ -1200,7 +1202,7 @@ export default ({ app }, inject) => {
 
     store(data) {
       const body = {
-        caught_id: parseInt(data.id),
+        caught_item_id: parseInt(data.id),
         price: parseInt(data.price)
       };
 
@@ -1412,6 +1414,7 @@ export default ({ app }, inject) => {
       const body = {
         nik: data.nik,
         name: data.name,
+        nick_name: data.nick_name,
         status: data.status,
         phone_number: data.phone_number,
         address: data.address,

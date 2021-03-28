@@ -53,12 +53,12 @@
                     v-model="input_filter.fisherid"
                     :items="fisher"
                     clearable
-                    item-text="name"
+                    item-text="nick_name"
                     item-value="id"
                     @change="getAllCaught()"
                   >
                     <template v-slot:selection="{ item }">{{
-                      item.name
+                      item.nick_name
                     }}</template></v-autocomplete
                   >
                 </v-col>
@@ -185,7 +185,7 @@ export default {
     headers: [
       { text: "Jenis Ikan", value: "fish_type.name" },
       { text: "Berat", value: "weight" },
-      { text: "Nama Nelayan", value: "fisher.name" },
+      { text: "Nama Nelayan", value: "caught.fisher.nick_name" },
       { text: "Aksi", value: "action", sortable: false, width: 160 }
     ]
   }),
@@ -208,7 +208,7 @@ export default {
       this.input.fish_type = item.fish_type.name;
       this.input.weight = item.weight;
       this.input.weight_unit = item.weight_unit;
-      this.input.fisher_name = item.fisher.name;
+      this.input.fisher_name = item.caught.fisher.nick_name;
     },
 
     popupDialog() {

@@ -15,6 +15,17 @@
           </v-col>
         </v-row>
         <v-row class="mx-0 mb-6">
+          <v-col lg="3" md="3" v-if="CheckPermissionCreateDistrict()">
+            <v-btn
+              class="text-capitalize"
+              small
+              block
+              color="success"
+              :to="'/user/register/adminDinas'"
+            >
+              + Tambah Admin Dinas
+            </v-btn>
+          </v-col>
           <v-col lg="3" md="3" v-if="CheckPermissionCreateAdminTPI()">
             <v-btn
               class="text-capitalize"
@@ -46,17 +57,6 @@
               :to="'/user/register/kasir'"
             >
               + Tambah Kasir
-            </v-btn>
-          </v-col>
-          <v-col lg="3" md="3" v-if="CheckPermissionCreateDistrict()">
-            <v-btn
-              class="text-capitalize"
-              small
-              block
-              color="success"
-              :to="'/user/register/adminDinas'"
-            >
-              + Tambah Admin Dinas
             </v-btn>
           </v-col>
         </v-row>

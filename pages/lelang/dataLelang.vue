@@ -46,12 +46,12 @@
               v-model="input.fisherid"
               :items="fisher"
               clearable
-              item-text="name"
+              item-text="nick_name"
               item-value="id"
               @change="getAllAuction()"
             >
               <template v-slot:selection="{ item }">{{
-                item.name
+                item.nick_name
               }}</template></v-autocomplete
             >
           </v-col>
@@ -151,15 +151,15 @@
       </v-dialog>
     </template>
 
-    <template v-slot:item.caught.created_at="{ item }">
+    <template v-slot:item.created_at="{ item }">
       <span
         >{{
-          new Date(item.caught.created_at)
+          new Date(item.created_at)
             .getHours()
             .toLocaleString()
             .padStart(2, "0")
         }}:{{
-          new Date(item.caught.created_at)
+          new Date(item.created_at)
             .getMinutes()
             .toLocaleString()
             .padStart(2, "0")
@@ -186,18 +186,19 @@
     <template v-slot:item.price="{ item }">
       {{ item.price | currencyFormat }}
     </template>
-    <template v-slot:item.weight="{ item }">
-      {{ item.caught.weight }} {{ item.caught.weight_unit }}
+    <template v-slot:item.caught_item.weight="{ item }">
+      {{ item.caught_item.weight }}
+      {{ item.caught_item.weight_unit }}
     </template>
 
-    <template v-slot:item.caught.caught_status.Status="{ item }">
+    <template v-slot:item.caught_item.caught_status.status="{ item }">
       <v-chip
-        :color="getColor(item.caught.caught_status.Status)"
+        :color="getColor(item.caught_item.caught_status.status)"
         outlined
         small
         dark
       >
-        {{ item.caught.caught_status.Status }}
+        {{ item.caught_item.caught_status.status }}
       </v-chip>
     </template>
 
@@ -247,13 +248,13 @@ export default {
         sortable: false,
         value: "code"
       },
-      { text: "Jam Masuk", value: "caught.created_at" },
+      { text: "Jam Masuk", value: "created_at" },
       { text: "Jam Terjual", value: "created_at" },
-      { text: "Nama Nelayan", value: "caught.fisher.name" },
-      { text: "Jenis Ikan", value: "caught.fish_type.name" },
-      { text: "Berat", value: "weight", align: "right" },
+      { text: "Nama Nelayan", value: "caught_item.caught.fisher.nick_name" },
+      { text: "Jenis Ikan", value: "caught_item.fish_type.name" },
+      { text: "Berat", value: "caught_item.weight", align: "right" },
       { text: "Harga", value: "price", align: "right" },
-      { text: "Status Lelang", value: "caught.caught_status.Status" },
+      { text: "Status Lelang", value: "caught_item.caught_status.status" },
       { text: "Aksi", value: "action", width: 135, sortable: false }
     ],
     fisher: [],

@@ -4,6 +4,14 @@
       <v-card color="secondary" dark elevation="0">
         <v-card-title class="mb-1">Pendaftaran Admin TPI</v-card-title>
       </v-card>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -84,6 +92,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -102,7 +113,7 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-    //res
+
     async register() {
       if (this.$refs.form.validate()) {
         try {
@@ -111,11 +122,25 @@ export default {
             "register_tpi_admin",
             this.input
           ).finally(response => {
-            this.$router.push("/user/dataUser");
             return response;
           });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Akun admin TPI berhasil ditambahkan";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/user/dataUser");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Akun admin TPI gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Akun admin TPI gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     },
