@@ -23,7 +23,14 @@
             + Tambah Ikan
           </v-btn>
         </v-col>
-
+        <!---- Alert ----->
+        <template>
+          <alert
+            v-model="snackbar"
+            :success="success"
+            :messages="messages"
+          ></alert>
+        </template>
         <!--Dialog Tambah Ikan--->
         <v-dialog v-model="dialogTambah" persistent max-width="600px">
           <v-card>
@@ -160,6 +167,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     dialogDelete: false,
@@ -226,14 +236,30 @@ export default {
       this.currentId = id;
     },
 
-    deleteFish() {
+    async deleteFish() {
       try {
-        this.$api("fish", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "fish",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllFish();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 
@@ -244,7 +270,7 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async storeFish() {
       if (this.$refs.form.validate()) {
         try {
@@ -256,8 +282,20 @@ export default {
               return response;
             }
           );
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data ikan berhasil ditambahkan";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data ikan gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data ikan gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     },
@@ -270,7 +308,7 @@ export default {
         console.log(e);
       }
     },
-    // res
+
     async updateFish() {
       try {
         const result = await this.$api(
@@ -282,8 +320,20 @@ export default {
           this.dialogEdit = false;
           return response;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil diubah";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal diubah";
+        this.snackbar = true;
       }
     }
   }

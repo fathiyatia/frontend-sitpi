@@ -115,7 +115,7 @@ export default {
 
     logout() {
       try {
-        this.$router.push("/login");
+        //this.$router.push("/login");
         this.isLogin = false;
         this.$api("user", "logout").finally(() => {
           this.$router.push("/login");
@@ -135,7 +135,12 @@ export default {
             return response;
           });
           if (result.status === 200) {
-            this.logout();
+            this.success = true;
+            this.messages = "Password berhasil diubah, silahkan login kembali";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.logout();
+            }, 1500);
           } else {
             this.success = false;
             this.messages = "Password gagal diubah";

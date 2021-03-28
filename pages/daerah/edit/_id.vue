@@ -5,6 +5,14 @@
         <v-toolbar-title>Edit Daerah Tangkapan</v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form">
           <h3 class="mb-3 mt-2 primary--text">
@@ -120,6 +128,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       name: null,
@@ -154,11 +165,25 @@ export default {
             "update",
             this.input
           ).finally(response => {
-            this.$router.push("/daerah/dataDaerah");
             return response;
           });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/daerah/dataDaerah");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
         }
       }
     }

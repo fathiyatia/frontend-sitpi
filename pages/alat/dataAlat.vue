@@ -23,7 +23,14 @@
             + Tambah Alat Tangkap
           </v-btn>
         </v-col>
-
+        <!---- Alert ----->
+        <template>
+          <alert
+            v-model="snackbar"
+            :success="success"
+            :messages="messages"
+          ></alert>
+        </template>
         <!--Dialog Tambah Alat Tangkap--->
         <v-dialog v-model="dialogTambah" persistent max-width="600px">
           <v-card>
@@ -159,6 +166,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     dialogDelete: false,
@@ -230,14 +240,30 @@ export default {
       this.currentId = id;
     },
 
-    deleteGear() {
+    async deleteGear() {
       try {
-        this.$api("fishing_gear", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "fishing_gear",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllGear();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 
@@ -249,7 +275,6 @@ export default {
       }
     },
 
-    //res
     async storeGear() {
       if (this.$refs.form.validate()) {
         try {
@@ -263,8 +288,20 @@ export default {
             this.$refs.form.reset();
             return response;
           });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data alat berhasil ditambahkan";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data alat gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data alat gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     },
@@ -278,7 +315,6 @@ export default {
       }
     },
 
-    //res
     async updateGear() {
       try {
         const result = await this.$api(
@@ -290,8 +326,20 @@ export default {
           this.dialogEdit = false;
           return response;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil diubah";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal diubah";
+        this.snackbar = true;
       }
     }
   }

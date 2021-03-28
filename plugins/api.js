@@ -419,7 +419,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -470,7 +470,7 @@ export default ({ app }, inject) => {
     store(data) {
       const body = {
         name: data.name,
-        code: data.code
+        code: "Kode"
       };
 
       return app
@@ -481,7 +481,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -495,7 +495,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -528,7 +528,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -777,7 +777,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -791,7 +791,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -823,7 +823,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -852,7 +852,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -866,7 +866,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -898,7 +898,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -932,7 +932,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -946,7 +946,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -983,7 +983,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1427,7 +1427,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -1441,7 +1441,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1480,7 +1480,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1512,7 +1512,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         });
     },
     delete(data) {
@@ -1526,7 +1526,7 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;
@@ -1562,7 +1562,7 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return response.data.response_data;
+          return response;
         })
         .catch(error => {
           throw error.response;

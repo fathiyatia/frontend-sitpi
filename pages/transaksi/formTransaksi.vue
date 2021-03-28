@@ -506,7 +506,6 @@ export default {
     },
 
     async storeTransaction() {
-      //del soon
       if (this.isEmpty) {
         this.success = false;
         this.messages = "Belum ada ikan yang dipilih";

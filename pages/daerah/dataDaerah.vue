@@ -24,7 +24,14 @@
               + Tambah Daerah
             </v-btn>
           </v-col>
-
+          <!---- Alert ----->
+          <template>
+            <alert
+              v-model="snackbar"
+              :success="success"
+              :messages="messages"
+            ></alert>
+          </template>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="justify-center"
@@ -127,6 +134,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialogDelete: false,
     dialogMap: false,
     search: "",
@@ -179,14 +189,30 @@ export default {
       this.currentId = id;
     },
 
-    deleteArea() {
+    async deleteArea() {
       try {
-        this.$api("fishing_area", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "fishing_area",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllArea();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 

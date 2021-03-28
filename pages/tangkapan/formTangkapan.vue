@@ -273,6 +273,7 @@
               Daftar Hasil Tangkapan
             </h3>
           </v-row>
+
           <div
             class="caughtfish"
             v-for="(caught, index) in input.caughts"
@@ -414,6 +415,7 @@ export default {
     },
     reset() {
       this.$refs.form.reset();
+      this.input.caughts.length = 1;
     },
     confirm() {
       if (this.$refs.form.validate()) {
@@ -508,6 +510,8 @@ export default {
             this.messages = "Data tangkapan berhasil ditambahkan";
             this.snackbar = true;
             document.documentElement.scrollTop = 0;
+            this.$refs.form.reset();
+            this.input.caughts.length = 1;
           } else {
             this.success = false;
             this.messages = "Data tangkapan gagal ditambahkan";
@@ -520,7 +524,6 @@ export default {
           this.snackbar = true;
         }
       }
-      this.$refs.form.reset();
     }
   }
 };

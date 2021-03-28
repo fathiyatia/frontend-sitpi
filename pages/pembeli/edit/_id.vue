@@ -5,6 +5,14 @@
         <v-toolbar-title>Edit Pembeli </v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -82,6 +90,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -106,18 +117,32 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async updateBuyer() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api("buyer", "update", this.input).finally(
             response => {
-              this.$router.push("/pembeli/dataPembeli");
               return response;
             }
           );
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/pembeli/dataPembeli");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
         }
       }
     }

@@ -23,6 +23,14 @@
             + Tambah TPI
           </v-btn>
         </v-col>
+        <!---- Alert ----->
+        <template>
+          <alert
+            v-model="snackbar"
+            :success="success"
+            :messages="messages"
+          ></alert>
+        </template>
 
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -73,6 +81,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialogDelete: false,
     search: "",
     headers: [
@@ -118,14 +129,28 @@ export default {
       this.currentId = id;
     },
 
-    deleteTpi() {
+    async deleteTpi() {
       try {
-        this.$api("tpi", "delete", this.currentId).finally(() => {
-          this.getAllTpi();
-          this.dialogDelete = false;
-        });
+        const result = await this.$api("tpi", "delete", this.currentId).finally(
+          () => {
+            this.getAllTpi();
+            this.dialogDelete = false;
+          }
+        );
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 

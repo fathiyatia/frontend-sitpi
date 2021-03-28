@@ -4,6 +4,14 @@
       <v-card color="secondary" dark elevation="0">
         <v-card-title class="mb-1">Edit User</v-card-title>
       </v-card>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -35,16 +43,6 @@
             label="Alamat"
             :rules="required"
             v-model="input.address"
-          />
-          <h3 class="mb-3 mt-2 primary--text">
-            Username
-          </h3>
-          <v-text-field
-            outlined
-            single-line
-            label="Username"
-            :rules="required"
-            v-model="input.username"
           />
           <div v-if="this.$auth.$state.user.user.role.name == 'tpi-admin'">
             <h3 class="mb-3 mt-2 primary--text">
@@ -96,6 +94,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -137,16 +138,27 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async updateUser() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api("user", "update", this.input).finally(
             response => {
-              this.$router.push("/user/dataUser");
               return response;
             }
           );
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/user/dataUser");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
         }

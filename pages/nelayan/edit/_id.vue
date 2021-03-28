@@ -5,6 +5,14 @@
         <v-toolbar-title>Edit Nelayan</v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -26,6 +34,16 @@
             label="Nama Lengkap Nelayan / Nahkoda"
             :rules="required"
             v-model="input.name"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Panggilan Nelayan / Nahkoda
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Nama Panggilan Nelayan / Nahkoda"
+            :rules="required"
+            v-model="input.nick_name"
           />
           <h3 class="mb-3 mt-2 primary--text">
             Status
@@ -107,11 +125,15 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       nik: null,
       name: null,
+      nick_name: null,
       address: null,
       ship_type: null,
       abk_total: null
@@ -144,7 +166,7 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async updateFisher() {
       if (this.$refs.form.validate()) {
         try {
@@ -153,11 +175,25 @@ export default {
             "update",
             this.input
           ).finally(response => {
-            this.$router.push("/nelayan/dataNelayan");
             return response;
           });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/nelayan/dataNelayan");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
         }
       }
     }

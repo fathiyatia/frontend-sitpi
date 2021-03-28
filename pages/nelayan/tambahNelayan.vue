@@ -4,6 +4,14 @@
       <v-card color="secondary" dark elevation="0">
         <v-card-title class="mb-1">Pendataan Nelayan</v-card-title>
       </v-card>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -25,6 +33,16 @@
             label="Nama Lengkap Nelayan / Nahkoda"
             :rules="required"
             v-model="input.name"
+          />
+          <h3 class="mb-3 mt-2 primary--text">
+            Nama Panggilan Nelayan / Nahkoda
+          </h3>
+          <v-text-field
+            outlined
+            single-line
+            label="Nama Panggilan Nelayan / Nahkoda"
+            :rules="required"
+            v-model="input.nick_name"
           />
           <h3 class="mb-3 mt-2 primary--text">
             Status
@@ -107,11 +125,15 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
       nik: null,
       name: null,
+      nick_name: null,
       status: null,
       address: null,
       phone_number: null,
@@ -132,18 +154,31 @@ export default {
     status: ["Tetap", "Pendatang"]
   }),
   methods: {
-    //res
     async storeFisher() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api("fisher", "store", this.input).finally(
             response => {
-              this.$router.push("/nelayan/dataNelayan");
               return response;
             }
           );
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data nelayan berhasil ditambahkan";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/nelayan/dataNelayan");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data nelayan gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data nelayan gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     }

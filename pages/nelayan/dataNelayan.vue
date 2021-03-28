@@ -23,7 +23,14 @@
             + Tambah Nelayan
           </v-btn>
         </v-col>
-
+        <!---- Alert ----->
+        <template>
+          <alert
+            v-model="snackbar"
+            :success="success"
+            :messages="messages"
+          ></alert>
+        </template>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="justify-center"
@@ -34,7 +41,7 @@
               <v-btn color="primary" text @click="dialogDelete = false"
                 >Batal</v-btn
               >
-              <v-btn color="error" text @click="deleteBuyer">Hapus</v-btn>
+              <v-btn color="error" text @click="deleteFisher">Hapus</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -81,6 +88,9 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     dialogDelete: false,
     search: "",
     headers: [
@@ -89,7 +99,8 @@ export default {
         align: "start",
         value: "nik"
       },
-      { text: "Nama", value: "name" },
+      { text: "Nama Lengkap", value: "name" },
+      { text: "Nama Panggilan", value: "nick_name" },
       { text: "Status", value: "status" },
       { text: "Alamat", value: "address" },
       { text: "No. Telepon", value: "phone_number" },
@@ -128,14 +139,30 @@ export default {
       this.currentId = id;
     },
 
-    deleteBuyer() {
+    async deleteFisher() {
       try {
-        this.$api("fisher", "delete", this.currentId).finally(() => {
+        const result = await this.$api(
+          "fisher",
+          "delete",
+          this.currentId
+        ).finally(() => {
           this.getAllFisher();
           this.dialogDelete = false;
         });
+        if (result.status === 200) {
+          this.success = true;
+          this.messages = "Data berhasil dihapus";
+          this.snackbar = true;
+        } else {
+          this.success = false;
+          this.messages = "Data gagal dihapus";
+          this.snackbar = true;
+        }
       } catch (e) {
         console.log(e);
+        this.success = false;
+        this.messages = "Data gagal dihapus";
+        this.snackbar = true;
       }
     },
 

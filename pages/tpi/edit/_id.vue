@@ -5,18 +5,16 @@
         <v-toolbar-title>Edit TPI</v-toolbar-title>
       </v-toolbar>
       <v-spacer></v-spacer>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <h3 class="mb-3 mt-2 primary--text">
-            Kode TPI
-          </h3>
-          <v-text-field
-            outlined
-            single-line
-            label="Kode TPI "
-            :rules="required"
-            v-model="input.code"
-          />
           <h3 class="mb-3 mt-2 primary--text">
             Nama TPI
           </h3>
@@ -76,10 +74,12 @@
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
-      code: null,
       name: null,
       address: null,
       phone_number: null,
@@ -97,18 +97,32 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async updateTpi() {
       if (this.$refs.form.validate()) {
         try {
           const result = await this.$api("tpi", "update", this.input).finally(
             response => {
-              this.$router.push("/tpi/dataTPI");
               return response;
             }
           );
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/tpi/dataTPI");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
         } catch (e) {
           console.log(e);
+          this.success = false;
+          this.messages = "Data gagal diubah";
+          this.snackbar = true;
         }
       }
     }

@@ -219,7 +219,6 @@ export default {
         console.log(e);
       }
     },
-    //res
     async updateCaught() {
       try {
         const result = await this.$api("caught", "update", this.input).finally(
