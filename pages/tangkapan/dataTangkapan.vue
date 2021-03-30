@@ -2,8 +2,8 @@
   <v-data-table
     :headers="showHeaders"
     :items="caught_fish"
-    sort-by="created_at"
     sort-desc
+    sort-by="caught.created_at"
     class="elevation-1 px-3"
   >
     <template v-slot:top>
@@ -18,8 +18,8 @@
           }}</span>
           pada tanggal
           <span class="primary--text font-weight-bold">
-            <date-format></date-format
-          ></span>
+            {{ new Date() | dateFormat }}</span
+          >
         </span>
       </v-row>
       <!---- Filter ----->
@@ -178,7 +178,6 @@ export default {
     ],
 
     all_headers: [
-      { text: "ID", align: "start", value: "code", sortable: false },
       { text: "Waktu", value: "caught.created_at" },
       { text: "Nama Nelayan", value: "caught.fisher.nick_name" },
       { text: "Jumlah Hari Trip", value: "caught.trip_day" },

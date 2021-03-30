@@ -472,7 +472,9 @@ export default ({ app }, inject) => {
     store(data) {
       const body = {
         name: data.name,
-        code: "Kode"
+        address: data.address,
+        phone_number: data.phone_number,
+        pic: data.pic
       };
 
       return app
@@ -519,8 +521,10 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
-        code: data.code,
-        name: data.name
+        name: data.name,
+        address: data.address,
+        phone_number: data.phone_number,
+        pic: data.pic
       };
       return app
         .$axios({
@@ -1469,6 +1473,7 @@ export default ({ app }, inject) => {
         id: data.id,
         nik: data.nik,
         name: data.name,
+        nick_name: data.nick_name,
         status: data.status,
         phone_number: data.phone_number,
         address: data.address,

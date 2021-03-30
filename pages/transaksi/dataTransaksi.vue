@@ -20,7 +20,7 @@
             }}</span>
             pada tanggal
             <span class="primary--text font-weight-bold">
-              <date-format></date-format>
+              {{ new Date() | dateFormat }}
             </span>
           </span>
         </v-row>
@@ -154,7 +154,8 @@
                   {{ index + 1 }})
                   {{ item.auction.caught_item.fish_type.name }}
                   {{ item.auction.caught_item.weight }}
-                  {{ item.auction.caught_item.weight_unit }}
+                  {{ item.auction.caught_item.weight_unit }} -
+                  {{ item.auction.caught_item.caught.fisher.nick_name }}
                 </h3>
               </v-col>
               <v-col>
@@ -271,7 +272,7 @@ export default {
       },
       { text: "Waktu", value: "created_at" },
       { text: "Nama Pembeli", value: "buyer.name" },
-      { text: "Daerah Penjualan", value: "distribution_area" },
+      { text: "Daerah Distribusi", value: "distribution_area" },
       { text: "Total Harga", value: "total_price", align: "right" },
       { text: "", value: "detail", sortable: false, align: "center" },
       { text: "Aksi", value: "action", width: 135, sortable: false }

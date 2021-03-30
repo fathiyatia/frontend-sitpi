@@ -93,7 +93,7 @@ export default {
         sortable: false,
         value: "code"
       },
-      { text: "Nama", value: "name" },
+      { text: "Nama TPI", value: "name" },
       { text: "Alamat", value: "address" },
       { text: "No. Telepon", value: "phone_number" },
       { text: "Kepala TPI", value: "pic" },

@@ -14,13 +14,13 @@
           </h1>
         </v-card-title>
 
-        <v-card-subtitle>
-          Ups. Something is wrong. Go back home?
+        <v-card-subtitle class="pt-2 d-flex justify-center">
+          Maaf, terjadi kesalahan. Silahkan kembali ke homepage.
         </v-card-subtitle>
 
         <v-card-actions class="d-flex justify-center">
           <v-btn class="primary text-capitalize" :to="'/'">
-            Home Page
+            Homepage
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -30,7 +30,6 @@
 
 <script>
 export default {
-  layout: "empty",
   props: {
     error: {
       type: Object,

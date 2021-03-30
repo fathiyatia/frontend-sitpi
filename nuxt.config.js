@@ -8,12 +8,16 @@ export default {
   */
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: "SITPI",
+    titleTemplate: "Sistem Informasi TPI",
     title: "SITPI",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" },
+      {
+        hid: "description",
+        name: "description",
+        content: "Sistem Informasi TPI"
+      },
       { name: "theme_color" }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
@@ -83,10 +87,11 @@ export default {
   // PWA configuration
   pwa: {
     meta: {
-      title: "SITPI"
+      title: "Sistem Informasi TPI"
     },
     manifest: {
-      name: "SITPI"
+      name: "Sistem Informasi TPI",
+      short_name: "Sistem TPI"
     }
   },
 
@@ -123,7 +128,8 @@ export default {
     port: 8000,
     host: "0.0.0.0"
   },
-*/
+  */
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {}
 };

@@ -77,9 +77,9 @@
       <template v-slot:item.role="{ item }">
         {{ item.role.name | roleFormat }}
       </template>
-      <template v-slot:item.user_status.Status="{ item }">
-        <v-chip :color="getColor(item.user_status.Status)" outlined small dark>
-          {{ item.user_status.Status }}
+      <template v-slot:item.user_status.status="{ item }">
+        <v-chip :color="getColor(item.user_status.status)" outlined small dark>
+          {{ item.user_status.status }}
         </v-chip>
       </template>
       <template v-slot:item.id="{ item }">
@@ -158,7 +158,8 @@ export default {
       { text: "NIK", value: "nik" },
       { text: "Alamat", value: "address" },
       { text: "Peran", value: "role" },
-      { text: "Status", value: "user_status.Status" },
+      { text: "Lokasi", value: "" },
+      { text: "Status", value: "user_status.status" },
       { text: "Aksi", value: "id", sortable: false, width: 210 }
     ],
     all_user: []

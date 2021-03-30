@@ -10,16 +10,16 @@
     >
       <template v-slot:top>
         <v-row class="mx-0  pt-6">
-          <v-col cols="12" lg="10" md="10">
+          <v-col cols="12" lg="8" md="8">
             <h2 class="accent--text">Laporan Produksi Ikan</h2>
           </v-col>
-          <!----
+
           <v-col lg="2" md="2">
             <v-btn block small color="error">
               Export Pdf
             </v-btn>
           </v-col>
-          ----->
+
           <v-col lg="2" md="2">
             <v-btn block small color="success" @click="exportExcel()">
               Export Excel
@@ -332,7 +332,7 @@
         <v-card elevation="0" rounded class="px-4 pt-3 mb-2 mt-4 rounded-lg">
           <v-row no-gutters class="">
             <v-col>
-              <h4 v-if="input.tpi != 0" class="accent--text">
+              <h4 v-if="checkRole()" class="accent--text">
                 {{ current_tpi.name }}
               </h4>
               <h4 v-else class="accent--text">
@@ -449,7 +449,7 @@ export default {
         value: "production_value"
       },
       {
-        text: "Kecepatan Lelang",
+        text: "Kecepatan Penjualan",
         align: "right",
         value: "transaction_speed"
       }
@@ -556,7 +556,7 @@ export default {
 
   methods: {
     async getByIdTpi() {
-      if (this.tpi != 0) {
+      if (this.input.tpi != 0) {
         try {
           this.current_tpi = await this.$api(
             "tpi",
@@ -568,6 +568,8 @@ export default {
         } catch (e) {
           console.log(e);
         }
+      } else {
+        this.current_tpi.name = this.$auth.$state.user.location_data.location_name;
       }
     },
     checkRole() {

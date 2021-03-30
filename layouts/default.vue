@@ -155,7 +155,7 @@ export default {
   methods: {
     async logout() {
       try {
-        //this.$router.push("/login");
+        this.$router.push("/login");
         this.isLogin = false;
         await this.$api("user", "logout").finally(() => {
           this.$router.push("/login");

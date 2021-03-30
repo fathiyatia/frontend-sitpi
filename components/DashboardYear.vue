@@ -68,7 +68,7 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Rata-rata Kecepatan Lelang</v-list-item-subtitle
+                >Kecepatan Penjualan</v-list-item-subtitle
               >
               <br />
               <v-list-item-title class="font-weight-black"
@@ -143,11 +143,11 @@
 
     <v-row class="mt-2">
       <!--------------------- Speed ------------------------------>
-      <v-col>
+      <v-col lg="6">
         <v-card class="px-md-5" elevation="4">
           <v-card color="info" dark class="mx-3">
             <v-card-title class="d-flex justify-center font-weight-regular">
-              Kecepatan Lelang Ikan
+              Kecepatan Penjualan Ikan
             </v-card-title>
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
@@ -313,7 +313,7 @@ export default {
               stacked: true,
               scaleLabel: {
                 display: true,
-                labelString: "Kecepatan Lelang (Jam)"
+                labelString: "Kecepatan Penjualan (Jam)"
               }
             }
           ]
@@ -378,7 +378,7 @@ export default {
           i++
         ) {
           this.production_data.labels.push(
-            this.all_dashboard.production_total_graph[i].month
+            this.all_dashboard.production_total_graph[i].name
           );
 
           this.production_data.name.push(
@@ -397,7 +397,7 @@ export default {
           i++
         ) {
           this.production_value_data.labels.push(
-            this.all_dashboard.transaction_total_graph[i].month
+            this.all_dashboard.transaction_total_graph[i].name
           );
 
           this.production_value_data.name.push(
@@ -416,7 +416,7 @@ export default {
           i++
         ) {
           this.speed_data.labels.push(
-            this.all_dashboard.transaction_speed_graph[i].month
+            this.all_dashboard.transaction_speed_graph[i].name
           );
 
           this.speed_data.name.push(

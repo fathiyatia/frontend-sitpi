@@ -20,7 +20,7 @@
           </span>
           pada tanggal
           <span class="primary--text font-weight-bold">
-            <date-format></date-format>
+            {{ new Date() | dateFormat }}
           </span>
         </span>
       </v-row>
@@ -80,7 +80,7 @@
               :items="status"
               item-text="status"
               item-value="id"
-              label="Status Pelelangan"
+              label="Status Lelang"
               solo
               dense
               block
@@ -151,10 +151,10 @@
       </v-dialog>
     </template>
 
-    <template v-slot:item.created_at="{ item }">
+    <template v-slot:item.caught_item.caught.created_at="{ item }">
       <span
         >{{
-          new Date(item.created_at)
+          new Date(item.caught_item.caught.created_at)
             .getHours()
             .toLocaleString()
             .padStart(2, "0")
@@ -242,13 +242,7 @@ export default {
       { status: "Selesai", id: "3" }
     ],
     all_headers: [
-      {
-        text: "ID",
-        align: "start",
-        sortable: false,
-        value: "code"
-      },
-      { text: "Jam Masuk", value: "created_at" },
+      { text: "Jam Masuk", value: "caught_item.caught.created_at" },
       { text: "Jam Terjual", value: "created_at" },
       { text: "Nama Nelayan", value: "caught_item.caught.fisher.nick_name" },
       { text: "Jenis Ikan", value: "caught_item.fish_type.name" },

@@ -72,11 +72,11 @@
           </v-autocomplete>
 
           <v-row no-gutters>
-            <h3 class="mb-3 primary--text">
+            <h3 class="mb-3 mr-4 primary--text">
               Daerah Tangkapan
             </h3>
             <v-btn
-              class="ml-4 mb-3"
+              class="mb-3"
               small
               color="secondary"
               @click="dialogMap = true"

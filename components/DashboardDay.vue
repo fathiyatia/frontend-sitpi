@@ -2,7 +2,7 @@
   <div>
     <h3 class="px-1 mt-3 accent--text font-weight-medium">
       <v-icon color="primary" class="mr-1"> mdi-calendar</v-icon> Tanggal :
-      <date-format></date-format>
+      {{ new Date() | dateFormat }}
     </h3>
 
     <!---- Small Card ----->
@@ -67,8 +67,8 @@
             >
             <v-list-item-content class="my-2" block>
               <v-list-item-subtitle class="overline text-capitalize"
-                >Rata-rata Kecepatan Lelang</v-list-item-subtitle
-              >
+                >Kecepatan Penjualan
+              </v-list-item-subtitle>
               <br />
               <v-list-item-title class="font-weight-black"
                 >{{
@@ -142,11 +142,11 @@
 
     <v-row class="mt-2">
       <!--------------------- Speed ------------------------------>
-      <v-col>
+      <v-col lg="6">
         <v-card class="px-md-5" elevation="4">
           <v-card color="info" dark class="mx-3">
             <v-card-title class="d-flex justify-center font-weight-regular">
-              Kecepatan Lelang Ikan
+              Kecepatan Penjualan Ikan
             </v-card-title>
             <v-card-subtitle
               class="d-flex justify-center font-weight-regular white--text"
@@ -313,7 +313,7 @@ export default {
               stacked: true,
               scaleLabel: {
                 display: true,
-                labelString: "Kecepatan Lelang (Jam)"
+                labelString: "Kecepatan Penjualan (Jam)"
               }
             }
           ]

@@ -289,7 +289,7 @@
               <v-col>
                 <h3 class="accent--text mt-4 font-weight-regular">
                   {{ index + 1 }}) {{ order.fish_type }} {{ order.weight }}
-                  {{ order.weight_unit }}
+                  {{ order.weight_unit }} - {{ order.fisher_name }}
                 </h3>
               </v-col>
               <v-col class="">
