@@ -26,7 +26,7 @@
             v-model="input.name"
           />
           <h3 class="mb-3 mt-2 primary--text">
-            Alamat
+            Alamat TPI
           </h3>
           <v-text-field
             outlined

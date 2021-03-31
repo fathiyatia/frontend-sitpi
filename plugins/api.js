@@ -75,6 +75,10 @@ export default ({ app }, inject) => {
             return Report.excel_production(data, other);
           case "excel_transaction":
             return Report.excel_transaction(data, other);
+          case "pdf_production":
+            return Report.pdf_production(data, other);
+          case "pdf_transaction":
+            return Report.pdf_transaction(data, other);
           default:
             console.error(
               `Unknown ${target} action : ${action} in '~/plugins/api.js'`
@@ -716,6 +720,90 @@ export default ({ app }, inject) => {
       } else if (data.period == "Pilih Jangka Waktu") {
         var link =
           "report/transaction/excel?tpi_id=" +
+          data.tpi +
+          "&period=" +
+          data.date_custom_from +
+          ":" +
+          data.date_custom_to;
+      }
+
+      return app
+        .$axios({
+          method: "get",
+          url: link
+        })
+        .then(response => {
+          console.log(response);
+          return window.open("http://23.97.52.240:9090/" + link);
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    pdf_production(data) {
+      if (data.period == "Laporan Harian") {
+        var link =
+          "report/production/pdf?tpi_id=" +
+          data.tpi +
+          "&daily=" +
+          data.date_daily;
+      } else if (data.period == "Laporan Bulanan") {
+        var link =
+          "report/production/pdf?tpi_id=" +
+          data.tpi +
+          "&monthly=" +
+          data.date_monthly;
+      } else if (data.period == "Laporan Tahunan") {
+        var link =
+          "report/production/pdf?tpi_id=" +
+          data.tpi +
+          "&yearly=" +
+          data.date_yearly;
+      } else if (data.period == "Pilih Jangka Waktu") {
+        var link =
+          "report/production/pdf?tpi_id=" +
+          data.tpi +
+          "&period=" +
+          data.date_custom_from +
+          ":" +
+          data.date_custom_to;
+      }
+
+      return app
+        .$axios({
+          method: "get",
+          url: link
+        })
+        .then(response => {
+          console.log(response);
+          return window.open("http://23.97.52.240:9090/" + link);
+        })
+        .catch(error => {
+          throw error.response;
+        });
+    },
+    pdf_transaction(data) {
+      if (data.period == "Laporan Harian") {
+        var link =
+          "report/transaction/pdf?tpi_id=" +
+          data.tpi +
+          "&daily=" +
+          data.date_daily;
+      } else if (data.period == "Laporan Bulanan") {
+        var link =
+          "report/transaction/pdf?tpi_id=" +
+          data.tpi +
+          "&monthly=" +
+          data.date_monthly;
+      } else if (data.period == "Laporan Tahunan") {
+        var link =
+          "report/transaction/pdf?tpi_id=" +
+          data.tpi +
+          "&yearly=" +
+          data.date_yearly;
+      } else if (data.period == "Pilih Jangka Waktu") {
+        var link =
+          "report/transaction/pdf?tpi_id=" +
           data.tpi +
           "&period=" +
           data.date_custom_from +

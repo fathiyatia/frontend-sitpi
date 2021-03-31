@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
+      :headers="showHeaders"
       :items="showTable()"
       :search="search"
       sort-by="created_at"
@@ -158,7 +158,8 @@ export default {
       { text: "NIK", value: "nik" },
       { text: "Alamat", value: "address" },
       { text: "Peran", value: "role" },
-      { text: "Lokasi", value: "" },
+      { text: "Lokasi TPI / Dinas", value: "location_name" },
+      { text: "Lokasi TPI", value: "location_name" },
       { text: "Status", value: "user_status.status" },
       { text: "Aksi", value: "id", sortable: false, width: 210 }
     ],
@@ -167,6 +168,23 @@ export default {
 
   mounted() {
     this.getAllUser();
+  },
+
+  computed: {
+    showHeaders() {
+      if (this.$auth.$state.user.user.role.name == "superadmin") {
+        return this.headers.filter(header => header.text !== "Lokasi TPI");
+      } else if (this.$auth.$state.user.user.role.name == "district-admin") {
+        return this.headers.filter(
+          header => header.text !== "Lokasi TPI / Dinas"
+        );
+      } else {
+        return this.headers.filter(
+          header =>
+            header.text !== "Lokasi TPI" && header.text !== "Lokasi TPI / Dinas"
+        );
+      }
+    }
   },
 
   methods: {

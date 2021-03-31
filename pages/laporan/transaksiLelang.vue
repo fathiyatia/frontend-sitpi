@@ -15,7 +15,7 @@
           </v-col>
 
           <v-col lg="2" md="2">
-            <v-btn block small color="error">
+            <v-btn block small color="error" @click="exportPdf()">
               Export Pdf
             </v-btn>
           </v-col>
@@ -713,6 +713,14 @@ export default {
     async exportExcel() {
       try {
         await this.$api("report", "excel_transaction", this.input);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async exportPdf() {
+      try {
+        await this.$api("report", "pdf_transaction", this.input);
       } catch (e) {
         console.log(e);
       }
