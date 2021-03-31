@@ -688,11 +688,17 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: link
+          url: link,
+          responseType: "blob"
         })
         .then(response => {
           console.log(response);
-          return window.open("http://23.97.52.240:9090/" + link);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Laporan Produksi Ikan.xlsx");
+          document.body.appendChild(link);
+          link.click();
         })
         .catch(error => {
           throw error.response;
@@ -730,11 +736,17 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: link
+          url: link,
+          responseType: "blob"
         })
         .then(response => {
           console.log(response);
-          return window.open("http://23.97.52.240:9090/" + link);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Laporan Transaksi Lelang.xlsx");
+          document.body.appendChild(link);
+          link.click();
         })
         .catch(error => {
           throw error.response;
@@ -772,11 +784,17 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: link
+          url: link,
+          responseType: "blob"
         })
         .then(response => {
           console.log(response);
-          return window.open("http://23.97.52.240:9090/" + link);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Laporan Produksi Ikan.pdf");
+          document.body.appendChild(link);
+          link.click();
         })
         .catch(error => {
           throw error.response;
@@ -818,7 +836,12 @@ export default ({ app }, inject) => {
         })
         .then(response => {
           console.log(response);
-          return window.open("http://23.97.52.240:9090/" + link);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "Laporan Transaksi Lelang.pdf");
+          document.body.appendChild(link);
+          link.click();
         })
         .catch(error => {
           throw error.response;

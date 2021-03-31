@@ -556,7 +556,10 @@ export default {
 
   methods: {
     async getByIdTpi() {
-      if (this.input.tpi != 0) {
+      if (
+        this.input.tpi != 0 &&
+        this.$auth.$state.user.user.role.name == "district-admin"
+      ) {
         try {
           this.current_tpi = await this.$api(
             "tpi",
