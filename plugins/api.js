@@ -832,7 +832,8 @@ export default ({ app }, inject) => {
       return app
         .$axios({
           method: "get",
-          url: link
+          url: link,
+          responseType: "blob"
         })
         .then(response => {
           console.log(response);
