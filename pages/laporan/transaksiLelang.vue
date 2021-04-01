@@ -366,7 +366,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.transaction_total }} Transaksi
+                : {{ report.transaction_total }}
               </h4>
             </v-col>
           </v-row>
@@ -378,7 +378,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.production_total }} Kg
+                : {{ report.production_total }}
               </h4>
             </v-col>
           </v-row>
@@ -390,7 +390,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.production_value | currencyFormat }}
+                : {{ report.production_value }}
               </h4>
             </v-col>
           </v-row>
@@ -403,7 +403,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.transaction_speed }} Jam
+                : {{ report.transaction_speed }}
               </h4>
             </v-col>
           </v-row>
@@ -426,7 +426,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : {{ report.permanent_fisher }} orang
+                    : {{ report.permanent_fisher }}
                   </h4>
                 </v-col>
               </v-row>
@@ -438,7 +438,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : {{ report.temporary_fisher }} orang
+                    : {{ report.temporary_fisher }}
                   </h4>
                 </v-col>
               </v-row>
@@ -460,7 +460,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : {{ report.permanent_buyer }} orang
+                    : {{ report.permanent_buyer }}
                   </h4>
                 </v-col>
               </v-row>
@@ -472,7 +472,7 @@
                 </v-col>
                 <v-col lg="6" sm="6">
                   <h4 class="accent--text font-weight-regular">
-                    : {{ report.temporary_buyer }} orang
+                    : {{ report.temporary_buyer }}
                   </h4>
                 </v-col>
               </v-row>
@@ -491,9 +491,11 @@
       <template v-slot:item.id="{ item }">
         {{ report.transaction_table.indexOf(item) + 1 }}
       </template>
-      <template v-slot:item.weight="{ item }"> {{ item.weight }} Kg </template>
+      <template v-slot:item.weight="{ item }">
+        {{ item.weight }} {{ item.weight_unit }}</template
+      >
       <template v-slot:item.price="{ item }">
-        {{ item.price | currencyFormat }}
+        {{ item.price }}
       </template>
     </v-data-table>
     <br />

@@ -367,7 +367,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.production_total }} Kg
+                : {{ report.production_total }}
               </h4>
             </v-col>
           </v-row>
@@ -379,7 +379,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.production_value | currencyFormat }}
+                : {{ report.production_value }}
               </h4>
             </v-col>
           </v-row>
@@ -392,7 +392,7 @@
             </v-col>
             <v-col lg="3" sm="6">
               <h4 class="accent--text font-weight-regular">
-                : {{ report.transaction_speed }} Jam
+                : {{ report.transaction_speed }}
               </h4>
             </v-col>
           </v-row>
@@ -411,13 +411,13 @@
         {{ report.production_table.indexOf(item) + 1 }}
       </template>
       <template v-slot:item.production_total="{ item }">
-        {{ item.production_total }} Kg
+        {{ item.production_total }}
       </template>
       <template v-slot:item.production_value="{ item }">
-        {{ item.production_value | currencyFormat }}
+        {{ item.production_value }}
       </template>
       <template v-slot:item.transaction_speed="{ item }">
-        {{ item.transaction_speed }} Jam
+        {{ item.transaction_speed }}
       </template>
     </v-data-table>
     <br />
