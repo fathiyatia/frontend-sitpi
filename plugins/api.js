@@ -271,7 +271,6 @@ export default ({ app }, inject) => {
   const User = {
     index() {
       return app.$axios.get("/users").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -280,7 +279,6 @@ export default ({ app }, inject) => {
       return app.$auth
         .loginWith(strategy, { data })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -314,7 +312,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -339,7 +336,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -363,7 +359,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -387,7 +382,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -402,7 +396,6 @@ export default ({ app }, inject) => {
           url: "/user/" + data
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -424,7 +417,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -441,7 +433,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -457,7 +448,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -469,7 +459,6 @@ export default ({ app }, inject) => {
   const Tpi = {
     index() {
       return app.$axios.get("/tpis").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -488,7 +477,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -516,7 +504,6 @@ export default ({ app }, inject) => {
           url: "/tpi/" + data
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -537,7 +524,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -554,7 +540,6 @@ export default ({ app }, inject) => {
           url: "/dashboard/header"
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -568,7 +553,6 @@ export default ({ app }, inject) => {
           url: "/dashboard/detail?query=" + data
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -610,7 +594,6 @@ export default ({ app }, inject) => {
           url: link
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -649,7 +632,6 @@ export default ({ app }, inject) => {
           url: link
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -692,7 +674,6 @@ export default ({ app }, inject) => {
           responseType: "blob"
         })
         .then(response => {
-          console.log(response);
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
@@ -740,11 +721,12 @@ export default ({ app }, inject) => {
           responseType: "blob"
         })
         .then(response => {
-          console.log(response);
+          //var popup = window.open();
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
           link.setAttribute("download", "Laporan Transaksi Lelang.xlsx");
+          //popup.document.body.appendChild(link);
           document.body.appendChild(link);
           link.click();
         })
@@ -788,7 +770,6 @@ export default ({ app }, inject) => {
           responseType: "blob"
         })
         .then(response => {
-          console.log(response);
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
@@ -836,7 +817,6 @@ export default ({ app }, inject) => {
           responseType: "blob"
         })
         .then(response => {
-          console.log(response);
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;
@@ -858,7 +838,6 @@ export default ({ app }, inject) => {
           url: "/districts?province_id=" + data
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -869,7 +848,6 @@ export default ({ app }, inject) => {
   const Province = {
     index() {
       return app.$axios.get("/provinces").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     }
@@ -877,7 +855,6 @@ export default ({ app }, inject) => {
   const Fish = {
     index() {
       return app.$axios.get("/fish-types").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -894,7 +871,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -940,7 +916,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -952,7 +927,6 @@ export default ({ app }, inject) => {
   const Fishing_gear = {
     index() {
       return app.$axios.get("/fishing-gears").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -969,7 +943,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1015,7 +988,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -1049,7 +1021,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1100,7 +1071,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -1132,7 +1102,6 @@ export default ({ app }, inject) => {
             data.status
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1165,7 +1134,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1216,7 +1184,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -1240,7 +1207,6 @@ export default ({ app }, inject) => {
             data.fish
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1258,7 +1224,6 @@ export default ({ app }, inject) => {
             data.date_end
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1276,7 +1241,6 @@ export default ({ app }, inject) => {
             data.date_end
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1308,7 +1272,6 @@ export default ({ app }, inject) => {
             data.status
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1329,7 +1292,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1377,7 +1339,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1401,7 +1362,6 @@ export default ({ app }, inject) => {
             data.fish
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1418,7 +1378,6 @@ export default ({ app }, inject) => {
           url: "/transactions"
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1446,7 +1405,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1492,7 +1450,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -1510,7 +1467,6 @@ export default ({ app }, inject) => {
             data.date_end
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1522,7 +1478,6 @@ export default ({ app }, inject) => {
   const Fisher = {
     index() {
       return app.$axios.get("/fishers").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -1545,7 +1500,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1573,7 +1527,6 @@ export default ({ app }, inject) => {
           url: "/fisher/" + data
         })
         .then(response => {
-          console.log(response);
           return response.data.response_data;
         })
         .catch(error => {
@@ -1599,7 +1552,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {
@@ -1611,7 +1563,6 @@ export default ({ app }, inject) => {
   const Buyer = {
     index() {
       return app.$axios.get("/buyers").then(response => {
-        console.log(response);
         return response.data.response_data;
       });
     },
@@ -1631,7 +1582,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         });
     },
@@ -1681,7 +1631,6 @@ export default ({ app }, inject) => {
           data: body
         })
         .then(response => {
-          console.log(response);
           return response;
         })
         .catch(error => {

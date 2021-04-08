@@ -125,7 +125,7 @@
 
 <script>
 export default {
-  //middleware: "permission",
+  middleware: "permission",
   filters: {
     roleFormat(value) {
       if (value == "tpi-officer") {

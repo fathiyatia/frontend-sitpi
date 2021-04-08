@@ -92,6 +92,7 @@
 </template>
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
     snackbar: false,
     success: false,
@@ -125,10 +126,12 @@ export default {
       }
     },
     async getAllTpi() {
-      try {
-        this.tpi = await this.$api("tpi", "index", null);
-      } catch (e) {
-        console.log(e);
+      if (this.$auth.$state.user.user.role.name != "tpi-admin") {
+        try {
+          this.tpi = await this.$api("tpi", "index", null);
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
 
@@ -155,7 +158,6 @@ export default {
             this.snackbar = true;
           }
         } catch (e) {
-          console.log(e);
           this.success = false;
           this.messages = "Akun petugas TPI gagal ditambahkan";
           this.snackbar = true;

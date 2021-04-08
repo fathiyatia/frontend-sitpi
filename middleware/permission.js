@@ -52,7 +52,7 @@ export default ({ store, route, redirect }) => {
         redirect("/login");
       }
       break;
-    case "ikan-dataikan":
+    case "ikan-dataIkan":
       if (!user.permissions.includes("create-fish-type")) {
         redirect("/login");
       }
@@ -115,11 +115,7 @@ export default ({ store, route, redirect }) => {
       break;
 
     case "tangkapan-dataTangkapan":
-      if (
-        user.role.name != "tpi-admin" &&
-        user.role.name != "tpi-officer" &&
-        user.role.name != "tpi-cashier"
-      ) {
+      if (user.role.name != "tpi-admin" && user.role.name != "tpi-officer") {
         redirect("/login");
       }
       break;

@@ -504,6 +504,7 @@
 
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
     dialogDelete: false,
     search: "",
@@ -567,7 +568,6 @@ export default {
     date_max: new Date(Date.now() + 7 * 60 * 60 * 1000)
       .toISOString()
       .substr(0, 10),
-    //daily date picker
     modal_daily: false,
     modal_monthly: false,
     modal_yearly: false,

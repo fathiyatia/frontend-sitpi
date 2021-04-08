@@ -20,7 +20,7 @@
 
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <!-- Fisher Identitiy etc ---->
+          <!-- Fisher Identity etc ---->
           <h3 class="mb-3 mt-2 primary--text">
             Nama Nelayan / Nahkoda
           </h3>
@@ -360,6 +360,7 @@
 </template>
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
     snackbar: false,
     success: false,
@@ -518,7 +519,6 @@ export default {
             this.snackbar = true;
           }
         } catch (e) {
-          console.log(e);
           this.success = false;
           this.messages = "Data tangkapan gagal ditambahkan";
           this.snackbar = true;

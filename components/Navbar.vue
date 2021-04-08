@@ -169,23 +169,7 @@ export default {
         }
       ],
 
-      recap: [
-        {
-          icon: "mdi-basket",
-          title: "Tangkapan Ikan",
-          to: "/tangkapan/dataTangkapan"
-        },
-        {
-          icon: "mdi-file-document-multiple",
-          title: "Hasil Lelang",
-          to: "/lelang/dataLelang"
-        },
-        {
-          icon: "mdi-cash-multiple",
-          title: "Transaksi",
-          to: "/transaksi/dataTransaksi"
-        }
-      ],
+      recap: [],
       data: [],
       report: [
         {
@@ -212,6 +196,7 @@ export default {
 
   mounted() {
     this.ShowData();
+    this.ShowRecap();
   },
 
   methods: {
@@ -222,6 +207,36 @@ export default {
         this.$auth.$state.user.user.role.name == "tpi-cashier"
       ) {
         return true;
+      }
+    },
+    ShowRecap() {
+      if (
+        this.$auth.$state.user.user.role.name == "tpi-admin" ||
+        this.$auth.$state.user.user.role.name == "tpi-officer"
+      ) {
+        this.recap.push({
+          icon: "mdi-basket",
+          title: "Tangkapan Ikan",
+          to: "/tangkapan/dataTangkapan"
+        });
+      }
+      if (
+        this.$auth.$state.user.user.role.name == "tpi-admin" ||
+        this.$auth.$state.user.user.role.name == "tpi-officer" ||
+        this.$auth.$state.user.user.role.name == "tpi-cashier"
+      ) {
+        this.recap.push(
+          {
+            icon: "mdi-file-document-multiple",
+            title: "Hasil Lelang",
+            to: "/lelang/dataLelang"
+          },
+          {
+            icon: "mdi-cash-multiple",
+            title: "Transaksi",
+            to: "/transaksi/dataTransaksi"
+          }
+        );
       }
     },
     CheckRoleForReport() {

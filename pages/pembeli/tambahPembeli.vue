@@ -89,6 +89,7 @@
 </template>
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
     snackbar: false,
     success: false,
@@ -126,7 +127,6 @@ export default {
             this.snackbar = true;
           }
         } catch (e) {
-          console.log(e);
           this.success = false;
           this.messages = "Data pembeli gagal ditambahkan";
           this.snackbar = true;

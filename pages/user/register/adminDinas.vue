@@ -4,6 +4,14 @@
       <v-card color="secondary" dark elevation="0">
         <v-card-title class="mb-1">Pendaftaran Admin Dinas</v-card-title>
       </v-card>
+      <!---- Alert ----->
+      <template>
+        <alert
+          v-model="snackbar"
+          :success="success"
+          :messages="messages"
+        ></alert>
+      </template>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <h3 class="mb-3 mt-2 primary--text">
@@ -98,7 +106,11 @@
 </template>
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
+    snackbar: false,
+    success: false,
+    messages: "",
     valid: true,
     required: [v => !!v || "Data ini harus diisi"],
     input: {
@@ -137,7 +149,7 @@ export default {
         console.log(e);
       }
     },
-    //res
+
     async register() {
       if (this.$refs.form.validate()) {
         try {
@@ -146,11 +158,24 @@ export default {
             "register_district_admin",
             this.input
           ).finally(response => {
-            this.$router.push("/user/dataUser");
             return response;
           });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Akun admin dinas berhasil ditambahkan";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/user/dataUser");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Akun admin dinas gagal ditambahkan";
+            this.snackbar = true;
+          }
         } catch (e) {
-          console.log(e);
+          this.success = false;
+          this.messages = "Akun admin dinas gagal ditambahkan";
+          this.snackbar = true;
         }
       }
     }

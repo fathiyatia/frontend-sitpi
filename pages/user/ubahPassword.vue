@@ -147,7 +147,6 @@ export default {
             this.snackbar = true;
           }
         } catch (e) {
-          console.log(e);
           this.success = false;
           this.messages = "Password gagal diubah";
           this.snackbar = true;

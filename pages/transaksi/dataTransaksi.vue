@@ -249,6 +249,7 @@
 
 <script>
 export default {
+  middleware: "permission",
   data: () => ({
     snackbar: false,
     success: false,
@@ -337,7 +338,6 @@ export default {
     async getById(id) {
       try {
         this.inputEdit = await this.$api("transaction", "get_by_id", id);
-        console.log("Masuk");
         this.dialogEdit = true;
       } catch (e) {
         console.log(e);
@@ -364,7 +364,6 @@ export default {
           this.snackbar = true;
         }
       } catch (e) {
-        console.log(e);
         this.success = false;
         this.messages = "Data gagal dihapus";
         this.snackbar = true;
@@ -392,7 +391,6 @@ export default {
           this.snackbar = true;
         }
       } catch (e) {
-        console.log(e);
         this.success = false;
         this.messages = "Data gagal diubah";
         this.snackbar = true;

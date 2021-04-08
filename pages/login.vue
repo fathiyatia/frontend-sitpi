@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       showError: false,
-      //test alert
       snackbar: false,
       success: false,
       messages: "",
@@ -68,7 +67,6 @@ export default {
     handleclick() {
       this.showPassword = !this.showPassword;
     },
-    //cek
     async login() {
       if (this.$refs.form.validate()) {
         try {
