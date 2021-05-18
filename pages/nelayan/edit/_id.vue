@@ -23,6 +23,7 @@
             single-line
             label="NIK Nelayan / Nahkoda"
             :rules="required"
+            type="number"
             v-model="input.nik"
           />
           <h3 class="mb-3 mt-2 primary--text">
@@ -76,6 +77,7 @@
             outlined
             single-line
             label="No. Telepon"
+            type="number"
             v-model="input.phone_number"
           />
           <h3 class="mb-3 mt-2 primary--text">

@@ -32,6 +32,7 @@
             single-line
             label="NIK"
             :rules="required"
+            type="number"
             v-model="input.nik"
           />
           <h3 class="mb-3 mt-2 primary--text">

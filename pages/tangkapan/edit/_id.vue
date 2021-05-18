@@ -42,6 +42,7 @@
             single-line
             label="Jumlah Hari Trip"
             v-model="input.trip_day"
+            :rules="required"
           />
           <h3 class="mb-3 primary--text">
             Jenis Alat Tangkap
@@ -109,6 +110,7 @@
                   label="Berat"
                   type="number"
                   v-model="input.weight"
+                  :rules="required"
                 />
               </v-col>
               <v-col md="6">
@@ -158,6 +160,7 @@ export default {
     fishtype: [],
     weightunit: [],
     fisher: [],
+    caught: [],
     input: {
       fisher_id: null,
       trip_day: null,
@@ -182,11 +185,20 @@ export default {
     },
     async getById() {
       try {
-        this.input = await this.$api(
+        this.caught = await this.$api(
           "caught",
           "get_by_id",
           this.$route.params.id
         );
+        this.input.id = this.caught.id;
+        this.input.caught_id = this.caught.caught_id;
+        this.input.fisher_id = this.caught.caught.fisher_id;
+        this.input.trip_day = this.caught.caught.trip_day;
+        this.input.fishing_gear_id = this.caught.caught.fishing_gear_id;
+        this.input.fishing_area_id = this.caught.caught.fishing_area_id;
+        this.input.fish_type_id = this.caught.fish_type_id;
+        this.input.weight = this.caught.weight;
+        this.input.weight_unit = this.caught.weight_unit;
       } catch (e) {
         console.log(e);
       }
@@ -220,28 +232,32 @@ export default {
       }
     },
     async updateCaught() {
-      try {
-        const result = await this.$api("caught", "update", this.input).finally(
-          response => {
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api(
+            "caught",
+            "update",
+            this.input
+          ).finally(response => {
             return response;
+          });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push("/tangkapan/dataTangkapan");
+            }, 500);
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
           }
-        );
-        if (result.status === 200) {
-          this.success = true;
-          this.messages = "Data berhasil diubah";
-          this.snackbar = true;
-          setTimeout(() => {
-            this.$router.push("/tangkapan/dataTangkapan");
-          }, 500);
-        } else {
+        } catch (e) {
           this.success = false;
           this.messages = "Data gagal diubah";
           this.snackbar = true;
         }
-      } catch (e) {
-        this.success = false;
-        this.messages = "Data gagal diubah";
-        this.snackbar = true;
       }
     }
   }

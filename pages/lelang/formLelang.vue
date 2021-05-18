@@ -122,7 +122,6 @@
               </h3>
             </v-col>
           </v-row>
-
           <v-form
             class=""
             no-gutters
@@ -133,15 +132,19 @@
             <v-text-field
               single-line
               prefix="Rp"
+              hide-details="auto"
               dense
               outlined
               class="mt-6"
               type="number"
               label="Harga lelang"
               v-model="input.price"
-              :rules="required"
+              :rules="priceRules"
               required
             ></v-text-field>
+            <h4 class="ml-1 mt-1 accent--text font-weight-regular">
+              {{ input.price | currencyFormat }}
+            </h4>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -166,7 +169,18 @@ export default {
     messages: "",
     dialog: false,
     valid: true,
-    required: [v => !!v || "Data ini harus diisi"],
+    priceRules: [
+      v =>
+        (v || "").indexOf("-") < 0 || "Harga tidak dapat memiliki nilai minus",
+      v =>
+        (v || "").indexOf(".") < 0 ||
+        "Tuliskan angkanya saja tanpa menggunakan titik",
+      v =>
+        (v || "").indexOf(",") < 0 ||
+        "Tuliskan angkanya saja tanpa menggunakan koma",
+
+      v => !!v || "Data ini harus diisi"
+    ],
     caught_fish: [],
     fisher: [],
     fishtype: [],
@@ -282,7 +296,6 @@ export default {
           this.snackbar = true;
         }
       }
-      this.$refs.form.reset();
     }
   }
 };

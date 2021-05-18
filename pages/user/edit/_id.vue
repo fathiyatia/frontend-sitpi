@@ -32,6 +32,7 @@
             single-line
             label="NIK"
             :rules="required"
+            type="number"
             v-model="input.nik"
           />
           <h3 class="mb-3 mt-2 primary--text">
@@ -110,6 +111,7 @@ export default {
     },
     tpi: ["TPI Indramayu", "TPI Sukabumi"],
     role: [
+      { name: "Admin TPI", id: 3 },
       { name: "Petugas TPI", id: 4 },
       { name: "Kasir", id: 5 }
     ],

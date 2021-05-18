@@ -50,13 +50,11 @@
                     label="Kode Alat"
                     v-model="input.code"
                     :rules="required"
-                    required
                   ></v-text-field>
                   <v-text-field
                     label="Nama Alat Tangkap"
                     v-model="input.name"
                     :rules="required"
-                    required
                   ></v-text-field>
                 </v-form>
               </v-container>
@@ -94,12 +92,12 @@
                 >
                   <v-text-field
                     label="Kode Alat"
-                    required
+                    :rules="required"
                     v-model="inputedit.code"
                   ></v-text-field>
                   <v-text-field
                     label="Nama Alat Tangkap"
-                    required
+                    :rules="required"
                     v-model="inputedit.name"
                   ></v-text-field>
                 </v-form>
@@ -315,29 +313,31 @@ export default {
     },
 
     async updateGear() {
-      try {
-        const result = await this.$api(
-          "fishing_gear",
-          "update",
-          this.inputedit
-        ).finally(response => {
-          this.getAllGear();
-          this.dialogEdit = false;
-          return response;
-        });
-        if (result.status === 200) {
-          this.success = true;
-          this.messages = "Data berhasil diubah";
-          this.snackbar = true;
-        } else {
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api(
+            "fishing_gear",
+            "update",
+            this.inputedit
+          ).finally(response => {
+            this.getAllGear();
+            this.dialogEdit = false;
+            return response;
+          });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
+        } catch (e) {
           this.success = false;
           this.messages = "Data gagal diubah";
           this.snackbar = true;
         }
-      } catch (e) {
-        this.success = false;
-        this.messages = "Data gagal diubah";
-        this.snackbar = true;
       }
     }
   }

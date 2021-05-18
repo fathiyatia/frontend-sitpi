@@ -203,7 +203,7 @@
             >
               <v-autocomplete
                 label="Nama Pembeli"
-                required
+                :rules="required"
                 v-model="inputEdit.buyer_id"
                 :items="buyer"
                 clearable
@@ -213,7 +213,7 @@
               </v-autocomplete>
               <v-text-field
                 label="Daerah Distribusi Ikan"
-                required
+                :rules="required"
                 v-model="inputEdit.distribution_area"
               ></v-text-field>
             </v-form>
@@ -371,29 +371,31 @@ export default {
     },
 
     async updateTransaction() {
-      try {
-        const result = await this.$api(
-          "transaction",
-          "update",
-          this.inputEdit
-        ).finally(response => {
-          this.getAllTransaction();
-          this.dialogEdit = false;
-          return response;
-        });
-        if (result.status === 200) {
-          this.success = true;
-          this.messages = "Data berhasil diubah";
-          this.snackbar = true;
-        } else {
+      if (this.$refs.form.validate()) {
+        try {
+          const result = await this.$api(
+            "transaction",
+            "update",
+            this.inputEdit
+          ).finally(response => {
+            this.getAllTransaction();
+            this.dialogEdit = false;
+            return response;
+          });
+          if (result.status === 200) {
+            this.success = true;
+            this.messages = "Data berhasil diubah";
+            this.snackbar = true;
+          } else {
+            this.success = false;
+            this.messages = "Data gagal diubah";
+            this.snackbar = true;
+          }
+        } catch (e) {
           this.success = false;
           this.messages = "Data gagal diubah";
           this.snackbar = true;
         }
-      } catch (e) {
-        this.success = false;
-        this.messages = "Data gagal diubah";
-        this.snackbar = true;
       }
     },
 

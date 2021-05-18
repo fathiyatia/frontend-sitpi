@@ -1169,6 +1169,7 @@ export default ({ app }, inject) => {
     },
     update(data) {
       const body = {
+        caught_id: parseInt(data.caught_id),
         fisher_id: parseInt(data.fisher_id),
         trip_day: parseInt(data.trip_day),
         fishing_gear_id: parseInt(data.fishing_gear_id),

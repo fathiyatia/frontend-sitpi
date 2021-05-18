@@ -32,6 +32,7 @@
             outlined
             single-line
             label="Alamat"
+            :rules="required"
             v-model="input.address"
           />
           <h3 class="mb-3 mt-2 primary--text">
@@ -41,6 +42,8 @@
             outlined
             single-line
             label="No. Telepon"
+            type="number"
+            :rules="required"
             v-model="input.phone_number"
           />
           <h3 class="mb-3 mt-2 primary--text">
@@ -50,6 +53,7 @@
             outlined
             single-line
             label="Kepala TPI"
+            :rules="required"
             v-model="input.pic"
           />
         </v-form>

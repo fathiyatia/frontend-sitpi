@@ -148,7 +148,7 @@
                     outlined
                     single-line
                     label="Berat"
-                    :rules="required"
+                    :rules="weightRules"
                     type="number"
                     v-model="input.caughts[index].weight"
                   />
@@ -392,7 +392,13 @@ export default {
     fishinggear_confirm: [],
     fish_confirm: [],
     all_fish_name_confirm: [],
-    required: [v => !!v || "Data ini harus diisi"]
+
+    required: [v => !!v || "Data ini harus diisi"],
+    weightRules: [
+      v =>
+        (v || "").indexOf("-") < 0 || "Berat tidak dapat memiliki nilai minus",
+      v => !!v || "Data ini harus diisi"
+    ]
   }),
 
   mounted() {
